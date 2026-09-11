@@ -1,0 +1,1928 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Iron Ledger</title>
+<meta name="description" content="A six-day hypertrophy program with set logging, automatic progression and a rest timer.">
+<meta name="theme-color" content="#133A61">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Iron Ledger">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+</head>
+<body>
+<style>
+/* -- Tokens -----------------------------------------------
+   Palette borrowed from Olympic bumper plates: 45 lb blue,
+   25 lb green, 55 lb red, 35 lb yellow. Neutrals carry a
+   blue bias so the greys read as steel, not as default grey. */
+:root {
+  --bg:        #F2F4F7;
+  --surface:   #FFFFFF;
+  --surface-2: #E7EAEF;
+  --line:      #D7DCE4;
+  --line-soft: #E7EAEF;
+  --ink:       #11151C;
+  --ink-2:     #59616E;
+  --ink-3:     #868E9B;
+  --accent:    #275E9E;
+  --accent-2:  #2B6CB0;
+  --accent-sf: #E2EBF6;
+  --good:      #24794C;
+  --good-sf:   #DFF0E6;
+  --hot:       #B23127;
+  --gold:      #9C7000;
+  --shadow:    0 1px 2px rgba(17,21,28,.05), 0 8px 24px rgba(17,21,28,.06);
+  --shadow-lg: 0 2px 6px rgba(17,21,28,.08), 0 18px 44px rgba(17,21,28,.14);
+  --r:  10px;
+  --r2: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:        #0C0F15;
+    --surface:   #151A22;
+    --surface-2: #1E242F;
+    --line:      #2A323F;
+    --line-soft: #1E242F;
+    --ink:       #EEF1F5;
+    --ink-2:     #99A2B0;
+    --ink-3:     #6E7787;
+    --accent:    #6BA9EA;
+    --accent-2:  #5A9BE0;
+    --accent-sf: #15263A;
+    --good:      #4BBE83;
+    --good-sf:   #102B1E;
+    --hot:       #EE7466;
+    --gold:      #E0A82E;
+    --shadow:    0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.34);
+    --shadow-lg: 0 2px 6px rgba(0,0,0,.5), 0 18px 44px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"] {
+  --bg:        #0C0F15;
+  --surface:   #151A22;
+  --surface-2: #1E242F;
+  --line:      #2A323F;
+  --line-soft: #1E242F;
+  --ink:       #EEF1F5;
+  --ink-2:     #99A2B0;
+  --ink-3:     #6E7787;
+  --accent:    #6BA9EA;
+  --accent-2:  #5A9BE0;
+  --accent-sf: #15263A;
+  --good:      #4BBE83;
+  --good-sf:   #102B1E;
+  --hot:       #EE7466;
+  --gold:      #E0A82E;
+  --shadow:    0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.34);
+  --shadow-lg: 0 2px 6px rgba(0,0,0,.5), 0 18px 44px rgba(0,0,0,.5);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 15px/1.5 "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+#app {
+  max-width: 540px;
+  margin: 0 auto;
+  padding: calc(20px + env(safe-area-inset-top)) 16px calc(180px + env(safe-area-inset-bottom));
+}
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+h1, h2, h3 { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; margin: 0; text-wrap: balance; }
+
+.num { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+.eyebrow {
+  font: 600 11px/1.3 "IBM Plex Sans", sans-serif;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* -- Screen header ---------------------------------------- */
+.head { margin-bottom: 18px; }
+.head h1 {
+  font-size: 34px; font-weight: 800; letter-spacing: -.028em;
+  line-height: 1.04; margin: 6px 0 4px;
+}
+.head .focus { color: var(--ink-2); font-size: 15px; }
+.head .len { color: var(--ink-3); font-size: 13px; margin-top: 6px; }
+
+/* -- Progress rail ---------------------------------------- */
+.rail { height: 5px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+.rail > i {
+  display: block; height: 100%; border-radius: 3px; background: var(--accent-2);
+  transform-origin: left; transition: transform .45s cubic-bezier(.22,.7,.3,1);
+}
+.rail.done > i { background: var(--good); }
+.rail-cap { display: flex; justify-content: space-between; margin-top: 7px; font-size: 12.5px; font-weight: 500; color: var(--ink-2); }
+.rail-cap .fin { color: var(--good); font-weight: 600; }
+
+/* -- Generic surfaces ------------------------------------- */
+.stack { display: flex; flex-direction: column; gap: 10px; }
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r2);
+  padding: 16px;
+}
+.note {
+  border-left: 3px solid var(--line);
+  padding: 2px 0 2px 12px;
+  color: var(--ink-2);
+  font-size: 13.5px; line-height: 1.5;
+}
+.note b { color: var(--ink); font-weight: 600; display: block; font-size: 12px; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 3px; }
+.note.cardio { border-left-color: var(--accent-2); }
+.note.cardio b { color: var(--accent); }
+
+/* -- Exercise row ----------------------------------------- */
+.ex {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r2);
+  overflow: hidden;
+  transition: border-color .2s ease, box-shadow .25s ease;
+}
+.ex.open { box-shadow: var(--shadow-lg); border-color: var(--line); }
+.ex.logged { border-color: color-mix(in srgb, var(--good) 45%, var(--line)); }
+
+.ex-hd {
+  width: 100%; display: flex; gap: 12px; align-items: flex-start;
+  padding: 14px 15px; background: none; border: 0; text-align: left;
+  font: inherit; color: inherit; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ex-hd:active { background: var(--surface-2); }
+
+.pip {
+  flex: 0 0 auto; width: 20px; height: 20px; margin-top: 2px;
+  border-radius: 50%; border: 1.5px solid var(--line);
+  display: grid; place-items: center;
+  font-size: 11px; font-weight: 800; color: transparent;
+  transition: background .25s ease, border-color .25s ease, transform .3s cubic-bezier(.2,1.5,.5,1);
+}
+.ex.logged .pip { background: var(--good); border-color: var(--good); color: #fff; transform: scale(1.06); }
+
+.ex-name { font-weight: 600; font-size: 15.5px; letter-spacing: -.005em; }
+.ex-meta { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; }
+.ex-meta .sep { opacity: .45; margin: 0 5px; }
+.ex-hint { font-size: 12.5px; font-weight: 500; color: var(--accent); margin-top: 4px; }
+.ex.logged .ex-hint { color: var(--good); }
+.opt {
+  display: inline-block; margin-left: 7px; padding: 1px 6px; border-radius: 5px;
+  background: var(--surface-2); color: var(--ink-3);
+  font-size: 9.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+  vertical-align: 2px;
+}
+.caret { flex: 0 0 auto; color: var(--ink-3); font-size: 13px; margin-top: 4px; transition: transform .25s ease; }
+.ex.open .caret { transform: rotate(90deg); }
+
+/* -- Logger ----------------------------------------------- */
+.log { padding: 0 15px 15px; border-top: 1px solid var(--line-soft); }
+.log-cue {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  padding: 12px 0 13px; font-size: 13px; color: var(--ink-2);
+}
+.log-cue span b { color: var(--ink); font-weight: 600; }
+.coach { font-size: 13px; line-height: 1.5; color: var(--ink-2); padding-bottom: 12px; }
+
+.prev { font-size: 12.5px; color: var(--ink-2); padding-bottom: 11px; }
+.prev .d { color: var(--ink-3); }
+
+.sugg {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: var(--accent-sf); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  color: var(--accent); border-radius: var(--r); padding: 10px 12px;
+  font: inherit; cursor: pointer; text-align: left; margin-bottom: 12px;
+  -webkit-tap-highlight-color: transparent;
+}
+.sugg:active { transform: scale(.985); }
+.sugg .lead { font-weight: 600; font-size: 13.5px; }
+.sugg .why { font-size: 12px; opacity: .85; margin-top: 1px; }
+.sugg .nextwk { margin-top: 4px; padding-top: 4px; border-top: 1px solid color-mix(in srgb, var(--accent) 22%, transparent); opacity: .8; }
+.nextup { font: 600 12px "IBM Plex Mono", monospace; color: var(--accent); margin-top: 3px; }
+.sugg .go { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; opacity: .8; }
+
+table.sets { width: 100%; border-collapse: collapse; }
+table.sets th {
+  font: 600 10.5px/1 "IBM Plex Sans", sans-serif; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-3); text-align: left;
+  padding: 0 0 7px;
+}
+table.sets th.n { width: 26px; }
+table.sets th.c { width: 42px; }
+table.sets td { padding: 0 0 7px; }
+table.sets td.n { color: var(--ink-3); font-size: 13px; font-weight: 600; }
+td.w { padding-right: 7px !important; }
+
+.fld {
+  width: 100%; padding: 9px 6px; text-align: center;
+  background: var(--surface-2); color: var(--ink);
+  border: 1px solid transparent; border-radius: 8px;
+  font: 600 16px/1 "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums;
+}
+.fld::placeholder { color: var(--ink-3); font-weight: 500; }
+.fld:focus { outline: none; border-color: var(--accent-2); background: var(--surface); }
+tr.set-done .fld { color: var(--ink-2); background: transparent; }
+
+.tick {
+  width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center;
+  background: var(--surface-2); border: 1px solid var(--line);
+  color: var(--ink-3); font-size: 15px; font-weight: 800;
+  cursor: pointer; padding: 0;
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .3s cubic-bezier(.2,1.5,.5,1);
+  -webkit-tap-highlight-color: transparent;
+}
+.tick:active { transform: scale(.9); }
+tr.set-done .tick { background: var(--good); border-color: var(--good); color: #fff; transform: scale(1.04); }
+
+.plates {
+  font: 500 11.5px/1 "IBM Plex Mono", monospace;
+  color: var(--ink-3); padding: 1px 0 9px 26px; letter-spacing: -.01em;
+}
+
+.addset {
+  width: 100%; padding: 9px; margin-top: 3px;
+  background: none; border: 1px dashed var(--line); border-radius: var(--r);
+  color: var(--accent); font: 600 13px "IBM Plex Sans", sans-serif; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.addset:active { background: var(--surface-2); }
+
+/* -- Rest timer ------------------------------------------- */
+#timer {
+  position: fixed; left: 50%; transform: translate(-50%, 130%);
+  bottom: calc(68px + env(safe-area-inset-bottom) + 10px);
+  width: min(508px, calc(100vw - 32px)); z-index: 40;
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid var(--line); border-radius: var(--r2);
+  box-shadow: var(--shadow-lg);
+  padding: 13px 15px 14px;
+  transition: transform .42s cubic-bezier(.2,.9,.3,1.08), opacity .3s ease;
+  opacity: 0; pointer-events: none;
+}
+#timer.up { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+#timer .rail { margin-bottom: 11px; }
+#timer .rail > i { transition: none; background: var(--accent-2); }
+#timer.done .rail > i { background: var(--good); }
+.t-row { display: flex; align-items: center; gap: 9px; }
+.t-lab { flex: 1; }
+.t-lab .eyebrow { display: block; }
+#t-clock {
+  font: 700 29px/1.05 "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums;
+  letter-spacing: -.02em; margin-top: 1px;
+}
+#timer.done #t-clock { color: var(--good); }
+.t-btn {
+  padding: 9px 13px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink);
+  font: 600 13.5px "IBM Plex Sans", sans-serif; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.t-btn:active { transform: scale(.95); }
+.t-btn.pri { background: var(--accent-sf); border-color: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--accent); }
+#timer.done .t-btn.pri { background: var(--good-sf); border-color: color-mix(in srgb, var(--good) 40%, transparent); color: var(--good); }
+
+/* -- Tab bar ---------------------------------------------- */
+#tabs {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  display: flex; justify-content: center; gap: 2px;
+  padding: 7px 8px calc(7px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid var(--line);
+}
+#tabs button {
+  flex: 1; max-width: 128px; padding: 7px 4px 5px;
+  background: none; border: 0; border-radius: 10px; cursor: pointer;
+  color: var(--ink-3); display: grid; gap: 3px; justify-items: center;
+  font: 600 10.5px/1 "IBM Plex Sans", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+#tabs button svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+#tabs button[aria-selected="true"] { color: var(--accent); }
+
+/* -- Volume chart ----------------------------------------- */
+.vol { display: grid; gap: 7px; }
+.vrow { display: grid; grid-template-columns: 64px 1fr 26px; align-items: center; gap: 9px; }
+.vlab { font-size: 12px; font-weight: 500; color: var(--ink-2); }
+.vtrack { position: relative; height: 9px; border-radius: 5px; background: var(--surface-2); overflow: hidden; }
+.vband { position: absolute; top: 0; bottom: 0; background: var(--line); }
+.vfill { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 5px; background: var(--accent-2); }
+.vfill.ok { background: var(--good); }
+.vnum { font: 600 12.5px "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; text-align: right; color: var(--ink); }
+
+.note b.ramp { display: inline; text-transform: none; letter-spacing: 0; font-size: 13.5px; margin: 0; }
+.note b.ramp.now { color: var(--accent); }
+.note b.ramp.now::after { content: " \2190 you are here"; font-weight: 500; font-size: 11.5px; letter-spacing: .02em; }
+.panel.ramping { border-color: color-mix(in srgb, var(--accent) 42%, var(--line)); }
+.panel.ramping .note { border-left-color: var(--accent); }
+.panel.ramping .note b { color: var(--accent); }
+.wkchip {
+  display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 5px;
+  background: var(--accent-sf); color: var(--accent);
+  font-size: 10px; font-weight: 700; letter-spacing: .07em; vertical-align: 1px;
+}
+.shaperow { display: flex; align-items: center; gap: 12px; padding: 9px 0; }
+.shaperow + .shaperow { border-top: 1px solid var(--line-soft); }
+.slab { font-size: 14px; font-weight: 600; }
+.ssub { font-size: 12px; color: var(--ink-3); margin-top: 1px; }
+.scount { margin-left: auto; text-align: right; white-space: nowrap; }
+.scount b { font: 700 18px "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; }
+.scount b.on { color: var(--good); }
+.scount b.off { color: var(--accent); }
+.scount span { display: block; font-size: 10.5px; color: var(--ink-3); margin-top: 1px; }
+
+/* -- Day card --------------------------------------------- */
+.day {
+  display: block; width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r2); padding: 14px 15px;
+  -webkit-tap-highlight-color: transparent;
+}
+.day:active { background: var(--surface-2); }
+.day.today { border-color: var(--accent-2); box-shadow: 0 0 0 1px var(--accent-2) inset; }
+.day-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.day h3 { font-size: 18px; font-weight: 700; letter-spacing: -.02em; margin: 5px 0 2px; }
+.day .focus { font-size: 13px; color: var(--ink-2); }
+.day .cd { font-size: 12.5px; color: var(--accent); font-weight: 500; margin-top: 5px; }
+.badge {
+  padding: 2px 7px; border-radius: 6px; background: var(--surface-2); color: var(--ink-3);
+  font: 700 9.5px "IBM Plex Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase;
+}
+.badge.now { background: var(--accent-sf); color: var(--accent); }
+.day .cnt { font: 500 12px "IBM Plex Mono", monospace; color: var(--ink-3); }
+
+/* -- Fuel ------------------------------------------------- */
+.seg { display: flex; gap: 3px; padding: 3px; background: var(--surface-2); border-radius: 11px; margin-bottom: 14px; }
+.seg button {
+  flex: 1; padding: 8px; border: 0; border-radius: 8px; background: none; cursor: pointer;
+  color: var(--ink-2); font: 600 13px "IBM Plex Sans", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+.seg button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+
+.kcal { display: flex; align-items: baseline; gap: 6px; margin: 3px 0 2px; }
+.kcal .v { font: 800 40px/1 Archivo, sans-serif; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+.kcal .u { font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.macrobar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin: 13px 0 12px; }
+.macros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.macro .dot { width: 8px; height: 8px; border-radius: 50%; margin-bottom: 5px; }
+.macro .g { font: 700 19px/1 "IBM Plex Mono", monospace; letter-spacing: -.03em; }
+.macro .n { font-size: 11.5px; font-weight: 500; color: var(--ink-2); margin-top: 3px; }
+.mp { background: var(--hot); } .mc { background: var(--gold); } .mf { background: var(--accent-2); }
+
+.mathrow { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; font-size: 13.5px; }
+.mathrow + .mathrow { border-top: 1px solid var(--line-soft); }
+.mathrow span { color: var(--ink-2); }
+.mathrow b { font: 600 14px "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; }
+.mathrow.sum b { color: var(--accent); }
+
+table.food { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+table.food td { padding: 9px 0; border-top: 1px solid var(--line-soft); }
+table.food tr:first-child td { border-top: 0; }
+table.food td.p { text-align: right; font: 700 14px "IBM Plex Mono", monospace; color: var(--hot); white-space: nowrap; }
+table.food .sv { display: block; font-size: 11.5px; color: var(--ink-3); margin-top: 1px; }
+
+/* -- Progress --------------------------------------------- */
+.prow {
+  width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; font: inherit; color: inherit;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r2); padding: 13px 15px; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.prow:active { background: var(--surface-2); }
+.prow .nm { font-weight: 600; font-size: 14.5px; }
+.prow .sub { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.prow .top { font: 600 14px "IBM Plex Mono", monospace; margin-top: 3px; }
+.spark { flex: 0 0 auto; }
+.trend { font: 700 11px "IBM Plex Mono", monospace; padding: 3px 7px; border-radius: 6px; white-space: nowrap; }
+.tup { background: var(--good-sf); color: var(--good); }
+.tdn { background: color-mix(in srgb, var(--hot) 15%, transparent); color: var(--hot); }
+.tfl { background: var(--surface-2); color: var(--ink-3); }
+.tnw { background: var(--accent-sf); color: var(--accent); }
+
+.hist { font-size: 13px; }
+.hist .h { display: flex; justify-content: space-between; padding: 8px 0; border-top: 1px solid var(--line-soft); }
+.hist .h:first-child { border-top: 0; }
+.hist .hd { color: var(--ink-3); font-size: 12px; }
+.hist .hs { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; font-size: 12.5px; text-align: right; }
+
+.empty { text-align: center; padding: 30px 18px; color: var(--ink-2); font-size: 14px; line-height: 1.55; }
+.empty h3 { font-size: 17px; margin-bottom: 6px; color: var(--ink); }
+
+.sync { text-align: center; font-size: 11.5px; color: var(--ink-3); margin-top: 18px; }
+.sync b { font-weight: 600; color: var(--ink-2); }
+
+.ex.cardio-card { border-color: color-mix(in srgb, var(--accent) 42%, var(--line)); }
+.ex.cardio-card .ex-name { color: var(--accent); }
+.ex.cardio-card.logged { border-color: color-mix(in srgb, var(--good) 45%, var(--line)); }
+.ex.cardio-card.logged .ex-name { color: var(--good); }
+.cardio-how { font-size: 13px; line-height: 1.5; color: var(--ink-2); margin-top: 6px; white-space: pre-line; }
+.ta {
+  text-align: left !important;
+  font: 400 13px/1.45 "IBM Plex Sans", sans-serif !important;
+  resize: vertical; min-height: 58px;
+}
+.weekcardio { display: flex; justify-content: space-between; align-items: baseline; margin-top: 11px; padding-top: 11px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
+.weekcardio b { font: 600 14px "IBM Plex Mono", monospace; color: var(--ink); }
+
+/* -- Editor ------------------------------------------------ */
+.erow { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r); padding: 11px 12px; display: grid; gap: 9px; }
+.ef {
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 7px; padding: 7px 8px;
+  font: 600 16px "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums;
+  text-align: center; width: 100%; min-width: 0;
+}
+.ef.nm { font: 600 14.5px "IBM Plex Sans", sans-serif; text-align: left; }
+.ef:focus { outline: none; border-color: var(--accent-2); }
+.egrid { display: grid; grid-template-columns: 1fr 1.6fr 1fr; gap: 8px; }
+.egrid label { display: grid; gap: 4px; font: 600 9.5px "IBM Plex Sans", sans-serif; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); }
+.rr { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 4px; }
+.rr i { font-style: normal; color: var(--ink-3); font-size: 12px; }
+.erest { display: flex; align-items: center; gap: 7px; }
+.elab { font: 600 9.5px "IBM Plex Sans", sans-serif; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); }
+.erest b { font: 600 14px "IBM Plex Mono", monospace; min-width: 42px; text-align: center; }
+.step {
+  width: 30px; height: 30px; border-radius: 8px; flex: 0 0 auto;
+  background: var(--surface); border: 1px solid var(--line); color: var(--ink);
+  font: 600 15px "IBM Plex Sans", sans-serif; cursor: pointer; padding: 0; line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+.step:active { transform: scale(.9); }
+.rm {
+  margin-left: auto; background: none; border: 0; cursor: pointer; padding: 4px 2px;
+  color: var(--hot); font: 600 12px "IBM Plex Sans", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+.editbtn {
+  background: none; border: 1px solid var(--line); border-radius: 8px; padding: 5px 11px;
+  color: var(--ink-2); font: 600 12px "IBM Plex Sans", sans-serif; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.editbtn[aria-pressed="true"] { background: var(--accent-sf); border-color: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--accent); }
+.editbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 11px; }
+.resetbtn {
+  width: 100%; margin-top: 8px; padding: 9px; background: none;
+  border: 1px dashed color-mix(in srgb, var(--hot) 40%, var(--line)); border-radius: var(--r);
+  color: var(--hot); font: 600 12.5px "IBM Plex Sans", sans-serif; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.restnudge { display: inline-flex; align-items: center; gap: 5px; }
+.restnudge .step { width: 24px; height: 24px; font-size: 13px; border-radius: 6px; }
+.edited { font: 600 9.5px "IBM Plex Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+
+:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; border-radius: 6px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  #timer { transition: opacity .15s ease !important; transform: translate(-50%, 0); }
+}
+</style>
+
+<div id="app"></div>
+
+<div id="timer" role="status" aria-live="polite">
+  <div class="rail"><i id="t-fill"></i></div>
+  <div class="t-row">
+    <div class="t-lab">
+      <span class="eyebrow" id="t-lab">Resting</span>
+      <div id="t-clock" class="num">0:00</div>
+    </div>
+    <button class="t-btn" id="t-add">+30s</button>
+    <button class="t-btn pri" id="t-skip">Skip</button>
+  </div>
+</div>
+
+<nav id="tabs"></nav>
+
+<script>
+/* ===========================================================
+   THE PROGRAM
+   Six lifting days, three cardio sessions, one full rest day.
+   RIR = reps in reserve: how many you leave in the tank.
+   =========================================================== */
+const PLAN = [
+  { key:'sunday', idx:0, title:'Rest', focus:'Recovery + mobility', ex:[] },
+  {
+    key:'monday', idx:1, title:'Push', focus:'Chest / Shoulders / Triceps',
+    warmup:'5 min bike or rower, band pull-aparts, then 2 ramping sets on the first press.',
+    cardio:{ kind:'Easy swim', min:20, how:'Continuous freestyle, conversational the whole way. This is recovery, not a session \u2014 if you are breathing hard, slow down.' },
+    ex:[
+      { id:'incline_db_press', name:'Incline DB Press', m:'chest', tag:'upper', sets:4, rep:[8,10], rest:120, rir:2, cue:'Upper chest is what gives the shelf under the collarbone. 30\u00b0 bench. Feel the stretch at the bottom; don\u2019t bounce off your shoulders.' },
+      { id:'flat_bench', name:'Flat Barbell Bench', m:'chest', sets:3, rep:[6,8], rest:150, rir:2, bar:45 },
+      { id:'seated_ohp', name:'Seated DB Overhead Press', m:'delts', sets:3, rep:[8,10], rest:90, rir:2 },
+      { id:'cable_lateral', name:'Cable Lateral Raise', m:'delts', tag:'side', sets:4, rep:[12,15], rest:60, rir:0, cue:'The single biggest lever on how wide your shoulders look. Cable beats dumbbells \u2014 it keeps tension at the bottom, where the delt is stretched. Lead with the elbow, never the hand.' },
+      { id:'weighted_dip', name:'Weighted Dip', m:'chest', sets:3, rep:[8,10], rest:90, rir:1, cue:'Lean forward to bias the chest.' },
+      { id:'hanging_oblique', name:'Hanging Oblique Raise', m:'obl', sets:3, rep:[10,12], rest:60, rir:1, cue:'Per side. Knees up and across toward one armpit. Loads the oblique in a lengthened position, which is where it grows best \u2014 the highest-value oblique builder there is. Add an ankle weight once you clear 12 clean reps a side.' },
+      { id:'rope_pushdown', name:'Rope Pushdown', m:'triceps', sets:3, rep:[12,15], rest:60, rir:0 },
+      { id:'oh_tri_ext', name:'Overhead Triceps Extension', m:'triceps', sets:3, rep:[10,12], rest:60, rir:1, cue:'The long head only grows from the overhead stretch. Don\u2019t trade this for more pushdowns.' }
+    ]
+  },
+  {
+    key:'tuesday', idx:2, title:'Pull', focus:'Back / Rear Delts / Biceps',
+    warmup:'5 min rower, scapular pull-ups, then one light set of the first row.',
+    ex:[
+      { id:'weighted_pullup', name:'Weighted Pull-Up', m:'back', tag:'lat', sets:4, rep:[6,8], rest:150, rir:2, cue:'The width builder. Stay at bodyweight until you clear 10 clean reps, then add the belt. Drive elbows down and back, not hands to the bar.' },
+      { id:'chest_supp_row', name:'Chest-Supported Row', m:'back', sets:4, rep:[8,10], rest:90, rir:1, cue:'The chest pad takes your lower back out of it, so you can push these genuinely hard.' },
+      { id:'lat_pulldown', name:'Wide-Grip Lat Pulldown', m:'back', tag:'lat', sets:3, rep:[10,12], rest:75, rir:1, cue:'Grip outside shoulder width. The wider path biases the upper-outer lat and teres major \u2014 the muscles that flare the V.' },
+      { id:'cable_row', name:'Seated Cable Row', m:'back', sets:3, rep:[10,12], rest:75, rir:1 },
+      { id:'face_pull', name:'Face Pull', m:'rear', sets:3, rep:[15,20], rest:45, rir:0, cue:'Rear delts and shoulder health \u2014 cheap insurance against six days of pressing.' },
+      { id:'cable_lateral_tue', name:'Cable Lateral Raise', m:'delts', tag:'side', sets:4, rep:[12,15], rest:45, rir:0, cue:'Third hit of the week. Your shoulders are fresh on pull day \u2014 no pressing has pre-fatigued them, so these are often your best sets.' },
+      { id:'incline_curl', name:'Incline DB Curl', m:'biceps', sets:3, rep:[10,12], rest:60, rir:0, cue:'Arms behind your torso is the most stretched position you can load a biceps in. No swing.' },
+      { id:'hammer_curl', name:'Hammer Curl', m:'biceps', sets:3, rep:[10,12], rest:60, rir:0, cue:'Brachialis \u2014 the muscle underneath that pushes the biceps up and thickens the arm.' }
+    ]
+  },
+  {
+    key:'wednesday', idx:3, title:'Legs \u2014 Quads', focus:'Quads / Glutes / Calves',
+    warmup:'5 min bike, leg swings, bodyweight squats, then 3 ramping squat sets.',
+    cardio:{ kind:'Hard swim or run', min:30, how:'Warm-up \u2014 200 m easy, then 4 \u00d7 50 m build (25 easy / 25 fast), 20 s rest.\nMain \u2014 10 \u00d7 75 m hard, RPE 8, 20 s rest. Pull buoy on the last five so your legs get a break the day you squatted.\nDown \u2014 100 m easy. About 1,250 m.\nRunning instead: 8 \u00d7 2 min at 5k pace, 90 s jog \u2014 the worse of the two options today, since it lands on legs you just trained.' },
+    ex:[
+      { id:'med_ball_throw', name:'Med Ball Rotational Throw', m:'rot', sets:3, rep:[5,5], rest:60, rir:3, cue:'Power, not fatigue \u2014 throw as hard as you can and stop when the ball slows down, never when you are tired. Per side, into a wall. Drive from the hip and let the torso follow. No ball? Do these as a cable rotational throw and let go of the tension at the end.' },
+      { id:'back_squat', name:'Back Squat', m:'quads', sets:4, rep:[6,8], rest:150, rir:2, bar:45, cue:'Leave 2 in the tank. A grinder here costs you the rest of the session.' },
+      { id:'hack_squat', name:'Hack Squat', m:'quads', sets:3, rep:[10,12], rest:120, rir:1, cue:'Go deep. The bottom third is where quads actually grow.' },
+      { id:'bulgarian', name:'Bulgarian Split Squat', m:'quads', sets:3, rep:[8,10], rest:75, rir:1, cue:'Per leg.' },
+      { id:'leg_ext', name:'Leg Extension', m:'quads', sets:3, rep:[12,15], rest:60, rir:0, cue:'The only move that trains rectus femoris with the hip extended. Worth its slot.' },
+      { id:'seated_calf', name:'Seated Calf Raise', m:'calves', sets:4, rep:[10,12], rest:45, rir:0, cue:'Bent knee targets the soleus. Pause 2 s at the bottom.' },
+      { id:'standing_calf_w', name:'Standing Calf Raise', m:'calves', sets:3, rep:[15,20], rest:45, rir:0, opt:true }
+    ]
+  },
+  {
+    key:'thursday', idx:4, title:'Upper', focus:'Second chest + back exposure',
+    warmup:'5 min rower, band pull-aparts, 2 ramping sets on incline bench.',
+    ex:[
+      { id:'incline_bb', name:'Incline Barbell Bench', m:'chest', tag:'upper', sets:4, rep:[6,8], rest:150, rir:2, bar:45, cue:'Second upper-chest session. Heavier and lower-rep than Monday so the two do different jobs.' },
+      { id:'meadows_row', name:'Meadows Row', m:'back', sets:3, rep:[8,10], rest:90, rir:1, cue:'Per side.' },
+      { id:'machine_press', name:'Machine Chest Press', m:'chest', sets:3, rep:[10,12], rest:75, rir:0, cue:'It\u2019s a machine \u2014 take the last set to true failure. Nothing to drop on yourself.' },
+      { id:'straight_arm', name:'Straight-Arm Pulldown', m:'back', tag:'lat', sets:3, rep:[12,15], rest:60, rir:0, cue:'Pure lat, no biceps. Keeps the width work going once your arms are the thing giving out.' },
+      { id:'db_lateral', name:'DB Lateral Raise', m:'delts', tag:'side', sets:4, rep:[12,15], rest:45, rir:0, cue:'Second of three weekly hits. Side delts are small, recover fast, and grow on frequency \u2014 this is why they appear three times a week and your chest does not.' },
+      { id:'rear_fly', name:'Rear Delt Fly', m:'rear', sets:3, rep:[15,20], rest:45, rir:0, cue:'Rear delts do not add width from the front, but they stop your shoulders rounding forward \u2014 which is what actually makes a wide frame read as wide.' },
+      { id:'bb_curl', name:'Barbell Curl', m:'biceps', sets:4, rep:[8,10], rest:75, rir:0, bar:45, cue:'Moved here from Saturday when that became a core day. Arms still need two sessions a week.' },
+      { id:'skullcrusher', name:'EZ-Bar Skull Crusher', m:'triceps', sets:4, rep:[8,10], rest:75, rir:0, bar:25, cue:'Lower behind your head, not to your forehead \u2014 keeps the long head under stretch.' }
+    ]
+  },
+  {
+    key:'friday', idx:5, title:'Legs \u2014 Posterior', focus:'Hamstrings / Glutes',
+    warmup:'5 min bike, hip hinges with a dowel, 2 ramping RDL sets.',
+    cardio:{ kind:'Easy swim', min:20, how:'Continuous and easy. Water is the right call after a hamstring day \u2014 no impact, and the kick flushes the legs out rather than beating them up.' },
+    ex:[
+      { id:'rdl', name:'Romanian Deadlift', m:'hams', sets:4, rep:[8,10], rest:150, rir:2, bar:45, cue:'Hips back, soft knees. Stop when the stretch runs out, not when the plates touch.' },
+      { id:'hip_thrust', name:'Barbell Hip Thrust', m:'glutes', sets:3, rep:[8,10], rest:120, rir:1, bar:45 },
+      { id:'seated_curl', name:'Seated Leg Curl', m:'hams', sets:4, rep:[10,12], rest:75, rir:0, cue:'Seated beats lying \u2014 the flexed hip puts the hamstring under a harder stretch.' },
+      { id:'back_ext', name:'45-Degree Back Extension', m:'lower', sets:4, rep:[10,12], rest:90, rir:1, cue:'Hold a plate at your chest. Same day as your RDLs on purpose \u2014 train the erectors together, then give them a full week. Load it for reps, not for a max.' },
+      { id:'walking_lunge', name:'DB Walking Lunge', m:'glutes', sets:3, rep:[10,12], rest:75, rir:1, cue:'Per leg.' },
+      { id:'nordic', name:'Nordic Curl (assisted)', m:'hams', sets:3, rep:[5,8], rest:75, rir:1, opt:true, cue:'4-second lower. The best hamstring injury insurance there is.' },
+      { id:'reverse_hyper', name:'Reverse Hyperextension', m:'lower', sets:3, rep:[12,15], rest:75, rir:1, opt:true, cue:'Decompresses the spine while it trains it. No machine? Do these off the end of a bench.' },
+      { id:'standing_calf_f', name:'Standing Calf Raise', m:'calves', sets:4, rep:[10,12], rest:45, rir:0 }
+    ]
+  },
+  {
+    key:'saturday', idx:6, title:'Abs + Swim', focus:'Every direction the trunk works, then the hard swim',
+    warmup:'5 min easy cardio, dead bugs and bird dogs, then one light set of cable crunches.',
+    cardio:{ kind:'Hard swim or run', min:35, how:'The hardest one of the week \u2014 your legs are fresh and tomorrow is a full rest day. Empty the tank.\nWarm-up \u2014 300 m easy, then 6 \u00d7 50 m build, 15 s rest.\nMain \u2014 8 \u00d7 100 m hard, RPE 8\u20139, 20 s rest. Then 4 \u00d7 50 m all out, 30 s rest.\nDown \u2014 150 m easy. About 1,850 m.\nRunning instead: 5 \u00d7 800 m at 5k pace, 2 min jog between.' },
+    ex:[
+      { id:'cable_crunch', name:'Weighted Cable Crunch', m:'abs', sets:4, rep:[8,12], rest:90, rir:1, cue:'Spinal flexion, heavy. Treat it like a compound \u2014 add weight weekly the same way you would on a row.' },
+      { id:'hanging_raise', name:'Weighted Hanging Leg Raise', m:'abs', sets:4, rep:[8,12], rest:90, rir:1, cue:'Lower abs. Ankle weight or a DB between the feet. Curl the pelvis up; don\u2019t just swing the legs.' },
+      { id:'ab_wheel', name:'Ab Wheel Rollout', m:'abs', sets:3, rep:[8,12], rest:75, rir:1, cue:'Anti-extension \u2014 resisting the arch is the job your abs actually do all day. Ribs down, no sag through the hips.' },
+      { id:'db_side_bend', name:'DB Side Bend', m:'obl', sets:3, rep:[15,20], rest:60, rir:1, cue:'Lateral flexion. One heavy DB, opposite hand behind your head, full stretch at the bottom. The 15\u201320 range is for your spine, not your waistline \u2014 growth is the same across rep ranges when effort matches.' },
+      { id:'cable_chop', name:'Cable Chop', m:'rot', sets:3, rep:[10,12], rest:75, rir:1, cue:'Rotation, per side, high to low. Alternate with low-to-high week to week. Drive from the hips with the abs braced \u2014 the spine itself barely twists.' },
+      { id:'suitcase_carry', name:'Suitcase Carry', m:'abs', sets:3, rep:[30,40], rest:60, rir:1, cue:'Anti-lateral-flexion. One heavy DB, steps per side, log steps as reps. Stay perfectly upright \u2014 the work is in not leaning.' },
+      { id:'pallof', name:'Pallof Press', m:'rot', sets:3, rep:[10,12], rest:45, rir:1, cue:'Anti-rotation, per side. Refusing to rotate is what holds your line in the water. Press slow, let nothing move but your arms.' }
+    ]
+  }
+];
+
+const BASE_EX = {};
+PLAN.forEach(d => d.ex.forEach(e => { BASE_EX[e.id] = e; e.day = d.key; }));
+
+/* ---------------------------------------------------------
+   YOUR EDITS
+   The program above is the starting point, not the law.
+   Every field you change is stored as an override on top of
+   it, so the defaults stay intact and "reset" always works.
+   --------------------------------------------------------- */
+let edits = { ov: {}, add: {}, rm: {}, fuel: {}, cardio: {}, at: 0 };
+
+const withOv = e => { const o = edits.ov[e.id]; return o ? Object.assign({}, e, o) : e; };
+
+/** The exercises actually in a day: defaults minus removals, plus your own. */
+function dayEx(day) {
+  const base = day.ex.filter(e => !edits.rm[e.id]).map(withOv);
+  const mine = (edits.add[day.key] || []).filter(e => !edits.rm[e.id]).map(withOv);
+  return base.concat(mine);
+}
+
+/* Exercises the program no longer prescribes. Kept resolvable so that
+   anything you already logged against them still shows in Progress. */
+const ARCHIVE = {
+  decline_situp: { id:'decline_situp', name:'Decline Weighted Sit-Up', m:'abs', sets:3, rep:[8,10], rest:75, rir:1 }
+};
+
+function customById(id) {
+  for (const k in edits.add) {
+    const hit = (edits.add[k] || []).find(x => x.id === id);
+    if (hit) return hit;
+  }
+  return null;
+}
+
+/** Resolve any exercise id, including ones you removed but already logged. */
+function lookup(id) {
+  const base = BASE_EX[id] || customById(id) || ARCHIVE[id];
+  return base ? withOv(base) : null;
+}
+
+function setOv(id, field, value) {
+  const base = BASE_EX[id] || customById(id);
+  if (!base) return;
+  const custom = !BASE_EX[id];
+  edits.ov[id] = edits.ov[id] || {};
+  // Matching the default again is not an edit - drop it so reset stays meaningful.
+  if (!custom && JSON.stringify(base[field]) === JSON.stringify(value)) delete edits.ov[id][field];
+  else edits.ov[id][field] = value;
+  if (!Object.keys(edits.ov[id]).length) delete edits.ov[id];
+  saveEdits();
+}
+
+const isEdited = id => !!edits.ov[id] || !BASE_EX[id];
+
+/** A day's cardio: your override if you set one (null means you removed it),
+ *  otherwise what the program prescribes. */
+function dayCardio(day) {
+  const ov = edits.cardio || {};
+  if (Object.prototype.hasOwnProperty.call(ov, day.key)) return ov[day.key];
+  return day.cardio || null;
+}
+function setCardio(key, field, value) {
+  const day = PLAN.find(d => d.key === key);
+  const cur = dayCardio(day) || { kind: 'Swim', min: 20, how: '' };
+  edits.cardio = edits.cardio || {};
+  edits.cardio[key] = Object.assign({}, cur, { [field]: value });
+  saveEdits();
+}
+
+/** Cardio is logged per calendar day, not per exercise. */
+const cardioDone = () => !!(logs.cardio || {})[TODAY];
+function toggleCardio(c) {
+  logs.cardio = logs.cardio || {};
+  if (logs.cardio[TODAY]) delete logs.cardio[TODAY];
+  else logs.cardio[TODAY] = { kind: c.kind, min: +c.min || 0, at: Date.now() };
+  persist('cardio');
+}
+function cardioThisWeek() {
+  const now = new Date();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  const from = iso(monday);
+  const done = logs.cardio || {};
+  return Object.keys(done).filter(d => d >= from)
+    .reduce((a, d) => ({ n: a.n + 1, min: a.min + (done[d].min || 0) }), { n: 0, min: 0 });
+}
+const weeklyCardioPlan = () => PLAN.reduce((a, d) => {
+  const c = dayCardio(d);
+  return c ? { n: a.n + 1, min: a.min + (+c.min || 0) } : a;
+}, { n: 0, min: 0 });
+
+const MUSCLES = [
+  ['chest','Chest'], ['back','Back'], ['delts','Delts'], ['biceps','Biceps'], ['triceps','Triceps'],
+  ['quads','Quads'], ['hams','Hams'], ['glutes','Glutes'], ['calves','Calves'],
+  ['rear','Rear delts'], ['abs','Abs'], ['obl','Obliques'], ['rot','Rotation'], ['lower','Low back']
+];
+const VOL_MIN = 10, VOL_MAX = 20, VOL_SCALE = 24;
+
+/* Nutrition. Maintenance \u2248 2,900 kcal: Mifflin-St Jeor at 6'2"/170 lb \u00d7 1.6
+   for six lifts and four cardio sessions a week. */
+const FUEL = {
+  maintenance: 2900,
+  bridge: { key:'bridge', label:'Bridge \u2014 before day one', detail:'From today until you start lifting. You have been under-eating on low protein, so your maintenance has drifted down with you. Walk it up rather than jumping, and get the protein right immediately \u2014 that is the single biggest lever you have this week.', p:190, f:75, c:315 },
+  comeback: { key:'comeback', label:'Phase 1 \u2014 Comeback', detail:'Weeks 1\u201310. Maintenance, not a surplus. Regaining muscle you already built costs almost no extra energy, so this is the window where you add muscle and lose fat at the same time.', p:190, f:80, c:355 },
+  simple: { key:'simple', label:'Phase 2 \u2014 Lean bulk', detail:'Week 11 onward, once the scale and your lifts both stall at maintenance. That stall is the signal the free gains are done.', p:185, f:85, c:400 },
+  split: [
+    { key:'training', label:'Training days', detail:'Monday through Saturday', p:185, f:85, c:415 },
+    { key:'rest', label:'Rest day', detail:'Sunday', p:185, f:85, c:310 }
+  ],
+  timing: [
+    ['Protein every 3\u20134 hours', 'Four or five feedings of 40\u201350 g beats two big ones. Muscle protein synthesis responds to each dose, not just the daily total.'],
+    ['Carbs before you train', '60\u201380 g of carbs and 30\u201340 g of protein in the two hours before lifting. This is the biggest single lever on how the last third of a 90-minute session feels.'],
+    ['Refuel after swimming', 'Cold water blunts appetite and swimming burns more than it feels like. An easy 20 minutes is 200\u2013300 kcal; a hard 35-minute set is closer to 400\u2013500. Eat it back on Wednesday and Saturday or the surplus quietly disappears.'],
+    ['Creatine monohydrate, 5 g daily', 'The only supplement with hypertrophy evidence strong enough to bother with. Any time of day, no loading phase.'],
+    ['Fiber and water', '35\u201340 g of fiber. Roughly a gallon of water a day, more on swim days \u2014 chlorine and heated pools dehydrate you more than you notice.']
+  ],
+  adjust: [
+    ['Weigh in three times a week', 'Monday, Wednesday, Friday. First thing, after the bathroom, before food. Average the three \u2014 the weekly average is the only number that means anything.'],
+    ['Gaining under 0.2 lb/week', 'After two flat weeks, add 150 kcal of carbs. Not fat, not protein \u2014 carbs fuel the extra work.'],
+    ['Gaining over 0.75 lb/week', 'Pull 200 kcal back. Above that rate the extra is mostly fat, and you asked for lean.'],
+    ['Expect the first two weeks to lie', 'Extra carbs pull water and glycogen into muscle. A 3\u20134 lb jump in week one is neither fat nor muscle. Judge from week three.']
+  ],
+};
+
+/* ===========================================================
+   STORAGE
+   Durable server-side store when the viewer grants it, with a
+   localStorage mirror so the page paints instantly and a lost
+   grant never loses a training history.
+   =========================================================== */
+const LS = 'ironledger.v1';
+const LSE = 'ironledger.edits.v1';
+let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
+let syncState = 'local';
+
+function loadLocal() {
+  try { logs = JSON.parse(localStorage.getItem(LS) || '{}') || {}; }
+  catch (e) { logs = {}; }
+}
+function saveLocal() {
+  try { localStorage.setItem(LS, JSON.stringify(logs)); } catch (e) {}
+}
+
+function loadEdits() {
+  try {
+    const e = JSON.parse(localStorage.getItem(LSE) || 'null');
+    if (e) edits = Object.assign({ ov:{}, add:{}, rm:{}, fuel:{}, cardio:{}, at:0 }, e);
+  } catch (e) {}
+}
+function saveEdits() {
+  edits.at = Date.now();
+  try { localStorage.setItem(LSE, JSON.stringify(edits)); } catch (e) {}
+
+}
+
+function persist(exId) {
+  try { saveLocal(); }
+  catch (e) { syncState = 'full'; paintSync(); }
+}
+
+/** Says plainly whether this phone can open the app with no signal. */
+function offlineLine() {
+  if (!('serviceWorker' in navigator)) return 'This browser cannot cache the app for offline use.';
+  return navigator.serviceWorker.controller
+    ? 'Works offline \u2014 the app is cached on this phone.'
+    : 'Not cached for offline use yet. Close and reopen the app once while you have signal.';
+}
+
+/* The whole log is one JSON file you can hand to another phone. */
+function exportBackup() {
+  const blob = new Blob([JSON.stringify({ v: 1, exported: TODAY, logs, edits }, null, 2)],
+                        { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'iron-ledger-' + TODAY + '.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+function importBackup(file) {
+  const r = new FileReader();
+  r.onload = () => {
+    let d;
+    try { d = JSON.parse(r.result); }
+    catch (e) { alert('That file is not a valid backup.'); return; }
+    if (!d || typeof d !== 'object' || (!d.logs && !d.edits)) {
+      alert('That file is not an Iron Ledger backup.');
+      return;
+    }
+    if (d.logs) { logs = d.logs; saveLocal(); }
+    if (d.edits) {
+      edits = Object.assign({ ov:{}, add:{}, rm:{}, fuel:{}, cardio:{}, at:0 }, d.edits);
+      try { localStorage.setItem(LSE, JSON.stringify(edits)); } catch (e) {}
+    }
+    draft = {};
+    render();
+    alert('Backup restored.');
+  };
+  r.readAsText(file);
+}
+
+/* ===========================================================
+   TRAINING MATH
+   =========================================================== */
+const DEFAULT_START = '2026-09-21';   // Monday
+
+/** Which week of the program today falls in, counting the start date as week 1. */
+function programWeek() {
+  const [y, m, d] = (edits.start || DEFAULT_START).split('-').map(Number);
+  const start = new Date(y, m - 1, d);
+  const now = new Date();
+  start.setHours(0, 0, 0, 0);
+  now.setHours(0, 0, 0, 0);
+  const days = Math.round((now - start) / 86400000);
+  if (days < 0) return { before: true, until: -days, n: 0 };
+  return { before: false, until: 0, n: Math.floor(days / 7) + 1 };
+}
+
+/* The ramp exists because tendons lag muscle by a few weeks after a
+   layoff. It expires on its own once week 4 comes around. */
+function rampNote(n) {
+  if (n <= 2) return ['Easing back in \u00b7 week ' + n + ' of 3',
+    'Two sets per exercise instead of three or four, and stop 3\u20134 reps short of the prescribed RIR. Skip anything marked optional, and leave the Nordic curl and heavy eccentrics alone. The weights will feel light \u2014 that is the point.'];
+  if (n === 3) return ['Easing back in \u00b7 week 3 of 3',
+    'Full sets this week, still a rep or two further from failure than prescribed. Next week you run the program as written.'];
+  return null;
+}
+
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const TODAY = iso(new Date());
+
+function e1rm(w, r) {            // Epley
+  if (!(w > 0) || !(r > 0)) return 0;
+  return r === 1 ? w : w * (1 + r / 30);
+}
+function topSet(sets) {
+  if (!sets || !sets.length) return null;
+  return sets.reduce((b, s) => e1rm(s.w, s.r) > e1rm(b.w, b.r) ? s : b);
+}
+function history(exId) {
+  const byDate = logs[exId] || {};
+  return Object.keys(byDate).sort().map(d => ({ date: d, sets: byDate[d].sets || [] }));
+}
+function lastBefore(exId, date) {
+  const h = history(exId).filter(s => s.date < date);
+  return h.length ? h[h.length - 1] : null;
+}
+
+/* ---------------------------------------------------------
+   PROGRESSION
+   Double progression: hold the load, climb the rep range,
+   then add weight and start the climb again. It is the model
+   that actually drives hypertrophy, and it is the one thing
+   a training app can do for you that a notebook cannot.
+   --------------------------------------------------------- */
+
+/** Barbells move in 5 lb jumps - the smallest pair of plates is 2.5 a side. */
+const roundLoad = (w, ex) => { const inc = ex.bar ? 5 : 2.5; return Math.round(w / inc) * inc; };
+const stepFor = (w, ex) => (w < 50 ? (ex.bar ? 5 : 2.5) : 5);
+
+function plan(exId) {
+  const ex = lookup(exId);
+  if (!ex) return null;
+  const h = history(exId).filter(s => s.date < TODAY);
+  const [lo, hi] = ex.rep;
+
+  if (!h.length) {
+    return {
+      state: 'start', ex, reps: hi,
+      headline: 'Find your working weight',
+      reason: `Warm up, then pick a load you could stop about ${ex.rir + 2} reps short of at ${hi} reps. Under-shoot it \u2014 every session after this one tells you exactly what to do.`
+    };
+  }
+
+  const last = h[h.length - 1];
+  const top = topSet(last.sets);
+  if (!top) return null;
+  const allTop = last.sets.every(s => s.r >= hi);
+  const step = stepFor(top.w, ex);
+
+  // Stalled: three sessions and the top set's estimated 1RM has not moved.
+  let stalled = false;
+  if (h.length >= 3 && !allTop) {
+    const e = h.slice(-3).map(x => { const t = topSet(x.sets); return t ? e1rm(t.w, t.r) : 0; });
+    stalled = e[2] <= e[0] + 0.5;
+  }
+
+  if (allTop) {
+    // Blowing through the top of the range means the jump was too small.
+    // Common when you are regaining rather than building - take a bigger bite.
+    const over = Math.min(...last.sets.map(x => x.r)) - hi;
+    const mult = over >= 4 ? 3 : over >= 2 ? 2 : 1;
+    const w = roundLoad(top.w + step * mult, ex);
+    return {
+      state: 'load', ex, weight: w, reps: lo, last,
+      headline: `${w} lb \u00d7 ${lo}`,
+      reason: mult > 1
+        ? `You cleared ${hi} on every set at ${top.w} lb with ${over} to spare, so that is a ${step * mult} lb jump, not ${step}. You are regaining, not grinding.`
+        : `You hit ${hi} on every set at ${top.w} lb, so the weight goes up.`,
+      next: `Then climb back to ${hi} reps at ${w} lb before adding more.`
+    };
+  }
+
+  if (stalled) {
+    const w = roundLoad(top.w * 0.9, ex);
+    return {
+      state: 'stall', ex, weight: w, reps: hi, last,
+      headline: `Drop to ${w} lb \u00d7 ${hi}`,
+      reason: `Three sessions stuck at ${top.w} lb. That is a stall, not bad luck.`,
+      next: `Rebuild from ${w} lb and you will pass ${top.w} in two or three weeks. If it stalls again, swap the exercise.`
+    };
+  }
+
+  const worst = Math.min(...last.sets.map(x => x.r));
+  const target = Math.min(hi, worst + 1);
+  const up = roundLoad(top.w + step, ex);
+  return {
+    state: 'hold', ex, weight: top.w, reps: target, last,
+    headline: `${top.w} lb \u00d7 ${target}`,
+    reason: `Same weight. Your worst set last time was ${worst} reps \u2014 get ${target} on all ${ex.sets}.`,
+    next: `Once every set reaches ${hi}, you move to ${up} lb.`
+  };
+}
+
+/** Short form for the exercise list. */
+function planHint(exId) {
+  const p = plan(exId);
+  if (!p) return '';
+  if (p.state === 'start') return 'First session \u2014 find your working weight';
+  return p.headline + (p.state === 'load' ? '  \u2191' : p.state === 'stall' ? '  deload' : '');
+}
+
+/** Per-side plate loading. A real plate rack: 45s down to 2.5s. */
+function plateMath(total, bar) {
+  let side = (total - bar) / 2;
+  if (side <= 0) return side === 0 ? 'empty bar' : null;
+  const out = [];
+  [45, 35, 25, 10, 5, 2.5].forEach(p => {
+    let n = Math.floor(side / p + 1e-9);
+    if (n > 0) { out.push(n > 1 ? `${p}\u00d7${n}` : `${p}`); side -= n * p; }
+  });
+  if (side > 0.01) return null;   // can't be made with standard plates
+  return out.join(' + ') + ' per side';
+}
+
+/* The V-taper is three levers and a ratio: side delts for width,
+   lats for the flare, upper chest for the shelf, and a waist that
+   stays tight underneath all of it. Tracked apart from the muscle
+   chart because these are the ones the look actually depends on. */
+const SHAPE = [
+  ['side',  'Side delts',  'shoulder width \u2014 the biggest lever', 12, 18],
+  ['lat',   'Lat width',   'vertical pulls, the flare',               8, 14],
+  ['upper', 'Upper chest', 'the shelf under the collarbone',          6, 12],
+  ['abs',   'Abs',         'the taper needs a tight waist',          12, 20]
+];
+
+function weeklyShape() {
+  const t = { side: 0, lat: 0, upper: 0, abs: 0 };
+  PLAN.forEach(d => dayEx(d).forEach(e => {
+    const n = +e.sets || 0;
+    if (e.tag && t[e.tag] !== undefined) t[e.tag] += n;
+    if (e.m === 'abs') t.abs += n;
+  }));
+  return t;
+}
+
+function weeklyVolume() {
+  const t = {};
+  PLAN.forEach(d => dayEx(d).forEach(e => { t[e.m] = (t[e.m] || 0) + (+e.sets || 0); }));
+  return t;
+}
+function estMinutes(day) {
+  const list = dayEx(day);
+  if (!list.length) return 0;
+  return Math.round(list.reduce((s, e) => s + (+e.sets || 0) * ((+e.rest || 0) + 45), 0) / 60) + 8;
+}
+const dayFor = d => PLAN.find(x => x.idx === d.getDay()) || PLAN[0];
+
+const fmtDate = s => {
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+};
+const mmss = t => `${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+
+/* ===========================================================
+   REST TIMER
+   Owns a wall-clock deadline, not a tick count, so it stays
+   honest when the screen sleeps between sets.
+   =========================================================== */
+const T = { el:document.getElementById('timer'), fill:document.getElementById('t-fill'),
+            clock:document.getElementById('t-clock'), lab:document.getElementById('t-lab'),
+            deadline:0, span:0, tick:null, fired:false };
+
+let audioCtx = null;
+function chime() {
+  if (navigator.vibrate) { try { navigator.vibrate([90, 70, 90]); } catch (e) {} }
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.22].forEach(delay => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.frequency.value = 880; o.type = 'sine';
+      const t0 = audioCtx.currentTime + delay;
+      g.gain.setValueAtTime(0, t0);
+      g.gain.linearRampToValueAtTime(0.22, t0 + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.18);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t0); o.stop(t0 + 0.2);
+    });
+  } catch (e) {}
+}
+
+function startRest(seconds) {
+  T.span = seconds;
+  T.deadline = Date.now() + seconds * 1000;
+  T.fired = false;
+  T.el.classList.remove('done');
+  T.el.classList.add('up');
+  T.lab.textContent = 'Resting';
+  if (!T.tick) T.tick = setInterval(paintTimer, 200);
+  paintTimer();
+}
+function paintTimer() {
+  const leftMs = Math.max(0, T.deadline - Date.now());
+  const left = Math.ceil(leftMs / 1000);
+  T.clock.textContent = mmss(left);
+  T.fill.style.transform = `scaleX(${T.span ? leftMs / (T.span * 1000) : 0})`;
+  if (left === 0 && !T.fired) {
+    T.fired = true;
+    T.el.classList.add('done');
+    T.lab.textContent = 'Rest complete';
+    document.getElementById('t-skip').textContent = 'Done';
+    chime();
+  }
+}
+function stopRest() {
+  T.el.classList.remove('up');
+  clearInterval(T.tick); T.tick = null;
+  document.getElementById('t-skip').textContent = 'Skip';
+}
+document.getElementById('t-skip').onclick = stopRest;
+document.getElementById('t-add').onclick = () => {
+  const left = Math.max(0, T.deadline - Date.now());
+  T.span = (left + 30000) / 1000;
+  T.deadline = Date.now() + left + 30000;
+  T.fired = false;
+  T.el.classList.remove('done');
+  T.lab.textContent = 'Resting';
+  document.getElementById('t-skip').textContent = 'Skip';
+  paintTimer();
+};
+
+/* ===========================================================
+   VIEW STATE
+   =========================================================== */
+let tab = 'today';
+let openEx = null;         // exercise id whose logger is expanded
+let openDay = null;        // day key expanded on the Plan tab
+let openHist = null;       // exercise id expanded on Progress
+let fuelMode = null;   // resolved from the calendar on first render
+let editDay = null;        // day key currently in edit mode
+let draft = {};            // { exId: [{w:'',r:'',done:false}] }
+
+function draftFor(ex) {
+  if (draft[ex.id]) return draft[ex.id];
+  const today = (logs[ex.id] || {})[TODAY];
+  if (today) {
+    draft[ex.id] = today.sets.map(s => ({ w: String(s.w), r: String(s.r), done: true }));
+  } else {
+    const p = plan(ex.id);
+    const seed = p && p.weight ? String(p.weight) : '';
+    draft[ex.id] = Array.from({ length: ex.sets }, () => ({ w: seed, r: '', done: false }));
+  }
+  return draft[ex.id];
+}
+
+function commit(exId) {
+  const rows = (draft[exId] || []).filter(r => r.done && Number(r.w) >= 0 && Number(r.r) > 0);
+  if (!rows.length) {
+    if (logs[exId]) { delete logs[exId][TODAY]; persist(exId); }
+    return;
+  }
+  logs[exId] = logs[exId] || {};
+  logs[exId][TODAY] = { sets: rows.map(r => ({ w: Number(r.w), r: Number(r.r) })), at: Date.now() };
+  persist(exId);
+}
+
+const isLogged = exId => !!(logs[exId] || {})[TODAY];
+
+/* ===========================================================
+   RENDER
+   =========================================================== */
+const app = document.getElementById('app');
+
+function render() {
+  app.innerHTML = ({ today: viewToday, plan: viewPlan, fuel: viewFuel, progress: viewProgress })[tab]();
+  paintSync();
+  wire();
+}
+
+function paintSync() {
+  const el = document.getElementById('syncline');
+  if (!el) return;
+  el.innerHTML = ({
+    local: 'Saved on <b>this phone</b>. Export a backup from the Progress tab every few weeks.',
+    full:  'Storage is full \u2014 <b>recent sets may not have saved</b>.'
+  })[syncState];
+}
+
+/* -- Today ------------------------------------------------ */
+function viewToday() {
+  const day = dayFor(new Date());
+  const list = dayEx(day);
+  const dateLabel = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+  const wk = programWeek();
+  const ramp = wk.before ? null : rampNote(wk.n);
+  const weekChip = wk.before
+    ? `<span class="wkchip">Starts in ${wk.until} day${wk.until === 1 ? '' : 's'}</span>`
+    : `<span class="wkchip">Week ${wk.n}</span>`;
+
+  if (!list.length) {
+    return `
+      <div class="head">
+        <div class="eyebrow">${dateLabel} ${weekChip}</div>
+        <h1>Rest</h1>
+        <div class="focus">Recovery + mobility</div>
+      </div>
+      <div class="panel empty">
+        <h3>Nothing to lift today</h3>
+        Walk, stretch, hydrate, eat your protein. Muscle is built on the days you don't train \u2014
+        this one is doing work you can't see.
+      </div>
+      <div class="sync" id="syncline"></div>`;
+  }
+
+  const cardio = dayCardio(day);
+  const done = list.filter(e => isLogged(e.id)).length + (cardio && cardioDone() ? 1 : 0);
+  const total = list.length + (cardio ? 1 : 0);
+  const pct = done / total;
+
+  return `
+    <div class="head">
+      <div class="eyebrow">${dateLabel} ${weekChip}</div>
+      <h1>${esc(day.title)}</h1>
+      <div class="focus">${esc(day.focus)}</div>
+      <div class="len">${total} exercises \u00b7 about ${estMinutes(day)} min including warm-up</div>
+    </div>
+
+    <div style="margin-bottom:18px">
+      <div class="rail${done === total ? ' done' : ''}"><i style="transform:scaleX(${pct || 0.001})"></i></div>
+      <div class="rail-cap">
+        <span class="${done === total ? 'fin' : ''}">${done === total ? 'Session complete' : `${done} of ${total} logged`}</span>
+        <span class="num">${Math.round(pct * 100)}%</span>
+      </div>
+    </div>
+
+    ${ramp ? `<div class="panel ramping" style="margin-bottom:14px"><div class="note"><b>${ramp[0]}</b>${ramp[1]}</div></div>` : ''}
+
+    ${day.warmup ? `<div class="panel" style="margin-bottom:14px"><div class="note"><b>Warm-up</b>${esc(day.warmup)}</div></div>` : ''}
+
+    <div class="stack">
+      ${list.map(exCard).join('')}
+      ${cardio ? cardioCard(cardio) : ''}
+    </div>
+
+
+    <div class="sync" id="syncline"></div>`;
+}
+
+function cardioCard(c) {
+  const done = cardioDone();
+  return `
+    <div class="ex cardio-card${done ? ' logged' : ''}">
+      <button class="ex-hd" data-cardiotick="1" aria-pressed="${done}">
+        <span class="pip">\u2713</span>
+        <span style="flex:1;min-width:0">
+          <span class="ex-name">${esc(c.kind)}</span>
+          <div class="ex-meta"><span class="num">${c.min} min</span><span class="sep">\u00b7</span>after the lift</div>
+          ${c.how ? `<div class="cardio-how">${esc(c.how)}</div>` : ''}
+        </span>
+      </button>
+    </div>`;
+}
+
+function exCard(ex) {
+  const logged = isLogged(ex.id);
+  const open = openEx === ex.id;
+  let hint = '';
+  if (logged) {
+    const t = topSet((logs[ex.id][TODAY]).sets);
+    hint = `Logged \u00b7 top set ${t.w} lb \u00d7 ${t.r}`;
+  } else {
+    hint = planHint(ex.id);
+  }
+  return `
+    <div class="ex${open ? ' open' : ''}${logged ? ' logged' : ''}" data-ex="${ex.id}">
+      <button class="ex-hd" data-toggle="${ex.id}" aria-expanded="${open}">
+        <span class="pip">\u2713</span>
+        <span style="flex:1;min-width:0">
+          <span class="ex-name">${esc(ex.name)}${ex.opt ? '<span class="opt">optional</span>' : ''}</span>
+          <div class="ex-meta">
+            <span class="num">${ex.sets} \u00d7 ${ex.rep[0]}\u2013${ex.rep[1]}</span><span class="sep">\u00b7</span>${ex.rir} RIR<span class="sep">\u00b7</span><span class="num">${mmss(ex.rest)}</span> rest
+          </div>
+          ${hint ? `<div class="ex-hint">${esc(hint)}</div>` : ''}
+        </span>
+        <span class="caret">\u203a</span>
+      </button>
+      ${open ? logger(ex) : ''}
+    </div>`;
+}
+
+function logger(ex) {
+  const rows = draftFor(ex);
+  const p = plan(ex.id);
+  const prev = lastBefore(ex.id, TODAY);
+
+  return `
+    <div class="log">
+      <div class="log-cue">
+        <span><b class="num">${ex.sets} \u00d7 ${ex.rep[0]}\u2013${ex.rep[1]}</b> reps</span>
+        <span>stop at <b>${ex.rir} RIR</b></span>
+        <span class="restnudge">
+          <button class="step" data-rest="${ex.id}" data-d="-15" aria-label="Less rest">\u2212</button>
+          <b class="num">${mmss(ex.rest)}</b>
+          <button class="step" data-rest="${ex.id}" data-d="15" aria-label="More rest">+</button>
+          rest
+        </span>
+      </div>
+      ${ex.cue ? `<div class="coach">${esc(ex.cue)}</div>` : ''}
+
+      ${prev ? `<div class="prev"><span class="d">Last time, ${fmtDate(prev.date)} \u2014</span> ${prev.sets.map(x => `<span class="num">${x.w}\u00d7${x.r}</span>`).join(', ')}</div>` : ''}
+
+      ${p && p.weight ? `
+        <button class="sugg" data-fill="${ex.id}">
+          <span>
+            <span class="lead num">${p.headline}</span>
+            <div class="why">${esc(p.reason)}</div>
+            ${p.next ? `<div class="why nextwk">Next week &middot; ${esc(p.next)}</div>` : ''}
+          </span>
+          <span class="go">Fill</span>
+        </button>` : p ? `
+        <div class="sugg" style="cursor:default">
+          <span>
+            <span class="lead">${esc(p.headline)}</span>
+            <div class="why">${esc(p.reason)}</div>
+          </span>
+        </div>` : ''}
+
+      <table class="sets">
+        <thead><tr><th class="n">#</th><th>Weight</th><th>Reps</th><th class="c"></th></tr></thead>
+        <tbody>
+          ${rows.map((r, i) => setRow(ex, r, i)).join('')}
+        </tbody>
+      </table>
+      <button class="addset" data-add="${ex.id}">+ Add set</button>
+    </div>`;
+}
+
+function setRow(ex, r, i) {
+  const load = ex.bar && Number(r.w) > 0 ? plateMath(Number(r.w), ex.bar) : null;
+  return `
+    <tr class="${r.done ? 'set-done' : ''}">
+      <td class="n">${i + 1}</td>
+      <td class="w"><input class="fld" inputmode="decimal" placeholder="lb" value="${esc(r.w)}" data-f="w" data-ex="${ex.id}" data-i="${i}"></td>
+      <td><input class="fld" inputmode="numeric" placeholder="reps" value="${esc(r.r)}" data-f="r" data-ex="${ex.id}" data-i="${i}"></td>
+      <td style="text-align:right">
+        <button class="tick" data-tick="${ex.id}" data-i="${i}" aria-pressed="${r.done}" aria-label="Set ${i + 1} complete">\u2713</button>
+      </td>
+    </tr>
+    ${load ? `<tr><td colspan="4" class="plates">${esc(load)}</td></tr>` : ''}`;
+}
+
+/* -- Plan ------------------------------------------------- */
+function editRow(ex) {
+  return `
+    <div class="erow">
+      <input class="ef nm" value="${esc(ex.name)}" data-e="name" data-id="${ex.id}" placeholder="Exercise name">
+      <div class="egrid">
+        <label>Sets<input class="ef" inputmode="numeric" value="${ex.sets}" data-e="sets" data-id="${ex.id}"></label>
+        <label>Reps<span class="rr">
+          <input class="ef" inputmode="numeric" value="${ex.rep[0]}" data-e="rep0" data-id="${ex.id}">
+          <i>\u2013</i>
+          <input class="ef" inputmode="numeric" value="${ex.rep[1]}" data-e="rep1" data-id="${ex.id}">
+        </span></label>
+        <label>RIR<input class="ef" inputmode="numeric" value="${ex.rir}" data-e="rir" data-id="${ex.id}"></label>
+      </div>
+      <div class="erest">
+        <span class="elab">Rest</span>
+        <button class="step" data-rest="${ex.id}" data-d="-15" aria-label="Less rest">\u2212</button>
+        <b class="num">${mmss(ex.rest)}</b>
+        <button class="step" data-rest="${ex.id}" data-d="15" aria-label="More rest">+</button>
+        <button class="rm" data-rm="${ex.id}">Remove</button>
+      </div>
+    </div>`;
+}
+
+function cardioEditor(d) {
+  const c = dayCardio(d);
+  if (!c) return `<button class="addset" data-addcardio="${d.key}" style="margin-top:9px">+ Add cardio</button>`;
+  return `
+    <div class="erow" style="margin-top:9px">
+      <div class="egrid" style="grid-template-columns:2fr 1fr">
+        <label>Cardio<input class="ef nm" value="${esc(c.kind)}" data-c="kind" data-id="${d.key}" placeholder="Swim"></label>
+        <label>Minutes<input class="ef" inputmode="numeric" value="${c.min}" data-c="min" data-id="${d.key}"></label>
+      </div>
+      <textarea class="ef ta" data-c="how" data-id="${d.key}" placeholder="How to run it">${esc(c.how)}</textarea>
+      <div class="erest"><button class="rm" data-rmcardio="${d.key}">Remove cardio</button></div>
+    </div>`;
+}
+
+function viewPlan() {
+  const vol = weeklyVolume();
+  const wc = weeklyCardioPlan();
+  const shape = weeklyShape();
+  const wk = programWeek();
+  const cd = cardioThisWeek();
+  const todayKey = dayFor(new Date()).key;
+  const ordered = PLAN.slice(1).concat(PLAN[0]);   // Monday first, rest day last
+
+  return `
+    <div class="head">
+      <h1>The Split</h1>
+      <div class="focus">Six lifting days, ${wc.n} cardio session${wc.n === 1 ? '' : 's'}, one full rest day.</div>
+    </div>
+
+    <div class="panel" style="margin-bottom:14px">
+      <div class="editbar">
+        <span class="eyebrow">Easing back in</span>
+        <span style="display:flex;align-items:center;gap:7px">
+          <span class="elab">Start</span>
+          <input class="ef" type="date" value="${edits.start || DEFAULT_START}" data-start="1" style="width:auto;padding:5px 7px;font-size:12.5px">
+        </span>
+      </div>
+      <div class="note" style="border:0;padding-left:0;margin-bottom:10px">
+        ${wk.before
+          ? `Day one is in <b>${wk.until} day${wk.until === 1 ? '' : 's'}</b>. Weeks 1 to 3 below run at reduced volume; the app drops the reminder on its own once week 4 arrives.`
+          : wk.n <= 3
+          ? `You are in <b>week ${wk.n}</b>. Follow the highlighted line; the reminder clears itself in week 4.`
+          : `You are in <b>week ${wk.n}</b>, past the ramp. Full program.`}
+      </div>
+      <div class="note" style="border:0;padding-left:0">
+        After five months off, do not run this at full volume in week one. Muscle strength returns
+        faster than tendons and connective tissue do, so for a few weeks you will be able to lift
+        more than your joints are ready for. That gap is where returning lifters get hurt.
+        <br><br>
+        <b class="ramp${!wk.before && wk.n <= 2 ? ' now' : ''}">Weeks 1&ndash;2</b> &mdash; two sets per exercise instead of three or four, stop
+        3&ndash;4 reps short, skip everything marked optional, and leave the Nordic curl and heavy
+        eccentrics alone entirely.<br>
+        <b class="ramp${!wk.before && wk.n === 3 ? ' now' : ''}">Week 3</b> &mdash; full sets, still a rep or two further from failure than
+        prescribed.<br>
+        <b class="ramp${!wk.before && wk.n >= 4 ? ' now' : ''}">Week 4</b> &mdash; the program as written.
+        <br><br>
+        You will be tempted to skip this because the weights feel light. The weights are not the
+        problem &mdash; week-one soreness is what ends six-day schedules.
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:14px">
+      <div class="eyebrow" style="margin-bottom:6px">Building the taper</div>
+      ${SHAPE.map(([k, label, sublabel, lo, hi]) => {
+        const n = shape[k], on = n >= lo && n <= hi;
+        return `<div class="shaperow">
+          <div>
+            <div class="slab">${label}</div>
+            <div class="ssub">${sublabel}</div>
+          </div>
+          <div class="scount"><b class="${on ? 'on' : 'off'}">${n}</b><span>of ${lo}\u2013${hi}</span></div>
+        </div>`;
+      }).join('')}
+      <div class="note" style="margin-top:12px;border:0;padding-left:0">
+        The V is a ratio, not a size \u2014 you widen the top and keep the bottom tight. Train abs heavy,
+        rotation hard, and obliques properly: at 6'2" and 170 lb your waist is not the thing holding
+        this look back, and developed obliques are what give the defined diagonal line once you are
+        lean.<br><br>
+        One thing worth being clear about: building obliques does not shrink love handles. That is
+        subcutaneous fat sitting on top of the muscle, and muscle grows underneath it \u2014 so the
+        flank gets slightly bigger, not smaller. The only levers on it are body fat and the ratio
+        above it. Your 0.4 lb a week is the lever; the flank is exactly where a faster bulk shows up.
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:14px">
+      <div class="eyebrow" style="margin-bottom:11px">Working sets per week</div>
+      <div class="vol">
+        ${MUSCLES.map(([k, label]) => {
+          const n = vol[k] || 0;
+          const ok = n >= VOL_MIN && n <= VOL_MAX;
+          return `<div class="vrow">
+            <div class="vlab">${label}</div>
+            <div class="vtrack">
+              <div class="vband" style="left:${VOL_MIN/VOL_SCALE*100}%;width:${(VOL_MAX-VOL_MIN)/VOL_SCALE*100}%"></div>
+              <div class="vfill${ok ? ' ok' : ''}" style="width:${Math.min(n/VOL_SCALE,1)*100}%"></div>
+            </div>
+            <div class="vnum">${n}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="weekcardio">
+        <span>Cardio this week</span>
+        <span><b>${cd.n} of ${wc.n}</b> done \u00b7 <b>${cd.min}</b>/${wc.min} min</span>
+      </div>
+      <div class="note" style="margin-top:12px;border:0;padding-left:0">
+        The shaded band is ${VOL_MIN}\u2013${VOL_MAX} sets \u2014 the range where more volume still buys growth
+        rather than just fatigue. Every muscle is trained at least twice a week, which matters more
+        than what any single session looks like.
+      </div>
+    </div>
+
+    <div class="stack">
+      ${ordered.map(d => {
+        const list = dayEx(d);
+        const rest = !list.length;
+        const isToday = d.key === todayKey;
+        const open = openDay === d.key;
+        const editing = editDay === d.key;
+        return `
+          <div>
+            <button class="day${isToday ? ' today' : ''}" data-day="${d.key}" aria-expanded="${open}">
+              <div class="day-top">
+                <span class="eyebrow">${d.key[0].toUpperCase() + d.key.slice(1)}</span>
+                ${isToday ? '<span class="badge now">Today</span>'
+                  : rest ? '<span class="badge">Rest</span>'
+                  : `<span class="cnt">${list.length} \u00b7 ${estMinutes(d)} min</span>`}
+              </div>
+              <h3>${esc(d.title)}</h3>
+              <div class="focus">${esc(d.focus)}</div>
+              ${d.cardio ? `<div class="cd">+ ${esc(d.cardio.kind)} \u00b7 ${d.cardio.min} min</div>` : ''}
+            </button>
+            ${open && !rest ? `
+              <div class="panel" style="margin-top:8px">
+                <div class="editbar">
+                  <span class="eyebrow">${editing ? 'Editing' : 'Exercises'}</span>
+                  <button class="editbtn" data-edit="${d.key}" aria-pressed="${editing}">${editing ? 'Done' : 'Edit'}</button>
+                </div>
+                ${editing ? `
+                  <div class="stack">${list.map(editRow).join('')}</div>
+                  <button class="addset" data-addex="${d.key}" style="margin-top:9px">+ Add exercise</button>
+                  ${cardioEditor(d)}
+                  <button class="resetbtn" data-resetday="${d.key}">Reset ${esc(d.title)} to the original program</button>
+                ` : `
+                  ${d.warmup ? `<div class="note" style="margin-bottom:12px"><b>Warm-up</b>${esc(d.warmup)}</div>` : ''}
+                  <table class="food">
+                    ${list.map(e => `<tr>
+                      <td>${esc(e.name)}${e.opt ? '<span class="opt">optional</span>' : ''}${isEdited(e.id) ? ' <span class="edited">edited</span>' : ''}
+                        <span class="sv">${e.rir} RIR \u00b7 ${mmss(e.rest)} rest</span></td>
+                      <td class="p" style="color:var(--ink-2)">${e.sets}\u00d7${e.rep[0]}\u2013${e.rep[1]}</td>
+                    </tr>`).join('')}
+                  </table>
+                  ${d.cardio ? `<div class="note cardio" style="margin-top:12px"><b>${esc(d.cardio.kind)} \u00b7 ${d.cardio.min} min</b>${esc(d.cardio.how)}</div>` : ''}
+                `}
+              </div>` : ''}
+          </div>`;
+      }).join('')}
+    </div>
+    ${Object.keys(edits.ov).length || Object.keys(edits.rm).length || Object.keys(edits.add).length || Object.keys(edits.cardio || {}).length
+      ? `<button class="resetbtn" data-resetall="1" style="margin-top:14px">Reset the whole program to the original</button>` : ''}
+    <div class="sync" id="syncline"></div>`;
+}
+
+/* -- Fuel ------------------------------------------------- */
+function fuelTarget(t) {
+  const o = edits.fuel[t.key] || {};
+  const m = Object.assign({}, t, o);
+  m.kcal = m.p * 4 + m.f * 9 + m.c * 4;      // always agrees with the macros
+  return m;
+}
+
+function viewFuel() {
+  const wk = programWeek();
+  if (!fuelMode) fuelMode = wk.before ? 'bridge' : wk.n <= 10 ? 'comeback' : 'simple';
+  const targets = (fuelMode === 'bridge' ? [FUEL.bridge]
+                 : fuelMode === 'comeback' ? [FUEL.comeback]
+                 : fuelMode === 'simple' ? [FUEL.simple]
+                 : FUEL.split).map(fuelTarget);
+  const simple = fuelTarget(targets.length === 1 ? targets[0] : FUEL.simple);
+
+  const card = t => {
+    const pk = t.p * 4, ck = t.c * 4, fk = t.f * 9, tot = pk + ck + fk || 1;
+    const field = (k, cls, label) => `
+      <div class="macro">
+        <div class="dot ${cls}"></div>
+        <input class="ef" inputmode="numeric" value="${t[k]}" data-fk="${t.key}" data-fm="${k}"
+               aria-label="${label} grams" style="text-align:left;padding:5px 7px">
+        <div class="n">${label} &middot; g</div>
+      </div>`;
+    return `
+      <div class="panel">
+        <div class="eyebrow">${esc(t.label)}</div>
+        <div class="kcal"><span class="v">${t.kcal.toLocaleString()}</span><span class="u">kcal</span></div>
+        <div style="font-size:13px;color:var(--ink-2)">${esc(t.detail)}</div>
+        <div class="macrobar">
+          <div class="mp" style="width:${pk/tot*100}%"></div>
+          <div class="mc" style="width:${ck/tot*100}%"></div>
+          <div class="mf" style="width:${fk/tot*100}%"></div>
+        </div>
+        <div class="macros">
+          ${field('p','mp','Protein')}
+          ${field('c','mc','Carbs')}
+          ${field('f','mf','Fat')}
+        </div>
+      </div>`;
+  };
+
+  const tips = list => list.map(([h, b]) =>
+    `<div class="panel"><div style="font-weight:600;font-size:14.5px;margin-bottom:3px">${esc(h)}</div>
+     <div style="font-size:13.5px;color:var(--ink-2);line-height:1.5">${esc(b)}</div></div>`).join('');
+
+  const surplus = simple.kcal - FUEL.maintenance;
+
+  return `
+    <div class="head">
+      <h1>Fuel</h1>
+      <div class="focus">170 lb \u2192 180\u2013190 lb at about 0.4 lb a week.</div>
+    </div>
+
+    <div class="seg">
+      <button data-fuel="bridge" aria-selected="${fuelMode === 'bridge'}">Bridge</button>
+      <button data-fuel="comeback" aria-selected="${fuelMode === 'comeback'}">Phase 1</button>
+      <button data-fuel="simple" aria-selected="${fuelMode === 'simple'}">Phase 2</button>
+      <button data-fuel="split" aria-selected="${fuelMode === 'split'}">Train / rest</button>
+    </div>
+
+    <div class="stack">${targets.map(card).join('')}</div>
+    <div style="font-size:12px;color:var(--ink-3);margin-top:9px">
+      ${wk.before
+        ? `Day one is in ${wk.until} day${wk.until === 1 ? '' : 's'}. Eat the Bridge number until then, then move to Phase 1.`
+        : wk.n <= 10
+        ? `You are in week ${wk.n} \u2014 Phase 1 territory. Switch to Phase 2 when your weight and your lifts both stall for two straight weeks, at the earliest around week 11.`
+        : `You are in week ${wk.n}. If your weight and lifts have stalled at maintenance, it is time for Phase 2.`}
+      Edit any macro and the calories recalculate: protein 4 kcal/g, carbs 4, fat 9.
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <div class="eyebrow" style="margin-bottom:8px">Where the number comes from</div>
+      <div class="mathrow"><span>Resting burn</span><b class="num">1,810 kcal</b></div>
+      <div class="mathrow"><span>With six lifts + ${weeklyCardioPlan().n} cardio</span><b class="num">${FUEL.maintenance.toLocaleString()} kcal</b></div>
+      <div class="mathrow sum"><span>Surplus</span><b class="num">${surplus >= 0 ? '+' : ''}${surplus.toLocaleString()} kcal</b></div>
+      <div class="note" style="margin-top:11px;border:0;padding-left:0">
+        ${fuelMode === 'bridge'
+          ? 'This is below your training maintenance on purpose, because you are not training yet. The protein target is not provisional though - hit 190 g from today. Six months of low protein is most of why the last half year cost you muscle.'
+          : fuelMode === 'comeback'
+          ? 'Sitting at maintenance is the point of this phase, not a mistake. Regaining muscle you have already built costs almost no extra energy, so a surplus here would only add fat. Hold here until the scale and your lifts both stall.'
+          : surplus > 450
+          ? 'That is a large surplus. Above roughly 0.75 lb a week the extra mostly arrives as fat.'
+          : surplus < 50
+          ? 'That is at or below maintenance \u2014 you will hold weight rather than build.'
+          : 'A surplus around 200 kcal is deliberately small. Past a point, a bigger one does not build muscle any faster \u2014 it just adds the fat you would then have to diet back off.'}
+      </div>
+    </div>
+
+    <div class="eyebrow" style="margin:20px 0 9px">Timing</div>
+    <div class="stack">${tips(FUEL.timing)}</div>
+
+    <div class="eyebrow" style="margin:20px 0 9px">Adjusting</div>
+    <div class="stack">${tips(FUEL.adjust)}</div>
+
+    ${Object.keys(edits.fuel).length
+      ? `<button class="resetbtn" data-resetfuel="1" style="margin-top:16px">Reset macros to the original targets</button>` : ''}
+    <div class="sync" id="syncline"></div>`;
+}
+
+/* -- Progress --------------------------------------------- */
+function sparkline(vals) {
+  if (vals.length < 2) return '';
+  const w = 58, h = 24, pad = 2;
+  const min = Math.min(...vals), max = Math.max(...vals), span = Math.max(max - min, 1);
+  const pts = vals.map((v, i) => [
+    pad + i * (w - pad * 2) / (vals.length - 1),
+    h - pad - ((v - min) / span) * (h - pad * 2)
+  ]);
+  const d = pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+  const last = pts[pts.length - 1];
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">
+    <path d="${d}" fill="none" stroke="var(--ink-3)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="2.6" fill="var(--accent-2)"/>
+  </svg>`;
+}
+
+function viewProgress() {
+  const rows = Object.keys(logs)
+    .filter(id => lookup(id) && history(id).length)
+    .map(id => {
+      const h = history(id);
+      const curve = h.map(s => { const t = topSet(s.sets); return t ? e1rm(t.w, t.r) : 0; });
+      const latest = h[h.length - 1], lt = topSet(latest.sets);
+      let trend = 'new';
+      if (h.length >= 2) {
+        const a = curve[curve.length - 1], b = curve[curve.length - 2];
+        trend = a > b + 0.5 ? 'up' : a < b - 0.5 ? 'down' : 'flat';
+      }
+      const np = plan(id);
+      return { id, name: lookup(id).name, h, curve, latest, lt, trend, best: Math.max(...curve),
+               nextUp: np && np.weight ? np.headline : null };
+    })
+    .sort((a, b) => a.latest.date < b.latest.date ? 1 : -1);
+
+  const badge = { up:['tup','\u25b2 up'], down:['tdn','\u25bc down'], flat:['tfl','= same'], new:['tnw','\u2605 new'] };
+
+  return `
+    <div class="head">
+      <h1>Progress</h1>
+      <div class="focus">${rows.length ? `${rows.length} exercise${rows.length === 1 ? '' : 's'} tracked \u00b7 estimated 1RM from your top set` : 'Your training history, once you start logging.'}</div>
+    </div>
+
+    ${!rows.length ? `
+      <div class="panel empty">
+        <h3>Nothing logged yet</h3>
+        Open Today, tap an exercise, and tick off a set. Every set you close lands here,
+        and the app starts telling you what to lift next.
+      </div>` : `
+      <div class="stack">
+        ${rows.map(r => {
+          const [cls, lab] = badge[r.trend];
+          const open = openHist === r.id;
+          return `
+            <div>
+              <button class="prow" data-hist="${r.id}" aria-expanded="${open}">
+                <span style="flex:1;min-width:0">
+                  <span class="nm">${esc(r.name)}</span>
+                  <div class="sub">${r.h.length} session${r.h.length === 1 ? '' : 's'} \u00b7 last ${fmtDate(r.latest.date)} \u00b7 best e1RM ${Math.round(r.best)} lb</div>
+                  <div class="top">${r.lt.w} lb \u00d7 ${r.lt.r}</div>
+                  ${r.nextUp ? `<div class="nextup">Next: ${esc(r.nextUp)}</div>` : ''}
+                </span>
+                ${sparkline(r.curve)}
+                <span class="trend ${cls}">${lab}</span>
+              </button>
+              ${open ? `
+                <div class="panel" style="margin-top:8px">
+                  <div class="hist">
+                    ${r.h.slice().reverse().map(s => `
+                      <div class="h">
+                        <span class="hd">${fmtDate(s.date)}</span>
+                        <span class="hs">${s.sets.map(x => `${x.w}\u00d7${x.r}`).join('  \u00b7  ')}</span>
+                      </div>`).join('')}
+                  </div>
+                </div>` : ''}
+            </div>`;
+        }).join('')}
+      </div>`}
+    <div class="panel" style="margin-top:18px">
+      <div class="eyebrow" style="margin-bottom:8px">Your data</div>
+      <div style="font-size:13px;color:var(--ink-2);line-height:1.5;margin-bottom:11px">
+        Everything you log lives on this phone. Export a copy every few weeks, and before you
+        change phones or clear Safari's data.
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="t-btn pri" data-export="1" style="flex:1">Export a backup</button>
+        <button class="t-btn" data-import="1" style="flex:1">Restore</button>
+      </div>
+      <div style="font-size:12px;color:var(--ink-3);margin-top:11px">${offlineLine()}</div>
+      <input type="file" accept="application/json,.json" id="importfile" hidden>
+    </div>
+    <div class="sync" id="syncline"></div>`;
+}
+
+/* ===========================================================
+   TABS + EVENTS
+   =========================================================== */
+const TABS = [
+  ['today', 'Today', '<path d="M12 3c0 3-4 4-4 8a4 4 0 0 0 8 0c0-1.5-.8-2.6-1.6-3.6"/><path d="M12 21a7 7 0 0 1-7-7"/>'],
+  ['plan', 'Split', '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
+  ['fuel', 'Fuel', '<path d="M7 3v18M7 3a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3 3 3 0 0 1-3-3V6a3 3 0 0 1 3-3z"/><path d="M17 3c-1.5 2-2 4-2 6s.7 3 2 3 2-1 2-3-.5-4-2-6zM17 12v9"/>'],
+  ['progress', 'Progress', '<path d="M3 17l5-5 4 4 8-8"/><path d="M16 8h4v4"/>']
+];
+
+document.getElementById('tabs').innerHTML = TABS.map(([k, label, svg]) =>
+  `<button data-tab="${k}" aria-selected="${tab === k}"><svg viewBox="0 0 24 24">${svg}</svg>${label}</button>`
+).join('');
+
+document.getElementById('tabs').onclick = e => {
+  const b = e.target.closest('[data-tab]');
+  if (!b) return;
+  tab = b.dataset.tab;
+  document.querySelectorAll('#tabs button').forEach(x => x.setAttribute('aria-selected', x.dataset.tab === tab));
+  window.scrollTo(0, 0);
+  render();
+};
+
+function wire() {
+  app.onclick = e => {
+    const t = e.target;
+
+    const toggle = t.closest('[data-toggle]');
+    if (toggle) {
+      const id = toggle.dataset.toggle;
+      openEx = openEx === id ? null : id;
+      render();
+      if (openEx) {
+        const el = document.querySelector(`[data-ex="${openEx}"]`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      return;
+    }
+
+    const fill = t.closest('[data-fill]');
+    if (fill) {
+      const ex = lookup(fill.dataset.fill), p = plan(ex.id);
+      if (p && p.weight) draftFor(ex).forEach(r => { if (!r.done) r.w = String(p.weight); });
+      render();
+      return;
+    }
+
+    const tick = t.closest('[data-tick]');
+    if (tick) {
+      const ex = lookup(tick.dataset.tick), i = +tick.dataset.i;
+      const rows = draftFor(ex), row = rows[i];
+      if (!row.done) {
+        if (!(Number(row.r) > 0)) {                 // nothing to close out yet
+          if (navigator.vibrate) { try { navigator.vibrate(45); } catch (err) {} }
+          const input = app.querySelector(`[data-ex="${ex.id}"][data-i="${i}"][data-f="r"]`);
+          if (input) input.focus();
+          return;
+        }
+        row.done = true;
+        commit(ex.id);
+        startRest(ex.rest);
+      } else {
+        row.done = false;
+        commit(ex.id);
+      }
+      render();
+      return;
+    }
+
+    const add = t.closest('[data-add]');
+    if (add) {
+      const rows = draftFor(lookup(add.dataset.add));
+      rows.push({ w: rows.length ? rows[rows.length - 1].w : '', r: '', done: false });
+      render();
+      return;
+    }
+
+    const day = t.closest('[data-day]');
+    if (day) { openDay = openDay === day.dataset.day ? null : day.dataset.day; render(); return; }
+
+    const hist = t.closest('[data-hist]');
+    if (hist) { openHist = openHist === hist.dataset.hist ? null : hist.dataset.hist; render(); return; }
+
+    if (t.closest('[data-export]')) { exportBackup(); return; }
+    if (t.closest('[data-import]')) {
+      const f = document.getElementById('importfile');
+      f.onchange = () => { if (f.files && f.files[0]) importBackup(f.files[0]); f.value = ''; };
+      f.click();
+      return;
+    }
+
+    const fuel = t.closest('[data-fuel]');
+    if (fuel) { fuelMode = fuel.dataset.fuel; render(); return; }
+
+    const ct = t.closest('[data-cardiotick]');
+    if (ct) {
+      const c = dayCardio(dayFor(new Date()));
+      if (c) {
+        if (!cardioDone() && navigator.vibrate) { try { navigator.vibrate(35); } catch (err) {} }
+        toggleCardio(c);
+        render();
+      }
+      return;
+    }
+
+    /* ---- editing ---- */
+
+    const ed = t.closest('[data-edit]');
+    if (ed) { editDay = editDay === ed.dataset.edit ? null : ed.dataset.edit; render(); return; }
+
+    const step = t.closest('[data-rest]');
+    if (step) {
+      const ex = lookup(step.dataset.rest);
+      const next = Math.max(15, Math.min(600, (+ex.rest || 0) + (+step.dataset.d)));
+      setOv(ex.id, 'rest', next);
+      render();
+      return;
+    }
+
+    const rm = t.closest('[data-rm]');
+    if (rm) { edits.rm[rm.dataset.rm] = true; saveEdits(); render(); return; }
+
+    const addex = t.closest('[data-addex]');
+    if (addex) {
+      const key = addex.dataset.addex;
+      const day = PLAN.find(d => d.key === key);
+      // Inherit the day's dominant muscle so the weekly volume chart stays honest.
+      const tally = {};
+      day.ex.forEach(e => { tally[e.m] = (tally[e.m] || 0) + 1; });
+      const m = Object.keys(tally).sort((a, b) => tally[b] - tally[a])[0] || 'chest';
+      edits.add[key] = edits.add[key] || [];
+      edits.add[key].push({
+        id: 'own_' + Date.now().toString(36),
+        name: 'New exercise', m, sets: 3, rep: [8, 12], rest: 90, rir: 1
+      });
+      saveEdits();
+      render();
+      return;
+    }
+
+    const ac = t.closest('[data-addcardio]');
+    if (ac) {
+      edits.cardio = edits.cardio || {};
+      edits.cardio[ac.dataset.addcardio] = { kind: 'Swim', min: 20, how: 'Easy continuous. Conversational pace.' };
+      saveEdits();
+      render();
+      return;
+    }
+
+    const rc = t.closest('[data-rmcardio]');
+    if (rc) {
+      edits.cardio = edits.cardio || {};
+      edits.cardio[rc.dataset.rmcardio] = null;   // null = deliberately removed
+      saveEdits();
+      render();
+      return;
+    }
+
+    const rd = t.closest('[data-resetday]');
+    if (rd) {
+      const key = rd.dataset.resetday;
+      const day = PLAN.find(d => d.key === key);
+      day.ex.forEach(e => { delete edits.ov[e.id]; delete edits.rm[e.id]; });
+      (edits.add[key] || []).forEach(e => { delete edits.ov[e.id]; delete edits.rm[e.id]; });
+      delete edits.add[key];
+      if (edits.cardio) delete edits.cardio[key];
+      saveEdits();
+      render();
+      return;
+    }
+
+    if (t.closest('[data-resetall]')) {
+      edits = { ov: {}, add: {}, rm: {}, fuel: {}, cardio: {}, at: 0 };
+      saveEdits();
+      editDay = null;
+      render();
+      return;
+    }
+
+    if (t.closest('[data-resetfuel]')) { edits.fuel = {}; saveEdits(); render(); return; }
+  };
+
+  // Field edits mutate the draft in place \u2014 no re-render, so the keyboard
+  // stays up and the caret stays put while you type.
+  app.oninput = e => {
+    const f = e.target.closest('[data-f]');
+    if (!f) return;
+    const rows = draft[f.dataset.ex];
+    if (!rows) return;
+    rows[+f.dataset.i][f.dataset.f] = f.value;
+    if (rows[+f.dataset.i].done) commit(f.dataset.ex);
+  };
+
+  // Program + macro fields write straight through; the view only
+  // re-renders on blur, so typing is never interrupted mid-number.
+  app.addEventListener('input', e => {
+    const p = e.target.closest('[data-e]');
+    if (p) {
+      const id = p.dataset.id, field = p.dataset.e, raw = p.value.trim();
+      if (field === 'name') { setOv(id, 'name', raw || 'Untitled'); return; }
+      const n = parseInt(raw, 10);
+      if (!Number.isFinite(n)) return;                       // mid-typing, wait
+      if (field === 'rep0' || field === 'rep1') {
+        const cur = lookup(id).rep;
+        const rep = field === 'rep0' ? [Math.max(1, n), cur[1]] : [cur[0], Math.max(1, n)];
+        setOv(id, 'rep', rep);
+      } else if (field === 'sets') setOv(id, 'sets', Math.max(1, Math.min(20, n)));
+      else if (field === 'rir')    setOv(id, 'rir',  Math.max(0, Math.min(5, n)));
+      return;
+    }
+
+    const c = e.target.closest('[data-c]');
+    if (c) {
+      const field = c.dataset.c, raw = c.value;
+      if (field === 'min') {
+        const n = parseInt(raw.trim(), 10);
+        if (Number.isFinite(n) && n >= 0) setCardio(c.dataset.id, 'min', Math.min(n, 300));
+      } else {
+        setCardio(c.dataset.id, field, raw);
+      }
+      return;
+    }
+
+    if (e.target.closest('[data-start]')) {
+      const v = e.target.value;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(v)) { edits.start = v; saveEdits(); }
+      return;
+    }
+
+    const m = e.target.closest('[data-fm]');
+    if (m) {
+      const n = parseInt(m.value.trim(), 10);
+      if (!Number.isFinite(n) || n < 0) return;
+      const key = m.dataset.fk;
+      edits.fuel[key] = Object.assign({}, edits.fuel[key], { [m.dataset.fm]: Math.min(n, 2000) });
+      saveEdits();
+    }
+  });
+
+  app.addEventListener('change', e => {
+    if (e.target.closest('[data-e]') || e.target.closest('[data-fm]') || e.target.closest('[data-c]')) render();
+  });
+}
+
+/* ===========================================================
+   BOOT
+   =========================================================== */
+loadLocal();
+loadEdits();
+render();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+</script>
+</body>
+</html>

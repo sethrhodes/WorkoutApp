@@ -1,0 +1,16 @@
+{
+  "name": "Iron Ledger",
+  "short_name": "Iron Ledger",
+  "description": "A six-day hypertrophy program with set logging, automatic progression and a rest timer.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0C0F15",
+  "theme_color": "#133A61",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
