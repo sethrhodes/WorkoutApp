@@ -533,7 +533,6 @@ const PLAN = [
       { id:'seated_ohp', name:'Seated DB Overhead Press', m:'delts', sets:3, rep:[8,10], rest:90, rir:2 },
       { id:'cable_lateral', name:'Cable Lateral Raise', m:'delts', tag:'side', sets:4, rep:[12,15], rest:60, rir:0, cue:'The single biggest lever on how wide your shoulders look. Cable beats dumbbells \u2014 it keeps tension at the bottom, where the delt is stretched. Lead with the elbow, never the hand.' },
       { id:'weighted_dip', name:'Weighted Dip', m:'chest', sets:3, rep:[8,10], rest:90, rir:1, cue:'Lean forward to bias the chest.' },
-      { id:'hanging_oblique', name:'Hanging Oblique Raise', m:'obl', sets:3, rep:[10,12], rest:60, rir:1, cue:'Per side. Knees up and across toward one armpit. Loads the oblique in a lengthened position, which is where it grows best \u2014 the highest-value oblique builder there is. Add an ankle weight once you clear 12 clean reps a side.' },
       { id:'rope_pushdown', name:'Rope Pushdown', m:'triceps', sets:3, rep:[12,15], rest:60, rir:0 },
       { id:'oh_tri_ext', name:'Overhead Triceps Extension', m:'triceps', sets:3, rep:[10,12], rest:60, rir:1, cue:'The long head only grows from the overhead stretch. Don\u2019t trade this for more pushdowns.' }
     ]
@@ -541,6 +540,7 @@ const PLAN = [
   {
     key:'tuesday', idx:2, title:'Pull', focus:'Back / Rear Delts / Biceps',
     warmup:'5 min rower, scapular pull-ups, then one light set of the first row.',
+    cardio:{ kind:'Hard run or swim', min:30, how:'Run is the better pick today \u2014 you just spent an hour pulling, and freestyle is lat-driven, so a hard swim lands on tired muscle.\nRun \u2014 8 \u00d7 2 min at 5k pace, 90 s jog between.\nSwimming instead: 10 \u00d7 75 m hard on 20 s rest, pull buoy off. Expect it to feel heavier than usual.' },
     ex:[
       { id:'weighted_pullup', name:'Weighted Pull-Up', m:'back', tag:'lat', sets:4, rep:[6,8], rest:150, rir:2, cue:'The width builder. Stay at bodyweight until you clear 10 clean reps, then add the belt. Drive elbows down and back, not hands to the bar.' },
       { id:'chest_supp_row', name:'Chest-Supported Row', m:'back', sets:4, rep:[8,10], rest:90, rir:1, cue:'The chest pad takes your lower back out of it, so you can push these genuinely hard.' },
@@ -553,11 +553,24 @@ const PLAN = [
     ]
   },
   {
-    key:'wednesday', idx:3, title:'Legs \u2014 Quads', focus:'Quads / Glutes / Calves',
-    warmup:'5 min bike, leg swings, bodyweight squats, then 3 ramping squat sets.',
-    cardio:{ kind:'Hard swim or run', min:30, how:'Warm-up \u2014 200 m easy, then 4 \u00d7 50 m build (25 easy / 25 fast), 20 s rest.\nMain \u2014 10 \u00d7 75 m hard, RPE 8, 20 s rest. Pull buoy on the last five so your legs get a break the day you squatted.\nDown \u2014 100 m easy. About 1,250 m.\nRunning instead: 8 \u00d7 2 min at 5k pace, 90 s jog \u2014 the worse of the two options today, since it lands on legs you just trained.' },
+    key:'wednesday', idx:3, title:'Abs', focus:'Every direction the trunk works \u2014 the short day',
+    warmup:'5 min easy cardio, dead bugs and bird dogs, then one light set of cable crunches.',
     ex:[
-      { id:'med_ball_throw', name:'Med Ball Rotational Throw', m:'rot', sets:3, rep:[5,5], rest:60, rir:3, cue:'Power, not fatigue \u2014 throw as hard as you can and stop when the ball slows down, never when you are tired. Per side, into a wall. Drive from the hip and let the torso follow. No ball? Do these as a cable rotational throw and let go of the tension at the end.' },
+      { id:'med_ball_throw', name:'Med Ball Rotational Throw', m:'rot', sets:3, rep:[5,5], rest:60, rir:3, cue:'Power, not fatigue \u2014 throw as hard as you can and stop when the ball slows down, never when you are tired. First thing, while you are fresh. Per side, into a wall. Drive from the hip and let the torso follow. No ball? Do these as a cable rotational throw and let go of the tension at the end.' },
+      { id:'cable_crunch', name:'Weighted Cable Crunch', m:'abs', sets:4, rep:[8,12], rest:90, rir:1, cue:'Spinal flexion, heavy. Treat it like a compound \u2014 add weight weekly the same way you would on a row.' },
+      { id:'hanging_raise', name:'Weighted Hanging Leg Raise', m:'abs', sets:4, rep:[8,12], rest:90, rir:1, cue:'Lower abs. Ankle weight or a DB between the feet. Curl the pelvis up; don\u2019t just swing the legs.' },
+      { id:'ab_wheel', name:'Ab Wheel Rollout', m:'abs', sets:3, rep:[8,12], rest:75, rir:1, cue:'Anti-extension \u2014 resisting the arch is the job your abs actually do all day. Ribs down, no sag through the hips.' },
+      { id:'db_side_bend', name:'DB Side Bend', m:'obl', sets:4, rep:[15,20], rest:60, rir:1, cue:'Lateral flexion. One heavy DB, opposite hand behind your head, full stretch at the bottom. The 15\u201320 range is for your spine, not your waistline \u2014 growth is the same across rep ranges when effort matches.' },
+      { id:'cable_chop', name:'Cable Chop', m:'rot', sets:3, rep:[10,12], rest:75, rir:1, cue:'Rotation, per side, high to low. Alternate with low-to-high week to week. Drive from the hips with the abs braced \u2014 the spine itself barely twists.' },
+      { id:'pallof', name:'Pallof Press', m:'rot', sets:3, rep:[10,12], rest:45, rir:1, cue:'Anti-rotation, per side. Refusing to rotate is what holds your line in the water. Press slow, let nothing move but your arms.' },
+      { id:'suitcase_carry', name:'Suitcase Carry', m:'abs', sets:3, rep:[30,40], rest:60, rir:1, cue:'Anti-lateral-flexion. One heavy DB, steps per side, log steps as reps. Stay perfectly upright \u2014 the work is in not leaning.' }
+    ]
+  },
+  {
+    key:'thursday', idx:4, title:'Legs \u2014 Quads', focus:'Quads / Glutes / Calves',
+    warmup:'5 min bike, leg swings, bodyweight squats, then 3 ramping squat sets.',
+    cardio:{ kind:'Hard swim or run', min:35, how:'The hardest session of the week. Your legs just worked but your lats and shoulders are fresh, which is exactly what a hard swim needs.\nWarm-up \u2014 300 m easy, then 6 \u00d7 50 m build, 15 s rest.\nMain \u2014 8 \u00d7 100 m hard, RPE 8\u20139, 20 s rest. Then 4 \u00d7 50 m all out, 30 s rest.\nDown \u2014 150 m easy. About 1,850 m.\nRunning instead: 5 \u00d7 800 m at 5k pace, 2 min jog between.' },
+    ex:[
       { id:'back_squat', name:'Back Squat', m:'quads', sets:4, rep:[6,8], rest:150, rir:2, bar:45, cue:'Leave 2 in the tank. A grinder here costs you the rest of the session.' },
       { id:'hack_squat', name:'Hack Squat', m:'quads', sets:3, rep:[10,12], rest:120, rir:1, cue:'Go deep. The bottom third is where quads actually grow.' },
       { id:'bulgarian', name:'Bulgarian Split Squat', m:'quads', sets:3, rep:[8,10], rest:75, rir:1, cue:'Per leg.' },
@@ -567,7 +580,7 @@ const PLAN = [
     ]
   },
   {
-    key:'thursday', idx:4, title:'Upper', focus:'Second chest + back exposure',
+    key:'friday', idx:5, title:'Upper', focus:'Second chest + back exposure',
     warmup:'5 min rower, band pull-aparts, 2 ramping sets on incline bench.',
     ex:[
       { id:'incline_bb', name:'Incline Barbell Bench', m:'chest', tag:'upper', sets:4, rep:[6,8], rest:150, rir:2, bar:45, cue:'Second upper-chest session. Heavier and lower-rep than Monday so the two do different jobs.' },
@@ -581,9 +594,9 @@ const PLAN = [
     ]
   },
   {
-    key:'friday', idx:5, title:'Legs \u2014 Posterior', focus:'Hamstrings / Glutes',
+    key:'saturday', idx:6, title:'Legs \u2014 Posterior', focus:'Hamstrings / Glutes / Low back',
     warmup:'5 min bike, hip hinges with a dowel, 2 ramping RDL sets.',
-    cardio:{ kind:'Easy swim', min:20, how:'Continuous and easy. Water is the right call after a hamstring day \u2014 no impact, and the kick flushes the legs out rather than beating them up.' },
+    cardio:{ kind:'Easy swim', min:20, how:'Continuous and easy to close the week out. Water is the right call after a hamstring day \u2014 no impact, and the kick flushes the legs rather than beating them up.' },
     ex:[
       { id:'rdl', name:'Romanian Deadlift', m:'hams', sets:4, rep:[8,10], rest:150, rir:2, bar:45, cue:'Hips back, soft knees. Stop when the stretch runs out, not when the plates touch.' },
       { id:'hip_thrust', name:'Barbell Hip Thrust', m:'glutes', sets:3, rep:[8,10], rest:120, rir:1, bar:45 },
@@ -594,23 +607,8 @@ const PLAN = [
       { id:'reverse_hyper', name:'Reverse Hyperextension', m:'lower', sets:3, rep:[12,15], rest:75, rir:1, opt:true, cue:'Decompresses the spine while it trains it. No machine? Do these off the end of a bench.' },
       { id:'standing_calf_f', name:'Standing Calf Raise', m:'calves', sets:4, rep:[10,12], rest:45, rir:0 }
     ]
-  },
-  {
-    key:'saturday', idx:6, title:'Abs + Swim', focus:'Every direction the trunk works, then the hard swim',
-    warmup:'5 min easy cardio, dead bugs and bird dogs, then one light set of cable crunches.',
-    cardio:{ kind:'Hard swim or run', min:35, how:'The hardest one of the week \u2014 your legs are fresh and tomorrow is a full rest day. Empty the tank.\nWarm-up \u2014 300 m easy, then 6 \u00d7 50 m build, 15 s rest.\nMain \u2014 8 \u00d7 100 m hard, RPE 8\u20139, 20 s rest. Then 4 \u00d7 50 m all out, 30 s rest.\nDown \u2014 150 m easy. About 1,850 m.\nRunning instead: 5 \u00d7 800 m at 5k pace, 2 min jog between.' },
-    ex:[
-      { id:'cable_crunch', name:'Weighted Cable Crunch', m:'abs', sets:4, rep:[8,12], rest:90, rir:1, cue:'Spinal flexion, heavy. Treat it like a compound \u2014 add weight weekly the same way you would on a row.' },
-      { id:'hanging_raise', name:'Weighted Hanging Leg Raise', m:'abs', sets:4, rep:[8,12], rest:90, rir:1, cue:'Lower abs. Ankle weight or a DB between the feet. Curl the pelvis up; don\u2019t just swing the legs.' },
-      { id:'ab_wheel', name:'Ab Wheel Rollout', m:'abs', sets:3, rep:[8,12], rest:75, rir:1, cue:'Anti-extension \u2014 resisting the arch is the job your abs actually do all day. Ribs down, no sag through the hips.' },
-      { id:'db_side_bend', name:'DB Side Bend', m:'obl', sets:3, rep:[15,20], rest:60, rir:1, cue:'Lateral flexion. One heavy DB, opposite hand behind your head, full stretch at the bottom. The 15\u201320 range is for your spine, not your waistline \u2014 growth is the same across rep ranges when effort matches.' },
-      { id:'cable_chop', name:'Cable Chop', m:'rot', sets:3, rep:[10,12], rest:75, rir:1, cue:'Rotation, per side, high to low. Alternate with low-to-high week to week. Drive from the hips with the abs braced \u2014 the spine itself barely twists.' },
-      { id:'suitcase_carry', name:'Suitcase Carry', m:'abs', sets:3, rep:[30,40], rest:60, rir:1, cue:'Anti-lateral-flexion. One heavy DB, steps per side, log steps as reps. Stay perfectly upright \u2014 the work is in not leaning.' },
-      { id:'pallof', name:'Pallof Press', m:'rot', sets:3, rep:[10,12], rest:45, rir:1, cue:'Anti-rotation, per side. Refusing to rotate is what holds your line in the water. Press slow, let nothing move but your arms.' }
-    ]
   }
 ];
-
 const BASE_EX = {};
 PLAN.forEach(d => d.ex.forEach(e => { BASE_EX[e.id] = e; e.day = d.key; }));
 
@@ -634,6 +632,7 @@ function dayEx(day) {
 /* Exercises the program no longer prescribes. Kept resolvable so that
    anything you already logged against them still shows in Progress. */
 const ARCHIVE = {
+  hanging_oblique: { id:'hanging_oblique', name:'Hanging Oblique Raise', m:'obl', sets:3, rep:[10,12], rest:60, rir:1, cue:'Per side. Knees up and across toward one armpit. Loads the oblique in a lengthened position, which is where it grows best \u2014 the highest-value oblique builder there is. Add an ankle weight once you clear 12 clean reps a side.' },
   decline_situp: { id:'decline_situp', name:'Decline Weighted Sit-Up', m:'abs', sets:3, rep:[8,10], rest:75, rir:1 }
 };
 
