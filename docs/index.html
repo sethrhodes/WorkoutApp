@@ -533,6 +533,7 @@ const PLAN = [
       { id:'seated_ohp', name:'Seated DB Overhead Press', m:'delts', sets:3, rep:[8,10], rest:90, rir:2 },
       { id:'cable_lateral', name:'Cable Lateral Raise', m:'delts', tag:'side', sets:4, rep:[12,15], rest:60, rir:0, cue:'The single biggest lever on how wide your shoulders look. Cable beats dumbbells \u2014 it keeps tension at the bottom, where the delt is stretched. Lead with the elbow, never the hand.' },
       { id:'weighted_dip', name:'Weighted Dip', m:'chest', sets:3, rep:[8,10], rest:90, rir:1, cue:'Lean forward to bias the chest.' },
+      { id:'incline_cable_fly', name:'Incline Cable Fly', m:'chest', tag:'upper', sets:3, rep:[12,15], rest:60, rir:0, cue:'Low to high, bench at 30\u00b0 or standing with the pulleys at your ankles. Everything else you do for chest is a press, and a press never loads the stretched position \u2014 this does, and that is where the pec actually grows. Let your hands travel behind the line of your chest at the bottom, then squeeze them together and slightly up, as if hugging round a barrel.' },
       { id:'rope_pushdown', name:'Rope Pushdown', m:'triceps', sets:3, rep:[12,15], rest:60, rir:0 },
       { id:'oh_tri_ext', name:'Overhead Triceps Extension', m:'triceps', sets:3, rep:[10,12], rest:60, rir:1, cue:'The long head only grows from the overhead stretch. Don\u2019t trade this for more pushdowns.' }
     ]
@@ -740,7 +741,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-09-20b';   // bump on every deploy
+const BUILD = '2026-09-20c';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
