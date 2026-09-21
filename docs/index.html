@@ -573,7 +573,7 @@ const PLAN = [
     ex:[
       { id:'back_squat', name:'Back Squat', m:'quads', sets:4, rep:[6,8], rest:90, rir:2, bar:45, cue:'Leave 2 in the tank. A grinder here costs you the rest of the session.' },
       { id:'hack_squat', name:'Hack Squat', m:'quads', sets:3, rep:[10,12], rest:90, rir:1, cue:'Go deep. The bottom third is where quads actually grow.' },
-      { id:'bulgarian', name:'Bulgarian Split Squat', m:'quads', sets:3, rep:[8,10], rest:60, rir:1, cue:'Per leg.' },
+      { id:'leg_press', name:'Leg Press', m:'quads', sets:3, rep:[12,15], rest:75, rir:1, cue:'Feet mid-platform, shoulder width, toes slightly out. Go down until your hips are just about to tuck under \u2014 that is the bottom, not the sled hitting the stops. Bilateral and supported, so there is nothing to balance and you can push it genuinely hard.' },
       { id:'leg_ext', name:'Leg Extension', m:'quads', sets:3, rep:[12,15], rest:45, rir:0, cue:'The only move that trains rectus femoris with the hip extended. Worth its slot.' },
       { id:'seated_calf', name:'Seated Calf Raise', m:'calves', sets:4, rep:[10,12], rest:45, rir:0, cue:'Bent knee targets the soleus. Pause 2 s at the bottom.' },
       { id:'standing_calf_w', name:'Standing Calf Raise', m:'calves', sets:3, rep:[15,20], rest:45, rir:0, opt:true }
@@ -599,10 +599,9 @@ const PLAN = [
     cardio:{ kind:'Easy swim', min:20, how:'Continuous and easy to close the week out. Water is the right call after a hamstring day \u2014 no impact, and the kick flushes the legs rather than beating them up.' },
     ex:[
       { id:'rdl', name:'Romanian Deadlift', m:'hams', sets:4, rep:[8,10], rest:90, rir:2, bar:45, cue:'Hips back, soft knees. Stop when the stretch runs out, not when the plates touch.' },
-      { id:'hip_thrust', name:'Barbell Hip Thrust', m:'glutes', sets:3, rep:[8,10], rest:90, rir:1, bar:45 },
+      { id:'pull_through', name:'Cable Pull-Through', m:'glutes', sets:4, rep:[12,15], rest:60, rir:1, cue:'Rope between your legs, facing away from the stack, walk out a step. Hinge back until the hamstrings load, then drive the hips forward and squeeze hard at the top. Trains the same hip extension a thrust does, with nothing digging into your hips and no bar to set up.' },
       { id:'seated_curl', name:'Seated Leg Curl', m:'hams', sets:4, rep:[10,12], rest:60, rir:0, cue:'Seated beats lying \u2014 the flexed hip puts the hamstring under a harder stretch.' },
       { id:'back_ext', name:'45-Degree Back Extension', m:'lower', sets:4, rep:[10,12], rest:75, rir:1, cue:'Hold a plate at your chest. Same day as your RDLs on purpose \u2014 train the erectors together, then give them a full week. Load it for reps, not for a max.' },
-      { id:'walking_lunge', name:'DB Walking Lunge', m:'glutes', sets:3, rep:[10,12], rest:60, rir:1, cue:'Per leg.' },
       { id:'nordic', name:'Nordic Curl (assisted)', m:'hams', sets:3, rep:[5,8], rest:60, rir:1, opt:true, cue:'4-second lower. The best hamstring injury insurance there is.' },
       { id:'reverse_hyper', name:'Reverse Hyperextension', m:'lower', sets:3, rep:[12,15], rest:60, rir:1, opt:true, cue:'Decompresses the spine while it trains it. No machine? Do these off the end of a bench.' },
       { id:'standing_calf_f', name:'Standing Calf Raise', m:'calves', sets:4, rep:[10,12], rest:45, rir:0 }
@@ -632,6 +631,9 @@ function dayEx(day) {
 /* Exercises the program no longer prescribes. Kept resolvable so that
    anything you already logged against them still shows in Progress. */
 const ARCHIVE = {
+  walking_lunge: { id:'walking_lunge', name:'DB Walking Lunge', m:'glutes', sets:3, rep:[10,12], rest:60, rir:1, cue:'Per leg.' },
+  hip_thrust: { id:'hip_thrust', name:'Barbell Hip Thrust', m:'glutes', sets:3, rep:[8,10], rest:90, rir:1, bar:45 },
+  bulgarian: { id:'bulgarian', name:'Bulgarian Split Squat', m:'quads', sets:3, rep:[8,10], rest:60, rir:1, cue:'Per leg.' },
   rope_pushdown: { id:'rope_pushdown', name:'Rope Pushdown', m:'triceps', sets:3, rep:[12,15], rest:45, rir:0 },
   hanging_oblique: { id:'hanging_oblique', name:'Hanging Oblique Raise', m:'obl', sets:3, rep:[10,12], rest:60, rir:1, cue:'Per side. Knees up and across toward one armpit. Loads the oblique in a lengthened position, which is where it grows best \u2014 the highest-value oblique builder there is. Add an ankle weight once you clear 12 clean reps a side.' },
   decline_situp: { id:'decline_situp', name:'Decline Weighted Sit-Up', m:'abs', sets:3, rep:[8,10], rest:75, rir:1 }
@@ -741,7 +743,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-09-21b';   // bump on every deploy
+const BUILD = '2026-09-21c';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
