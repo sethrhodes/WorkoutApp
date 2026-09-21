@@ -404,6 +404,30 @@ table.food td.p { text-align: right; font: 700 14px "IBM Plex Mono", monospace; 
 table.food .sv { display: block; font-size: 11.5px; color: var(--ink-3); margin-top: 1px; }
 
 /* -- Progress --------------------------------------------- */
+.daypick { display: flex; gap: 4px; margin-bottom: 12px; }
+.daypick button {
+  flex: 1; padding: 8px 0; border-radius: 8px; cursor: pointer;
+  background: var(--surface-2); border: 1px solid transparent; color: var(--ink-2);
+  font: 600 12px "IBM Plex Sans", sans-serif; -webkit-tap-highlight-color: transparent;
+}
+.daypick button[aria-selected="true"] { background: var(--accent-sf); border-color: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--accent); }
+.daypick button.istoday::after { content: ""; display: block; width: 4px; height: 4px; border-radius: 50%; background: currentColor; margin: 3px auto 0; }
+.mealhead { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 3px; }
+.mealhead .d { font: 700 17px Archivo, sans-serif; letter-spacing: -.02em; }
+.mealhead .l { font-size: 11.5px; color: var(--ink-3); }
+.mealsum { font: 600 13px "IBM Plex Mono", monospace; color: var(--ink-2); margin-bottom: 12px; }
+.mealsum b { color: var(--ink); font-size: 15px; }
+.meal { padding: 12px 0; border-top: 1px solid var(--line-soft); }
+.meal .mt { font: 600 10.5px "IBM Plex Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.meal .mn { font-size: 15px; font-weight: 600; margin: 2px 0 6px; }
+.meal ul { margin: 0; padding-left: 16px; }
+.meal li { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+.meal .mm { font: 600 12px "IBM Plex Mono", monospace; color: var(--ink-3); margin-top: 7px; }
+.meal .mnote { font-size: 12.5px; color: var(--ink-3); font-style: italic; margin-top: 5px; }
+.weigh { display: flex; gap: 8px; padding: 7px 0; font-size: 13.5px; }
+.weigh + .weigh { border-top: 1px solid var(--line-soft); }
+.weigh b { min-width: 74px; font-weight: 600; }
+.weigh span { color: var(--ink-2); }
 .prow {
   width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; font: inherit; color: inherit;
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--r2); padding: 13px 15px; cursor: pointer;
@@ -714,6 +738,592 @@ const MUSCLES = [
 ];
 const VOL_MIN = 10, VOL_MAX = 20, VOL_SCALE = 24;
 
+/* Seth's 7-day meal plan, transcribed from the gram-based PDF.
+   Every day's meals sum exactly to its stated totals. */
+const MEALS = {
+ "monday": {
+  "lift": "Lift 11:10 AM",
+  "k": 3000,
+  "p": 207,
+  "c": 390,
+  "f": 78,
+  "m": [
+   {
+    "t": "7:45 AM",
+    "n": "Egg breakfast",
+    "i": [
+     "4 whole eggs",
+     "3 slices whole-grain toast",
+     "140 g berries"
+    ],
+    "k": 650,
+    "p": 43,
+    "c": 83,
+    "f": 25
+   },
+   {
+    "t": "10:50 AM",
+    "n": "Pre-workout",
+    "i": [
+     "1 medium banana (taken from the smoothie)"
+    ],
+    "k": 105,
+    "p": 1,
+    "c": 27,
+    "f": 0
+   },
+   {
+    "t": "12:20 PM",
+    "n": "Post-workout smoothie",
+    "i": [
+     "35 g Orgain vanilla (2 scoops)",
+     "210 g frozen berries",
+     "60 g spinach",
+     "244 g 2% milk",
+     "Water and ice"
+    ],
+    "k": 380,
+    "p": 32,
+    "c": 48,
+    "f": 9
+   },
+   {
+    "t": "2:00 PM",
+    "n": "Chicken-rice lunch",
+    "i": [
+     "170 g cooked chicken breast",
+     "120 g dry rice, then cooked",
+     "234 g cooked broccoli",
+     "14 g olive oil",
+     "30 g teriyaki sauce"
+    ],
+    "k": 920,
+    "p": 68,
+    "c": 112,
+    "f": 21
+   },
+   {
+    "t": "4:45 PM",
+    "n": "Snack",
+    "i": [
+     "1 medium apple",
+     "78 g shelled edamame"
+    ],
+    "k": 195,
+    "p": 10,
+    "c": 33,
+    "f": 4
+   },
+   {
+    "t": "6:45-7:00 PM",
+    "n": "Chicken-rice dinner",
+    "i": [
+     "142 g cooked chicken breast",
+     "90 g dry rice, then cooked",
+     "104 g cucumber",
+     "75 g bell pepper",
+     "64 g carrots",
+     "14 g olive oil",
+     "30 g sauce"
+    ],
+    "k": 750,
+    "p": 53,
+    "c": 87,
+    "f": 19
+   }
+  ]
+ },
+ "tuesday": {
+  "lift": "Lift 10:30 AM",
+  "k": 2950,
+  "p": 172,
+  "c": 446,
+  "f": 61,
+  "m": [
+   {
+    "t": "7:30 AM",
+    "n": "Yogurt breakfast",
+    "i": [
+     "383 g yogurt",
+     "73 g granola",
+     "140 g berries",
+     "21 g honey"
+    ],
+    "k": 710,
+    "p": 26,
+    "c": 113,
+    "f": 17
+   },
+   {
+    "t": "11:45 AM-12:00 PM",
+    "n": "Chicken-rice lunch",
+    "i": [
+     "170 g cooked chicken breast",
+     "120 g dry rice, then cooked",
+     "234 g cooked broccoli",
+     "14 g olive oil",
+     "30 g teriyaki sauce"
+    ],
+    "k": 920,
+    "p": 68,
+    "c": 112,
+    "f": 21
+   },
+   {
+    "t": "4:30 PM",
+    "n": "Smoothie",
+    "i": [
+     "35 g Orgain vanilla (2 scoops)",
+     "1 medium banana",
+     "210 g frozen berries",
+     "60 g spinach",
+     "244 g 2% milk",
+     "Water and ice"
+    ],
+    "k": 485,
+    "p": 33,
+    "c": 75,
+    "f": 9
+   },
+   {
+    "t": "6:00 PM",
+    "n": "Snack",
+    "i": [
+     "1 medium apple",
+     "78 g shelled edamame"
+    ],
+    "k": 195,
+    "p": 10,
+    "c": 33,
+    "f": 4
+   },
+   {
+    "t": "7:30-8:00 PM",
+    "n": "Goodles dinner",
+    "i": [
+     "1 full box Goodles (150 g dry mix), prepared per box",
+     "234 g cooked broccoli",
+     "No additional chicken"
+    ],
+    "k": 640,
+    "p": 35,
+    "c": 113,
+    "f": 10
+   }
+  ]
+ },
+ "wednesday": {
+  "lift": "Lift 1:45-2:00 PM",
+  "k": 3000,
+  "p": 207,
+  "c": 390,
+  "f": 78,
+  "m": [
+   {
+    "t": "7:30 AM",
+    "n": "Egg breakfast",
+    "i": [
+     "4 whole eggs",
+     "3 slices whole-grain toast",
+     "140 g berries"
+    ],
+    "k": 650,
+    "p": 43,
+    "c": 83,
+    "f": 25
+   },
+   {
+    "t": "10:50 AM",
+    "n": "Lighter pre-workout lunch",
+    "i": [
+     "170 g cooked chicken breast",
+     "120 g dry rice, then cooked",
+     "30 g teriyaki sauce"
+    ],
+    "k": 720,
+    "p": 63,
+    "c": 96,
+    "f": 7,
+    "note": "Broccoli and the lunch oil move to dinner."
+   },
+   {
+    "t": "3:15 PM",
+    "n": "Smoothie",
+    "i": [
+     "35 g Orgain vanilla (2 scoops)",
+     "1 medium banana",
+     "210 g frozen berries",
+     "60 g spinach",
+     "244 g 2% milk",
+     "Water and ice"
+    ],
+    "k": 485,
+    "p": 33,
+    "c": 75,
+    "f": 9
+   },
+   {
+    "t": "6:30 PM",
+    "n": "Snack",
+    "i": [
+     "1 medium apple",
+     "78 g shelled edamame"
+    ],
+    "k": 195,
+    "p": 10,
+    "c": 33,
+    "f": 4
+   },
+   {
+    "t": "7:30-8:00 PM",
+    "n": "Expanded chicken dinner",
+    "i": [
+     "142 g cooked chicken",
+     "90 g dry rice, then cooked",
+     "234 g cooked broccoli",
+     "104 g cucumber",
+     "75 g bell pepper",
+     "64 g carrots",
+     "28 g olive oil",
+     "30 g sauce"
+    ],
+    "k": 950,
+    "p": 58,
+    "c": 103,
+    "f": 33
+   }
+  ]
+ },
+ "thursday": {
+  "lift": "Lift 10:30 AM",
+  "k": 3060,
+  "p": 190,
+  "c": 420,
+  "f": 70,
+  "m": [
+   {
+    "t": "7:30 AM",
+    "n": "Yogurt breakfast",
+    "i": [
+     "383 g yogurt",
+     "73 g granola",
+     "140 g berries",
+     "21 g honey"
+    ],
+    "k": 710,
+    "p": 26,
+    "c": 113,
+    "f": 17
+   },
+   {
+    "t": "11:45 AM-12:00 PM",
+    "n": "Chicken-rice lunch",
+    "i": [
+     "170 g cooked chicken breast",
+     "120 g dry rice, then cooked",
+     "234 g cooked broccoli",
+     "14 g olive oil",
+     "30 g teriyaki sauce"
+    ],
+    "k": 920,
+    "p": 68,
+    "c": 112,
+    "f": 21
+   },
+   {
+    "t": "4:30 PM",
+    "n": "Smoothie",
+    "i": [
+     "35 g Orgain vanilla (2 scoops)",
+     "1 medium banana",
+     "210 g frozen berries",
+     "60 g spinach",
+     "244 g 2% milk",
+     "Water and ice"
+    ],
+    "k": 485,
+    "p": 33,
+    "c": 75,
+    "f": 9
+   },
+   {
+    "t": "6:00 PM",
+    "n": "Snack",
+    "i": [
+     "1 medium apple",
+     "78 g shelled edamame"
+    ],
+    "k": 195,
+    "p": 10,
+    "c": 33,
+    "f": 4
+   },
+   {
+    "t": "7:30-8:00 PM",
+    "n": "Chicken-rice dinner",
+    "i": [
+     "142 g cooked chicken breast",
+     "90 g dry rice, then cooked",
+     "104 g cucumber",
+     "75 g bell pepper",
+     "64 g carrots",
+     "14 g olive oil",
+     "30 g sauce"
+    ],
+    "k": 750,
+    "p": 53,
+    "c": 87,
+    "f": 19
+   }
+  ]
+ },
+ "friday": {
+  "lift": "Lift 10:30 AM",
+  "k": 2890,
+  "p": 189,
+  "c": 416,
+  "f": 69,
+  "m": [
+   {
+    "t": "7:30 AM",
+    "n": "Egg breakfast",
+    "i": [
+     "4 whole eggs",
+     "3 slices whole-grain toast",
+     "140 g berries"
+    ],
+    "k": 650,
+    "p": 43,
+    "c": 83,
+    "f": 25
+   },
+   {
+    "t": "11:45 AM-12:00 PM",
+    "n": "Chicken-rice lunch",
+    "i": [
+     "170 g cooked chicken breast",
+     "120 g dry rice, then cooked",
+     "234 g cooked broccoli",
+     "14 g olive oil",
+     "30 g teriyaki sauce"
+    ],
+    "k": 920,
+    "p": 68,
+    "c": 112,
+    "f": 21
+   },
+   {
+    "t": "2:15 PM",
+    "n": "Smoothie",
+    "i": [
+     "35 g Orgain vanilla (2 scoops)",
+     "1 medium banana",
+     "210 g frozen berries",
+     "60 g spinach",
+     "244 g 2% milk",
+     "Water and ice"
+    ],
+    "k": 485,
+    "p": 33,
+    "c": 75,
+    "f": 9
+   },
+   {
+    "t": "4:30-5:00 PM",
+    "n": "Snack",
+    "i": [
+     "1 medium apple",
+     "78 g shelled edamame"
+    ],
+    "k": 195,
+    "p": 10,
+    "c": 33,
+    "f": 4
+   },
+   {
+    "t": "7:30 PM",
+    "n": "Goodles dinner",
+    "i": [
+     "1 full box Goodles (150 g dry mix), prepared per box",
+     "234 g cooked broccoli",
+     "No additional chicken"
+    ],
+    "k": 640,
+    "p": 35,
+    "c": 113,
+    "f": 10
+   }
+  ]
+ },
+ "saturday": {
+  "lift": "Written as a rest day",
+  "k": 3060,
+  "p": 190,
+  "c": 420,
+  "f": 70,
+  "m": [
+   {
+    "t": "9:00 AM",
+    "n": "Yogurt breakfast",
+    "i": [
+     "383 g yogurt",
+     "73 g granola",
+     "140 g berries",
+     "21 g honey"
+    ],
+    "k": 710,
+    "p": 26,
+    "c": 113,
+    "f": 17
+   },
+   {
+    "t": "1:00 PM",
+    "n": "Chicken-rice lunch",
+    "i": [
+     "170 g cooked chicken breast",
+     "120 g dry rice, then cooked",
+     "234 g cooked broccoli",
+     "14 g olive oil",
+     "30 g teriyaki sauce"
+    ],
+    "k": 920,
+    "p": 68,
+    "c": 112,
+    "f": 21
+   },
+   {
+    "t": "4:00 PM",
+    "n": "Smoothie",
+    "i": [
+     "35 g Orgain vanilla (2 scoops)",
+     "1 medium banana",
+     "210 g frozen berries",
+     "60 g spinach",
+     "244 g 2% milk",
+     "Water and ice"
+    ],
+    "k": 485,
+    "p": 33,
+    "c": 75,
+    "f": 9
+   },
+   {
+    "t": "6:00 PM",
+    "n": "Snack",
+    "i": [
+     "1 medium apple",
+     "78 g shelled edamame"
+    ],
+    "k": 195,
+    "p": 10,
+    "c": 33,
+    "f": 4
+   },
+   {
+    "t": "8:00 PM",
+    "n": "Chicken-rice dinner",
+    "i": [
+     "142 g cooked chicken breast",
+     "90 g dry rice, then cooked",
+     "104 g cucumber",
+     "75 g bell pepper",
+     "64 g carrots",
+     "14 g olive oil",
+     "30 g sauce"
+    ],
+    "k": 750,
+    "p": 53,
+    "c": 87,
+    "f": 19
+   }
+  ]
+ },
+ "sunday": {
+  "lift": "Rest day",
+  "k": 3000,
+  "p": 207,
+  "c": 390,
+  "f": 78,
+  "m": [
+   {
+    "t": "9:00 AM",
+    "n": "Egg breakfast",
+    "i": [
+     "4 whole eggs",
+     "3 slices whole-grain toast",
+     "140 g berries"
+    ],
+    "k": 650,
+    "p": 43,
+    "c": 83,
+    "f": 25
+   },
+   {
+    "t": "1:00 PM",
+    "n": "Chicken-rice lunch",
+    "i": [
+     "170 g cooked chicken breast",
+     "120 g dry rice, then cooked",
+     "234 g cooked broccoli",
+     "14 g olive oil",
+     "30 g teriyaki sauce"
+    ],
+    "k": 920,
+    "p": 68,
+    "c": 112,
+    "f": 21
+   },
+   {
+    "t": "4:00 PM",
+    "n": "Smoothie",
+    "i": [
+     "35 g Orgain vanilla (2 scoops)",
+     "1 medium banana",
+     "210 g frozen berries",
+     "60 g spinach",
+     "244 g 2% milk",
+     "Water and ice"
+    ],
+    "k": 485,
+    "p": 33,
+    "c": 75,
+    "f": 9
+   },
+   {
+    "t": "6:00 PM",
+    "n": "Snack",
+    "i": [
+     "1 medium apple",
+     "78 g shelled edamame"
+    ],
+    "k": 195,
+    "p": 10,
+    "c": 33,
+    "f": 4
+   },
+   {
+    "t": "8:00 PM",
+    "n": "Chicken-rice dinner",
+    "i": [
+     "142 g cooked chicken breast",
+     "90 g dry rice, then cooked",
+     "104 g cucumber",
+     "75 g bell pepper",
+     "64 g carrots",
+     "14 g olive oil",
+     "30 g sauce"
+    ],
+    "k": 750,
+    "p": 53,
+    "c": 87,
+    "f": 19
+   }
+  ]
+ }
+};
+const WEIGH = [["Chicken", "weigh it after cooking"], ["Rice", "weigh it dry, before cooking"], ["Goodles", "use the full 150 g dry box"], ["Produce", "weigh the edible portion"], ["Orgain", "35 g is 2 scoops"]];
+const PLAN_NOTES = ["Macros are estimates from the labels you supplied plus standard values for produce, chicken, milk and sauces. Water absorbed during cooking changes what food weighs but not what it contains.", "Tuesday and Friday swap the chicken-rice dinner for Goodles.", "This plan was written with Saturday as a rest day, but your split now trains Legs - Posterior then. Saturday is already the joint-highest day at 3,060 kcal, so eat it as written - nothing needs moving."];
+
 /* Nutrition. Maintenance \u2248 2,900 kcal: Mifflin-St Jeor at 6'2"/170 lb \u00d7 1.6
    for six lifts and four cardio sessions a week. */
 const FUEL = {
@@ -746,7 +1356,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-09-21e';   // bump on every deploy
+const BUILD = '2026-09-21f';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
@@ -1106,6 +1716,7 @@ let openEx = null;         // exercise id whose logger is expanded
 let openDay = null;        // day key expanded on the Plan tab
 let openHist = null;       // exercise id expanded on Progress
 let fuelMode = null;   // resolved from the calendar on first render
+let mealDay = null;    // defaults to today
 let editDay = null;        // day key currently in edit mode
 let draft = {};            // { exId: [{w:'',r:'',done:false}] }
 
@@ -1515,8 +2126,14 @@ function fuelTarget(t) {
   return m;
 }
 
+const DAY_KEYS = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+
 function viewFuel() {
   const wk = programWeek();
+  const todayKey = DAY_KEYS[(new Date().getDay() + 6) % 7];
+  if (!mealDay) mealDay = todayKey;
+  const md = mealDay;
+  const mday = MEALS[md];
   if (!fuelMode) fuelMode = wk.before ? 'bridge' : wk.n <= 10 ? 'comeback' : 'simple';
   const targets = (fuelMode === 'bridge' ? [FUEL.bridge]
                  : fuelMode === 'comeback' ? [FUEL.comeback]
@@ -1578,6 +2195,37 @@ function viewFuel() {
         ? `You are in week ${wk.n} \u2014 Phase 1 territory. Switch to Phase 2 when your weight and your lifts both stall for two straight weeks, at the earliest around week 11.`
         : `You are in week ${wk.n}. If your weight and lifts have stalled at maintenance, it is time for Phase 2.`}
       Edit any macro and the calories recalculate: protein 4 kcal/g, carbs 4, fat 9.
+    </div>
+
+    <div class="eyebrow" style="margin:22px 0 9px">Meal plan</div>
+    <div class="panel">
+      <div class="daypick">
+        ${DAY_KEYS.map((k, i) => `<button data-mealday="${k}" aria-selected="${k === md}"
+          class="${k === todayKey ? 'istoday' : ''}">${['M','T','W','T','F','S','S'][i]}</button>`).join('')}
+      </div>
+      <div class="mealhead">
+        <span class="d">${md[0].toUpperCase() + md.slice(1)}</span>
+        <span class="l">${esc(mday.lift)}</span>
+      </div>
+      <div class="mealsum"><b>${mday.k.toLocaleString()}</b> kcal \u00b7 ${mday.p} P \u00b7 ${mday.c} C \u00b7 ${mday.f} F</div>
+      ${mday.m.map(m => `
+        <div class="meal">
+          <div class="mt">${esc(m.t)}</div>
+          <div class="mn">${esc(m.n)}</div>
+          <ul>${m.i.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+          ${m.note ? `<div class="mnote">${esc(m.note)}</div>` : ''}
+          <div class="mm">${m.k} kcal \u00b7 ${m.p} P \u00b7 ${m.c} C \u00b7 ${m.f} F</div>
+        </div>`).join('')}
+    </div>
+
+    <div class="panel" style="margin-top:10px">
+      <div class="eyebrow" style="margin-bottom:6px">How to weigh it</div>
+      ${WEIGH.map(([a, b]) => `<div class="weigh"><b>${esc(a)}</b><span>${esc(b)}</span></div>`).join('')}
+    </div>
+
+    <div class="panel" style="margin-top:10px">
+      <div class="eyebrow" style="margin-bottom:7px">About this plan</div>
+      ${PLAN_NOTES.map(n => `<div style="font-size:13px;line-height:1.55;color:var(--ink-2);margin-top:7px">${esc(n)}</div>`).join('')}
     </div>
 
     <div class="panel" style="margin-top:16px">
@@ -1793,6 +2441,9 @@ function wire() {
       f.click();
       return;
     }
+
+    const mdBtn = t.closest('[data-mealday]');
+    if (mdBtn) { mealDay = mdBtn.dataset.mealday; render(); return; }
 
     const fuel = t.closest('[data-fuel]');
     if (fuel) { fuelMode = fuel.dataset.fuel; render(); return; }
