@@ -556,14 +556,14 @@ const PLAN = [
     key:'wednesday', idx:3, title:'Abs', focus:'Every direction the trunk works \u2014 the short day',
     warmup:'5 min easy cardio, dead bugs and bird dogs, then one light set of cable crunches.',
     ex:[
-      { id:'med_ball_throw', name:'Med Ball Rotational Throw', m:'rot', sets:3, rep:[5,5], rest:45, rir:3, cue:'Power, not fatigue \u2014 throw as hard as you can and stop when the ball slows down, never when you are tired. First thing, while you are fresh. Per side, into a wall. Drive from the hip and let the torso follow. No ball? Do these as a cable rotational throw and let go of the tension at the end.' },
-      { id:'cable_crunch', name:'Weighted Cable Crunch', m:'abs', sets:4, rep:[8,12], rest:75, rir:1, cue:'Spinal flexion, heavy. Treat it like a compound \u2014 add weight weekly the same way you would on a row.' },
+      { id:'cable_crunch', name:'Weighted Cable Crunch', m:'abs', sets:4, rep:[8,12], rest:75, rir:1, cue:'Spinal flexion, heavy \u2014 treat it like a compound and add weight weekly the same way you would on a row. The weighted crunch machine does this job just as well, so use whichever is free and lets you load heaviest; just stay on one of them long enough to progress it.' },
       { id:'hanging_raise', name:'Weighted Hanging Leg Raise', m:'abs', sets:4, rep:[8,12], rest:75, rir:1, cue:'Lower abs. Ankle weight or a DB between the feet. Curl the pelvis up; don\u2019t just swing the legs.' },
+      { id:'incline_situp', name:'Incline Sit-Up', m:'abs', sets:3, rep:[10,12], rest:60, rir:1, cue:'Plate held at the chest once bodyweight gets easy. Curl up through the spine rather than hinging at the hips in one rigid piece \u2014 that keeps the work in the abs instead of the hip flexors. Lower under control; the way down is half the set.' },
       { id:'ab_wheel', name:'Ab Wheel Rollout', m:'abs', sets:3, rep:[8,12], rest:60, rir:1, cue:'Anti-extension \u2014 resisting the arch is the job your abs actually do all day. Ribs down, no sag through the hips.' },
       { id:'db_side_bend', name:'DB Side Bend', m:'obl', sets:4, rep:[15,20], rest:45, rir:1, cue:'Lateral flexion. One heavy DB, opposite hand behind your head, full stretch at the bottom. The 15\u201320 range is for your spine, not your waistline \u2014 growth is the same across rep ranges when effort matches.' },
+      { id:'rotary_torso', name:'Rotary Torso Machine', m:'rot', sets:3, rep:[12,15], rest:45, rir:1, cue:'Per side. Set the range conservatively \u2014 this machine will happily rotate you further than your lower back wants to go. Turn through the mid-back with the abs braced, and control the return instead of letting the stack drag you back.' },
       { id:'cable_chop', name:'Cable Chop', m:'rot', sets:3, rep:[10,12], rest:60, rir:1, cue:'Rotation, per side, high to low. Alternate with low-to-high week to week. Drive from the hips with the abs braced \u2014 the spine itself barely twists.' },
-      { id:'pallof', name:'Pallof Press', m:'rot', sets:3, rep:[10,12], rest:45, rir:1, cue:'Anti-rotation, per side. Refusing to rotate is what holds your line in the water. Press slow, let nothing move but your arms.' },
-      { id:'suitcase_carry', name:'Suitcase Carry', m:'abs', sets:3, rep:[30,40], rest:45, rir:1, cue:'Anti-lateral-flexion. One heavy DB, steps per side, log steps as reps. Stay perfectly upright \u2014 the work is in not leaning.' }
+      { id:'pallof', name:'Pallof Press', m:'rot', sets:3, rep:[10,12], rest:45, rir:1, cue:'Anti-rotation, per side. Refusing to rotate is what holds your line in the water. Press slow, let nothing move but your arms.' }
     ]
   },
   {
@@ -583,7 +583,7 @@ const PLAN = [
     warmup:'5 min rower, band pull-aparts, 2 ramping sets on incline bench.',
     ex:[
       { id:'incline_bb', name:'Incline Barbell Bench', m:'chest', tag:'upper', sets:4, rep:[6,8], rest:90, rir:2, bar:45, cue:'Second upper-chest session. Heavier and lower-rep than Monday so the two do different jobs.' },
-      { id:'meadows_row', name:'Meadows Row', m:'back', sets:3, rep:[8,10], rest:75, rir:1, cue:'Per side.' },
+      { id:'db_row', name:'Single-Arm DB Row', m:'back', sets:3, rep:[10,12], rest:75, rir:1, cue:'Per side, knee and hand on the bench. Row toward your hip rather than your armpit, and let the shoulder blade travel at the bottom of each rep. Same job the Meadows row was doing, without needing a landmine.' },
       { id:'machine_press', name:'Machine Chest Press', m:'chest', sets:3, rep:[10,12], rest:60, rir:0, cue:'It\u2019s a machine \u2014 take the last set to true failure. Nothing to drop on yourself.' },
       { id:'straight_arm', name:'Straight-Arm Pulldown', m:'back', tag:'lat', sets:3, rep:[12,15], rest:45, rir:0, cue:'Pure lat, no biceps. Keeps the width work going once your arms are the thing giving out.' },
       { id:'db_lateral', name:'DB Lateral Raise', m:'delts', tag:'side', sets:4, rep:[12,15], rest:45, rir:0, cue:'Second of three weekly hits. Side delts are small, recover fast, and grow on frequency \u2014 this is why they appear three times a week and your chest does not.' },
@@ -630,6 +630,9 @@ function dayEx(day) {
 /* Exercises the program no longer prescribes. Kept resolvable so that
    anything you already logged against them still shows in Progress. */
 const ARCHIVE = {
+  meadows_row: { id:'meadows_row', name:'Meadows Row', m:'back', sets:3, rep:[8,10], rest:75, rir:1, cue:'Per side.' },
+  suitcase_carry: { id:'suitcase_carry', name:'Suitcase Carry', m:'abs', sets:3, rep:[30,40], rest:45, rir:1, cue:'Anti-lateral-flexion. One heavy DB, steps per side, log steps as reps. Stay perfectly upright \u2014 the work is in not leaning.' },
+  med_ball_throw: { id:'med_ball_throw', name:'Med Ball Rotational Throw', m:'rot', sets:3, rep:[5,5], rest:45, rir:3, cue:'Power, not fatigue \u2014 throw as hard as you can and stop when the ball slows down, never when you are tired. First thing, while you are fresh. Per side, into a wall. Drive from the hip and let the torso follow. No ball? Do these as a cable rotational throw and let go of the tension at the end.' },
   hack_squat: { id:'hack_squat', name:'Hack Squat', m:'quads', sets:3, rep:[10,12], rest:90, rir:1, cue:'Go deep. The bottom third is where quads actually grow.' },
   walking_lunge: { id:'walking_lunge', name:'DB Walking Lunge', m:'glutes', sets:3, rep:[10,12], rest:60, rir:1, cue:'Per leg.' },
   hip_thrust: { id:'hip_thrust', name:'Barbell Hip Thrust', m:'glutes', sets:3, rep:[8,10], rest:90, rir:1, bar:45 },
@@ -743,7 +746,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-09-21d';   // bump on every deploy
+const BUILD = '2026-09-21e';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
