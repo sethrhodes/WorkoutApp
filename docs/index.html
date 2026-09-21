@@ -740,6 +740,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
+const BUILD = '2026-09-20b';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
@@ -1119,7 +1120,7 @@ function paintSync() {
   el.innerHTML = ({
     local: 'Saved on <b>this phone</b>. Export a backup from the Progress tab every few weeks.',
     full:  'Storage is full \u2014 <b>recent sets may not have saved</b>.'
-  })[syncState];
+  })[syncState] + ' &middot; build ' + BUILD;
 }
 
 /* -- Today ------------------------------------------------ */
@@ -1920,7 +1921,26 @@ loadEdits();
 render();
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  // A worker already controlling the page means this load came from cache,
+  // so when a newer one takes over we are looking at stale content: reload.
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController || reloading) return;
+    reloading = true;
+    location.reload();
+  });
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => {
+        reg.update();
+        // Catch deploys that land while the app sits open in the background.
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) reg.update();
+        });
+      })
+      .catch(() => {});
+  });
 }
 </script>
 </body>
