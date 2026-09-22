@@ -738,15 +738,11 @@ const MUSCLES = [
 ];
 const VOL_MIN = 10, VOL_MAX = 20, VOL_SCALE = 24;
 
-/* Seth's 7-day meal plan, transcribed from the gram-based PDF.
-   Every day's meals sum exactly to its stated totals. */
+/* Seth's 7-day meal plan, transcribed from the rebalanced gram-based PDF.
+   Day totals are computed from the meals; per-meal kcal from macros at 4/4/9. */
 const MEALS = {
  "monday": {
   "lift": "Lift 11:10 AM",
-  "k": 3000,
-  "p": 207,
-  "c": 390,
-  "f": 78,
   "m": [
    {
     "t": "7:45 AM",
@@ -756,7 +752,7 @@ const MEALS = {
      "3 slices whole-grain toast",
      "140 g berries"
     ],
-    "k": 650,
+    "k": 729,
     "p": 43,
     "c": 83,
     "f": 25
@@ -767,7 +763,7 @@ const MEALS = {
     "i": [
      "1 medium banana (taken from the smoothie)"
     ],
-    "k": 105,
+    "k": 112,
     "p": 1,
     "c": 27,
     "f": 0
@@ -782,7 +778,7 @@ const MEALS = {
      "244 g 2% milk",
      "Water and ice"
     ],
-    "k": 380,
+    "k": 401,
     "p": 32,
     "c": 48,
     "f": 9
@@ -791,16 +787,16 @@ const MEALS = {
     "t": "2:00 PM",
     "n": "Chicken-rice lunch",
     "i": [
-     "170 g cooked chicken breast",
+     "147 g cooked chicken breast",
      "120 g dry rice, then cooked",
      "234 g cooked broccoli",
      "14 g olive oil",
      "30 g teriyaki sauce"
     ],
-    "k": 920,
-    "p": 68,
+    "k": 872,
+    "p": 61,
     "c": 112,
-    "f": 21
+    "f": 20
    },
    {
     "t": "4:45 PM",
@@ -809,7 +805,7 @@ const MEALS = {
      "1 medium apple",
      "78 g shelled edamame"
     ],
-    "k": 195,
+    "k": 208,
     "p": 10,
     "c": 33,
     "f": 4
@@ -818,56 +814,56 @@ const MEALS = {
     "t": "6:45-7:00 PM",
     "n": "Chicken-rice dinner",
     "i": [
-     "142 g cooked chicken breast",
-     "90 g dry rice, then cooked",
+     "120 g cooked chicken breast",
+     "45 g dry rice, then cooked",
      "104 g cucumber",
      "75 g bell pepper",
      "64 g carrots",
-     "14 g olive oil",
+     "18 g olive oil",
      "30 g sauce"
     ],
-    "k": 750,
-    "p": 53,
-    "c": 87,
-    "f": 19
+    "k": 578,
+    "p": 43,
+    "c": 52,
+    "f": 22
    }
-  ]
+  ],
+  "k": 2900,
+  "p": 190,
+  "c": 355,
+  "f": 80
  },
  "tuesday": {
   "lift": "Lift 10:30 AM",
-  "k": 2950,
-  "p": 172,
-  "c": 446,
-  "f": 61,
   "m": [
    {
     "t": "7:30 AM",
-    "n": "Yogurt breakfast",
+    "n": "Lighter yogurt breakfast",
     "i": [
      "383 g yogurt",
-     "73 g granola",
+     "40 g granola",
      "140 g berries",
-     "21 g honey"
+     "No honey today"
     ],
-    "k": 710,
-    "p": 26,
-    "c": 113,
-    "f": 17
+    "k": 492,
+    "p": 23,
+    "c": 73,
+    "f": 12
    },
    {
     "t": "11:45 AM-12:00 PM",
-    "n": "Chicken-rice lunch",
+    "n": "Higher-protein chicken-rice lunch",
     "i": [
-     "170 g cooked chicken breast",
-     "120 g dry rice, then cooked",
+     "252 g cooked chicken breast",
+     "55 g dry rice, then cooked",
      "234 g cooked broccoli",
-     "14 g olive oil",
+     "21 g olive oil",
      "30 g teriyaki sauce"
     ],
-    "k": 920,
-    "p": 68,
-    "c": 112,
-    "f": 21
+    "k": 879,
+    "p": 89,
+    "c": 61,
+    "f": 31
    },
    {
     "t": "4:30 PM",
@@ -880,7 +876,7 @@ const MEALS = {
      "244 g 2% milk",
      "Water and ice"
     ],
-    "k": 485,
+    "k": 513,
     "p": 33,
     "c": 75,
     "f": 9
@@ -892,7 +888,7 @@ const MEALS = {
      "1 medium apple",
      "78 g shelled edamame"
     ],
-    "k": 195,
+    "k": 208,
     "p": 10,
     "c": 33,
     "f": 4
@@ -903,21 +899,22 @@ const MEALS = {
     "i": [
      "1 full box Goodles (150 g dry mix), prepared per box",
      "234 g cooked broccoli",
+     "14 g olive oil over the broccoli",
      "No additional chicken"
     ],
-    "k": 640,
+    "k": 808,
     "p": 35,
     "c": 113,
-    "f": 10
+    "f": 24
    }
-  ]
+  ],
+  "k": 2900,
+  "p": 190,
+  "c": 355,
+  "f": 80
  },
  "wednesday": {
   "lift": "Lift 1:45-2:00 PM",
-  "k": 3000,
-  "p": 207,
-  "c": 390,
-  "f": 78,
   "m": [
    {
     "t": "7:30 AM",
@@ -927,7 +924,7 @@ const MEALS = {
      "3 slices whole-grain toast",
      "140 g berries"
     ],
-    "k": 650,
+    "k": 729,
     "p": 43,
     "c": 83,
     "f": 25
@@ -936,31 +933,33 @@ const MEALS = {
     "t": "10:50 AM",
     "n": "Lighter pre-workout lunch",
     "i": [
-     "170 g cooked chicken breast",
+     "147 g cooked chicken breast",
      "120 g dry rice, then cooked",
      "30 g teriyaki sauce"
     ],
-    "k": 720,
-    "p": 63,
-    "c": 96,
-    "f": 7,
-    "note": "Broccoli and the lunch oil move to dinner."
+    "k": 649,
+    "p": 56,
+    "c": 95,
+    "f": 5,
+    "note": "Broccoli and the lunch oil move to the post-workout meal."
    },
    {
     "t": "3:15 PM",
-    "n": "Smoothie",
+    "n": "Smoothie + vegetables",
     "i": [
      "35 g Orgain vanilla (2 scoops)",
      "1 medium banana",
      "210 g frozen berries",
      "60 g spinach",
      "244 g 2% milk",
-     "Water and ice"
+     "Water and ice",
+     "234 g cooked broccoli",
+     "14 g olive oil over the broccoli"
     ],
-    "k": 485,
-    "p": 33,
-    "c": 75,
-    "f": 9
+    "k": 736,
+    "p": 38,
+    "c": 92,
+    "f": 24
    },
    {
     "t": "6:30 PM",
@@ -969,37 +968,36 @@ const MEALS = {
      "1 medium apple",
      "78 g shelled edamame"
     ],
-    "k": 195,
+    "k": 208,
     "p": 10,
     "c": 33,
     "f": 4
    },
    {
     "t": "7:30-8:00 PM",
-    "n": "Expanded chicken dinner",
+    "n": "Chicken-rice dinner",
     "i": [
-     "142 g cooked chicken",
-     "90 g dry rice, then cooked",
-     "234 g cooked broccoli",
+     "120 g cooked chicken breast",
+     "45 g dry rice, then cooked",
      "104 g cucumber",
      "75 g bell pepper",
      "64 g carrots",
-     "28 g olive oil",
+     "18 g olive oil",
      "30 g sauce"
     ],
-    "k": 950,
-    "p": 58,
-    "c": 103,
-    "f": 33
+    "k": 578,
+    "p": 43,
+    "c": 52,
+    "f": 22
    }
-  ]
+  ],
+  "k": 2900,
+  "p": 190,
+  "c": 355,
+  "f": 80
  },
  "thursday": {
   "lift": "Lift 10:30 AM",
-  "k": 3060,
-  "p": 190,
-  "c": 420,
-  "f": 70,
   "m": [
    {
     "t": "7:30 AM",
@@ -1010,7 +1008,7 @@ const MEALS = {
      "140 g berries",
      "21 g honey"
     ],
-    "k": 710,
+    "k": 709,
     "p": 26,
     "c": 113,
     "f": 17
@@ -1020,14 +1018,14 @@ const MEALS = {
     "n": "Chicken-rice lunch",
     "i": [
      "170 g cooked chicken breast",
-     "120 g dry rice, then cooked",
+     "75 g dry rice, then cooked",
      "234 g cooked broccoli",
      "14 g olive oil",
      "30 g teriyaki sauce"
     ],
-    "k": 920,
-    "p": 68,
-    "c": 112,
+    "k": 757,
+    "p": 65,
+    "c": 77,
     "f": 21
    },
    {
@@ -1041,7 +1039,7 @@ const MEALS = {
      "244 g 2% milk",
      "Water and ice"
     ],
-    "k": 485,
+    "k": 513,
     "p": 33,
     "c": 75,
     "f": 9
@@ -1053,7 +1051,7 @@ const MEALS = {
      "1 medium apple",
      "78 g shelled edamame"
     ],
-    "k": 195,
+    "k": 208,
     "p": 10,
     "c": 33,
     "f": 4
@@ -1062,27 +1060,27 @@ const MEALS = {
     "t": "7:30-8:00 PM",
     "n": "Chicken-rice dinner",
     "i": [
-     "142 g cooked chicken breast",
-     "90 g dry rice, then cooked",
+     "160 g cooked chicken breast",
+     "51 g dry rice, then cooked",
      "104 g cucumber",
      "75 g bell pepper",
      "64 g carrots",
-     "14 g olive oil",
+     "23 g olive oil",
      "30 g sauce"
     ],
-    "k": 750,
-    "p": 53,
-    "c": 87,
-    "f": 19
+    "k": 713,
+    "p": 56,
+    "c": 57,
+    "f": 29
    }
-  ]
+  ],
+  "k": 2900,
+  "p": 190,
+  "c": 355,
+  "f": 80
  },
  "friday": {
   "lift": "Lift 10:30 AM",
-  "k": 2890,
-  "p": 189,
-  "c": 416,
-  "f": 69,
   "m": [
    {
     "t": "7:30 AM",
@@ -1092,7 +1090,7 @@ const MEALS = {
      "3 slices whole-grain toast",
      "140 g berries"
     ],
-    "k": 650,
+    "k": 729,
     "p": 43,
     "c": 83,
     "f": 25
@@ -1101,16 +1099,16 @@ const MEALS = {
     "t": "11:45 AM-12:00 PM",
     "n": "Chicken-rice lunch",
     "i": [
-     "170 g cooked chicken breast",
-     "120 g dry rice, then cooked",
+     "187 g cooked chicken breast",
+     "42 g dry rice, then cooked",
      "234 g cooked broccoli",
-     "14 g olive oil",
+     "24 g olive oil",
      "30 g teriyaki sauce"
     ],
-    "k": 920,
+    "k": 764,
     "p": 68,
-    "c": 112,
-    "f": 21
+    "c": 51,
+    "f": 32
    },
    {
     "t": "2:15 PM",
@@ -1123,7 +1121,7 @@ const MEALS = {
      "244 g 2% milk",
      "Water and ice"
     ],
-    "k": 485,
+    "k": 513,
     "p": 33,
     "c": 75,
     "f": 9
@@ -1135,7 +1133,7 @@ const MEALS = {
      "1 medium apple",
      "78 g shelled edamame"
     ],
-    "k": 195,
+    "k": 208,
     "p": 10,
     "c": 33,
     "f": 4
@@ -1148,19 +1146,19 @@ const MEALS = {
      "234 g cooked broccoli",
      "No additional chicken"
     ],
-    "k": 640,
+    "k": 682,
     "p": 35,
     "c": 113,
     "f": 10
    }
-  ]
+  ],
+  "k": 2896,
+  "p": 189,
+  "c": 355,
+  "f": 80
  },
  "saturday": {
   "lift": "Written as a rest day",
-  "k": 3060,
-  "p": 190,
-  "c": 420,
-  "f": 70,
   "m": [
    {
     "t": "9:00 AM",
@@ -1171,7 +1169,7 @@ const MEALS = {
      "140 g berries",
      "21 g honey"
     ],
-    "k": 710,
+    "k": 709,
     "p": 26,
     "c": 113,
     "f": 17
@@ -1181,14 +1179,14 @@ const MEALS = {
     "n": "Chicken-rice lunch",
     "i": [
      "170 g cooked chicken breast",
-     "120 g dry rice, then cooked",
+     "75 g dry rice, then cooked",
      "234 g cooked broccoli",
      "14 g olive oil",
      "30 g teriyaki sauce"
     ],
-    "k": 920,
-    "p": 68,
-    "c": 112,
+    "k": 757,
+    "p": 65,
+    "c": 77,
     "f": 21
    },
    {
@@ -1202,7 +1200,7 @@ const MEALS = {
      "244 g 2% milk",
      "Water and ice"
     ],
-    "k": 485,
+    "k": 513,
     "p": 33,
     "c": 75,
     "f": 9
@@ -1214,7 +1212,7 @@ const MEALS = {
      "1 medium apple",
      "78 g shelled edamame"
     ],
-    "k": 195,
+    "k": 208,
     "p": 10,
     "c": 33,
     "f": 4
@@ -1223,27 +1221,27 @@ const MEALS = {
     "t": "8:00 PM",
     "n": "Chicken-rice dinner",
     "i": [
-     "142 g cooked chicken breast",
-     "90 g dry rice, then cooked",
+     "160 g cooked chicken breast",
+     "51 g dry rice, then cooked",
      "104 g cucumber",
      "75 g bell pepper",
      "64 g carrots",
-     "14 g olive oil",
+     "23 g olive oil",
      "30 g sauce"
     ],
-    "k": 750,
-    "p": 53,
-    "c": 87,
-    "f": 19
+    "k": 713,
+    "p": 56,
+    "c": 57,
+    "f": 29
    }
-  ]
+  ],
+  "k": 2900,
+  "p": 190,
+  "c": 355,
+  "f": 80
  },
  "sunday": {
   "lift": "Rest day",
-  "k": 3000,
-  "p": 207,
-  "c": 390,
-  "f": 78,
   "m": [
    {
     "t": "9:00 AM",
@@ -1253,7 +1251,7 @@ const MEALS = {
      "3 slices whole-grain toast",
      "140 g berries"
     ],
-    "k": 650,
+    "k": 729,
     "p": 43,
     "c": 83,
     "f": 25
@@ -1262,16 +1260,16 @@ const MEALS = {
     "t": "1:00 PM",
     "n": "Chicken-rice lunch",
     "i": [
-     "170 g cooked chicken breast",
+     "147 g cooked chicken breast",
      "120 g dry rice, then cooked",
      "234 g cooked broccoli",
      "14 g olive oil",
      "30 g teriyaki sauce"
     ],
-    "k": 920,
-    "p": 68,
+    "k": 872,
+    "p": 61,
     "c": 112,
-    "f": 21
+    "f": 20
    },
    {
     "t": "4:00 PM",
@@ -1284,7 +1282,7 @@ const MEALS = {
      "244 g 2% milk",
      "Water and ice"
     ],
-    "k": 485,
+    "k": 513,
     "p": 33,
     "c": 75,
     "f": 9
@@ -1296,7 +1294,7 @@ const MEALS = {
      "1 medium apple",
      "78 g shelled edamame"
     ],
-    "k": 195,
+    "k": 208,
     "p": 10,
     "c": 33,
     "f": 4
@@ -1305,24 +1303,28 @@ const MEALS = {
     "t": "8:00 PM",
     "n": "Chicken-rice dinner",
     "i": [
-     "142 g cooked chicken breast",
-     "90 g dry rice, then cooked",
+     "120 g cooked chicken breast",
+     "45 g dry rice, then cooked",
      "104 g cucumber",
      "75 g bell pepper",
      "64 g carrots",
-     "14 g olive oil",
+     "18 g olive oil",
      "30 g sauce"
     ],
-    "k": 750,
-    "p": 53,
-    "c": 87,
-    "f": 19
+    "k": 578,
+    "p": 43,
+    "c": 52,
+    "f": 22
    }
-  ]
+  ],
+  "k": 2900,
+  "p": 190,
+  "c": 355,
+  "f": 80
  }
 };
-const WEIGH = [["Chicken", "weigh it after cooking"], ["Rice", "weigh it dry, before cooking"], ["Goodles", "use the full 150 g dry box"], ["Produce", "weigh the edible portion"], ["Orgain", "35 g is 2 scoops"]];
-const PLAN_NOTES = ["Macros are estimates from the labels you supplied plus standard values for produce, chicken, milk and sauces. Water absorbed during cooking changes what food weighs but not what it contains.", "Tuesday and Friday swap the chicken-rice dinner for Goodles.", "This plan was written with Saturday as a rest day, but your split now trains Legs - Posterior then. Saturday is already the joint-highest day at 3,060 kcal, so eat it as written - nothing needs moving."];
+const WEIGH = [["Chicken", "weigh it after cooking"], ["Rice", "weigh it dry, before cooking"], ["Goodles", "use the full 150 g dry box"], ["Produce", "weigh the edible portion"], ["Orgain", "35 g is 2 scoops"], ["Eggs, toast, bananas, apples", "counted whole, not weighed"]];
+const PLAN_NOTES = ["Rebalanced so every day hits the same target: 190 g protein, 355 g carbs, 80 g fat. That is exactly the Phase 1 comeback target above, so the plan and the number now agree.", "Macros are estimates from the supplied labels plus standard values for produce, chicken, milk and sauces. Per-meal calories are worked out from the macros at 4/4/9, so the meals always add up to the day.", "Tuesday and Friday swap the chicken-rice dinner for Goodles.", "Friday's protein sums to 189 g rather than 190 - a rounding artefact in the source, not a missing gram of chicken.", "The plan lists Saturday as a rest day, but your split now trains Legs - Posterior then. Every day is the same total now, so there is nothing to move."];
 
 /* Nutrition. Maintenance \u2248 2,900 kcal: Mifflin-St Jeor at 6'2"/170 lb \u00d7 1.6
    for six lifts and four cardio sessions a week. */
@@ -1356,7 +1358,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-09-21f';   // bump on every deploy
+const BUILD = '2026-09-22';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
