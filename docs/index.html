@@ -862,7 +862,7 @@ const MEALS = {
   "liftAt": "2:15-3:30 PM"
  },
  "tuesday": {
-  "lift": "Lift 10:30 AM",
+  "lift": "Lift 10:00-11:30 AM",
   "m": [
    {
     "t": "7:30 AM",
@@ -940,10 +940,10 @@ const MEALS = {
   "p": 190,
   "c": 355,
   "f": 80,
-  "liftAt": "10:30 AM"
+  "liftAt": "10:00-11:30 AM"
  },
  "wednesday": {
-  "lift": "Lift 1:45-2:00 PM",
+  "lift": "Lift 1:45-3:15 PM",
   "m": [
    {
     "t": "7:30 AM",
@@ -1024,10 +1024,10 @@ const MEALS = {
   "p": 190,
   "c": 355,
   "f": 80,
-  "liftAt": "1:45-2:00 PM"
+  "liftAt": "1:45-3:15 PM"
  },
  "thursday": {
-  "lift": "Lift 10:30 AM",
+  "lift": "Lift 10:00-11:30 AM",
   "m": [
    {
     "t": "7:30 AM",
@@ -1108,7 +1108,7 @@ const MEALS = {
   "p": 190,
   "c": 355,
   "f": 80,
-  "liftAt": "10:30 AM"
+  "liftAt": "10:00-11:30 AM"
  },
  "friday": {
   "lift": "Lift 10:30 AM",
@@ -1190,7 +1190,7 @@ const MEALS = {
   "liftAt": "10:30 AM"
  },
  "saturday": {
-  "lift": "Written as a rest day",
+  "lift": "Lift 10:30 AM-12:00 PM",
   "m": [
    {
     "t": "9:00 AM",
@@ -1271,7 +1271,7 @@ const MEALS = {
   "p": 190,
   "c": 355,
   "f": 80,
-  "liftAt": null
+  "liftAt": "10:30 AM-12:00 PM"
  },
  "sunday": {
   "lift": "Rest day",
@@ -1358,7 +1358,7 @@ const MEALS = {
  }
 };
 const WEIGH = [["Chicken", "weigh it after cooking"], ["Rice", "weigh it dry, before cooking \u2014 see the table below"], ["Goodles", "use the full 150 g dry box"], ["Produce", "weigh the edible portion"], ["Orgain", "35 g is 2 scoops"], ["Eggs, toast, bananas, apples", "counted whole, not weighed"]];
-const PLAN_NOTES = ["Rebalanced so every day hits the same target: 190 g protein, 355 g carbs, 80 g fat. That is exactly the Phase 1 comeback target above, so the plan and the number now agree.", "Macros are estimates from the supplied labels plus standard values for produce, chicken, milk and sauces. Per-meal calories are worked out from the macros at 4/4/9, so the meals always add up to the day.", "Tuesday and Friday swap the chicken-rice dinner for Goodles.", "Friday's protein sums to 189 g rather than 190 - a rounding artefact in the source, not a missing gram of chicken.", "The plan lists Saturday as a rest day, but your split now trains Legs - Posterior then. Every day is the same total now, so there is nothing to move."];
+const PLAN_NOTES = ["Rebalanced so every day hits the same target: 190 g protein, 355 g carbs, 80 g fat. That is exactly the Phase 1 comeback target above, so the plan and the number now agree.", "Macros are estimates from the supplied labels plus standard values for produce, chicken, milk and sauces. Per-meal calories are worked out from the macros at 4/4/9, so the meals always add up to the day.", "Tuesday and Friday swap the chicken-rice dinner for Goodles.", "Friday's protein sums to 189 g rather than 190 - a rounding artefact in the source, not a missing gram of chicken.", "The source PDF was written with Saturday as a rest day, but it is a full training day \u2014 Legs - Posterior plus an easy swim. Only the schedule needed fixing: every day carries the same 2,900 kcal, so nothing about the food changes."];
 
 /* Nutrition. Maintenance \u2248 2,900 kcal: Mifflin-St Jeor at 6'2"/170 lb \u00d7 1.6
    for six lifts and four cardio sessions a week. */
@@ -1392,7 +1392,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-09-22f';   // bump on every deploy
+const BUILD = '2026-09-22g';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
