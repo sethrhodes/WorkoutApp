@@ -427,6 +427,14 @@ table.food .sv { display: block; font-size: 11.5px; color: var(--ink-3); margin-
 .weigh { display: flex; gap: 8px; padding: 7px 0; font-size: 13.5px; }
 .weigh + .weigh { border-top: 1px solid var(--line-soft); }
 .weigh b { min-width: 74px; font-weight: 600; }
+.liftmark {
+  display: flex; align-items: center; gap: 9px;
+  padding: 11px 0 10px; border-top: 1px solid var(--line-soft);
+  color: var(--accent); font: 700 11px "IBM Plex Sans", sans-serif;
+  letter-spacing: .11em; text-transform: uppercase;
+}
+.liftmark .tm { font: 600 12px "IBM Plex Mono", monospace; letter-spacing: 0; text-transform: none; }
+.liftmark::after { content: ""; flex: 1; height: 1px; background: color-mix(in srgb, var(--accent) 32%, transparent); }
 table.rice { width: 100%; border-collapse: collapse; }
 table.rice th {
   font: 600 10px "IBM Plex Sans", sans-serif; letter-spacing: .09em; text-transform: uppercase;
@@ -839,7 +847,8 @@ const MEALS = {
   "k": 2900,
   "p": 190,
   "c": 355,
-  "f": 80
+  "f": 80,
+  "liftAt": "2:15-3:30 PM"
  },
  "tuesday": {
   "lift": "Lift 10:30 AM",
@@ -919,7 +928,8 @@ const MEALS = {
   "k": 2900,
   "p": 190,
   "c": 355,
-  "f": 80
+  "f": 80,
+  "liftAt": "10:30 AM"
  },
  "wednesday": {
   "lift": "Lift 1:45-2:00 PM",
@@ -1002,7 +1012,8 @@ const MEALS = {
   "k": 2900,
   "p": 190,
   "c": 355,
-  "f": 80
+  "f": 80,
+  "liftAt": "1:45-2:00 PM"
  },
  "thursday": {
   "lift": "Lift 10:30 AM",
@@ -1085,7 +1096,8 @@ const MEALS = {
   "k": 2900,
   "p": 190,
   "c": 355,
-  "f": 80
+  "f": 80,
+  "liftAt": "10:30 AM"
  },
  "friday": {
   "lift": "Lift 10:30 AM",
@@ -1163,7 +1175,8 @@ const MEALS = {
   "k": 2896,
   "p": 189,
   "c": 355,
-  "f": 80
+  "f": 80,
+  "liftAt": "10:30 AM"
  },
  "saturday": {
   "lift": "Written as a rest day",
@@ -1246,7 +1259,8 @@ const MEALS = {
   "k": 2900,
   "p": 190,
   "c": 355,
-  "f": 80
+  "f": 80,
+  "liftAt": null
  },
  "sunday": {
   "lift": "Rest day",
@@ -1328,7 +1342,8 @@ const MEALS = {
   "k": 2900,
   "p": 190,
   "c": 355,
-  "f": 80
+  "f": 80,
+  "liftAt": null
  }
 };
 const WEIGH = [["Chicken", "weigh it after cooking"], ["Rice", "weigh it dry, before cooking \u2014 see the table below"], ["Goodles", "use the full 150 g dry box"], ["Produce", "weigh the edible portion"], ["Orgain", "35 g is 2 scoops"], ["Eggs, toast, bananas, apples", "counted whole, not weighed"]];
@@ -1366,7 +1381,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-09-22c';   // bump on every deploy
+const BUILD = '2026-09-22d';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
@@ -2139,6 +2154,28 @@ function fuelTarget(t) {
 /* The plan weighs rice dry, because cooked weight depends entirely on how
    much water went in the pot. 2.8x is the ratio implied by USDA's raw and
    cooked figures for white long-grain; real kitchens land near 2.6 to 3.0. */
+/** Minutes past midnight from labels like "7:45 AM", "11:45 AM-12:00 PM",
+ *  or "2:15-3:30 PM" where only the end carries the meridiem. */
+function clockMin(label) {
+  const parts = String(label).split('-');
+  const head = parts[0].trim(), tail = (parts[1] || '').trim();
+  const hm = head.match(/(\d{1,2}):(\d{2})/);
+  if (!hm) return null;
+  const mer = (head.match(/[AP]M/i) || tail.match(/[AP]M/i) || [])[0];
+  let h = (+hm[1]) % 12;
+  if (mer && /^P/i.test(mer)) h += 12;
+  return h * 60 + (+hm[2]);
+}
+
+/** Where the lift falls in the day's run of meals. */
+function liftSlot(day) {
+  if (!day.liftAt) return -1;
+  const at = clockMin(day.liftAt);
+  if (at == null) return -1;
+  const i = day.m.findIndex(m => (clockMin(m.t) ?? 0) > at);
+  return i === -1 ? day.m.length : i;
+}
+
 function riceTable() {
   const dry = new Set();
   Object.values(MEALS).forEach(d => d.m.forEach(m => m.i.forEach(x => {
@@ -2231,7 +2268,8 @@ function viewFuel() {
         <span class="l">${esc(mday.lift)}</span>
       </div>
       <div class="mealsum"><b>${mday.k.toLocaleString()}</b> kcal \u00b7 ${mday.p} P \u00b7 ${mday.c} C \u00b7 ${mday.f} F</div>
-      ${mday.m.map(m => `
+      ${mday.m.map((m, i) => `
+        ${i === liftSlot(mday) ? `<div class="liftmark"><span class="tm">${esc(mday.liftAt)}</span> Lift</div>` : ''}
         <div class="meal">
           <div class="mt">${esc(m.t)}</div>
           <div class="mn">${esc(m.n)}</div>
@@ -2239,6 +2277,7 @@ function viewFuel() {
           ${m.note ? `<div class="mnote">${esc(m.note)}</div>` : ''}
           <div class="mm">${m.k} kcal \u00b7 ${m.p} P \u00b7 ${m.c} C \u00b7 ${m.f} F</div>
         </div>`).join('')}
+      ${liftSlot(mday) === mday.m.length ? `<div class="liftmark"><span class="tm">${esc(mday.liftAt)}</span> Lift</div>` : ''}
     </div>
 
     <div class="panel" style="margin-top:10px">
