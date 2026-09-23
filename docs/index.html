@@ -423,13 +423,18 @@ table.food .sv { display: block; font-size: 11.5px; color: var(--ink-3); margin-
 .meal ul { margin: 0; padding-left: 16px; }
 .meal li { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
 .meal .mm { font: 600 12px "IBM Plex Mono", monospace; color: var(--ink-3); margin-top: 7px; }
-.meal.block { opacity: .72; }
-.meal.block .mt { color: var(--ink-3); }
-.meal.block .mn { font-weight: 500; }
 .meal .mnote { font-size: 12.5px; color: var(--ink-3); font-style: italic; margin-top: 5px; }
 .weigh { display: flex; gap: 8px; padding: 7px 0; font-size: 13.5px; }
 .weigh + .weigh { border-top: 1px solid var(--line-soft); }
 .weigh b { min-width: 74px; font-weight: 600; }
+table.rice { width: 100%; border-collapse: collapse; }
+table.rice th {
+  font: 600 10px "IBM Plex Sans", sans-serif; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--ink-3); text-align: left; padding-bottom: 6px;
+}
+table.rice td { padding: 7px 0; border-top: 1px solid var(--line-soft); font-size: 14px; }
+table.rice td.b { font-weight: 700; }
+table.rice td.dim { color: var(--ink-3); font-size: 12.5px; text-align: right; }
 .weigh span { color: var(--ink-2); }
 .prow {
   width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; font: inherit; color: inherit;
@@ -776,18 +781,6 @@ const MEALS = {
     "f": 20
    },
    {
-    "t": "12:30-1:30 PM",
-    "n": "Weekly meeting",
-    "i": [
-     "Bring water; no meal needed"
-    ],
-    "k": 0,
-    "p": 0,
-    "c": 0,
-    "f": 0,
-    "block": true
-   },
-   {
     "t": "2:00 PM",
     "n": "Pre-workout",
     "i": [
@@ -797,18 +790,6 @@ const MEALS = {
     "p": 1,
     "c": 27,
     "f": 0
-   },
-   {
-    "t": "2:15-3:30 PM",
-    "n": "Lift",
-    "i": [
-     "Full 75-minute training window"
-    ],
-    "k": 0,
-    "p": 0,
-    "c": 0,
-    "f": 0,
-    "block": true
    },
    {
     "t": "3:40 PM",
@@ -1350,7 +1331,7 @@ const MEALS = {
   "f": 80
  }
 };
-const WEIGH = [["Chicken", "weigh it after cooking"], ["Rice", "weigh it dry, before cooking"], ["Goodles", "use the full 150 g dry box"], ["Produce", "weigh the edible portion"], ["Orgain", "35 g is 2 scoops"], ["Eggs, toast, bananas, apples", "counted whole, not weighed"]];
+const WEIGH = [["Chicken", "weigh it after cooking"], ["Rice", "weigh it dry, before cooking \u2014 see the table below"], ["Goodles", "use the full 150 g dry box"], ["Produce", "weigh the edible portion"], ["Orgain", "35 g is 2 scoops"], ["Eggs, toast, bananas, apples", "counted whole, not weighed"]];
 const PLAN_NOTES = ["Rebalanced so every day hits the same target: 190 g protein, 355 g carbs, 80 g fat. That is exactly the Phase 1 comeback target above, so the plan and the number now agree.", "Macros are estimates from the supplied labels plus standard values for produce, chicken, milk and sauces. Per-meal calories are worked out from the macros at 4/4/9, so the meals always add up to the day.", "Tuesday and Friday swap the chicken-rice dinner for Goodles.", "Friday's protein sums to 189 g rather than 190 - a rounding artefact in the source, not a missing gram of chicken.", "The plan lists Saturday as a rest day, but your split now trains Legs - Posterior then. Every day is the same total now, so there is nothing to move."];
 
 /* Nutrition. Maintenance \u2248 2,900 kcal: Mifflin-St Jeor at 6'2"/170 lb \u00d7 1.6
@@ -1385,7 +1366,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-09-22b';   // bump on every deploy
+const BUILD = '2026-09-22c';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
@@ -2155,6 +2136,19 @@ function fuelTarget(t) {
   return m;
 }
 
+/* The plan weighs rice dry, because cooked weight depends entirely on how
+   much water went in the pot. 2.8x is the ratio implied by USDA's raw and
+   cooked figures for white long-grain; real kitchens land near 2.6 to 3.0. */
+function riceTable() {
+  const dry = new Set();
+  Object.values(MEALS).forEach(d => d.m.forEach(m => m.i.forEach(x => {
+    const g = /^(\d+) g dry rice/.exec(x);
+    if (g) dry.add(+g[1]);
+  })));
+  const r = (g, f) => Math.round(g * f / 5) * 5;
+  return [...dry].sort((a, b) => a - b).map(g => ({ dry: g, mid: r(g, 2.8), lo: r(g, 2.6), hi: r(g, 3.0) }));
+}
+
 const DAY_KEYS = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
 
 function viewFuel() {
@@ -2238,18 +2232,40 @@ function viewFuel() {
       </div>
       <div class="mealsum"><b>${mday.k.toLocaleString()}</b> kcal \u00b7 ${mday.p} P \u00b7 ${mday.c} C \u00b7 ${mday.f} F</div>
       ${mday.m.map(m => `
-        <div class="meal${m.block ? ' block' : ''}">
+        <div class="meal">
           <div class="mt">${esc(m.t)}</div>
           <div class="mn">${esc(m.n)}</div>
           <ul>${m.i.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
           ${m.note ? `<div class="mnote">${esc(m.note)}</div>` : ''}
-          ${m.block ? '' : `<div class="mm">${m.k} kcal \u00b7 ${m.p} P \u00b7 ${m.c} C \u00b7 ${m.f} F</div>`}
+          <div class="mm">${m.k} kcal \u00b7 ${m.p} P \u00b7 ${m.c} C \u00b7 ${m.f} F</div>
         </div>`).join('')}
     </div>
 
     <div class="panel" style="margin-top:10px">
       <div class="eyebrow" style="margin-bottom:6px">How to weigh it</div>
       ${WEIGH.map(([a, b]) => `<div class="weigh"><b>${esc(a)}</b><span>${esc(b)}</span></div>`).join('')}
+    </div>
+
+    <div class="panel" style="margin-top:10px">
+      <div class="eyebrow" style="margin-bottom:6px">Rice, dry to cooked</div>
+      <div style="font-size:13px;line-height:1.5;color:var(--ink-2);margin-bottom:10px">
+        Every rice figure in this plan is the <b style="color:var(--ink)">dry</b> weight. Weigh it dry
+        wherever you can \u2014 cooked weight swings with how much water went in the pot, so it is the
+        less reliable number. These are for when the rice is already cooked.
+      </div>
+      <table class="rice">
+        <tr><th>Dry</th><th>Cooked</th><th>Range</th></tr>
+        ${riceTable().map(r => `<tr>
+          <td class="num">${r.dry} g</td>
+          <td class="num b">${r.mid} g</td>
+          <td class="num dim">${r.lo}\u2013${r.hi} g</td>
+        </tr>`).join('')}
+      </table>
+      <div style="font-size:12.5px;line-height:1.5;color:var(--ink-3);margin-top:10px">
+        Better than any table: cook 100 g dry the way you normally would, weigh the whole batch once
+        it has stopped steaming, and divide by 100. That multiplier is yours \u2014 your rice, your pot,
+        your lid \u2014 and it will not move much after that.
+      </div>
     </div>
 
     <div class="panel" style="margin-top:10px">
