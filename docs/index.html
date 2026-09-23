@@ -434,7 +434,18 @@ table.food .sv { display: block; font-size: 11.5px; color: var(--ink-3); margin-
   letter-spacing: .11em; text-transform: uppercase;
 }
 .liftmark .tm { font: 600 12px "IBM Plex Mono", monospace; letter-spacing: 0; text-transform: none; }
-.liftmark::after { content: ""; flex: 1; height: 1px; background: color-mix(in srgb, var(--accent) 32%, transparent); }
+.liftmark .rule { flex: 1; height: 1px; background: color-mix(in srgb, var(--accent) 32%, transparent); }
+.liftmark .fit { font: 600 11px "IBM Plex Mono", monospace; letter-spacing: 0; text-transform: none; color: var(--ink-3); }
+.liftmark.tight { color: var(--hot); }
+.liftmark.tight .rule { background: color-mix(in srgb, var(--hot) 35%, transparent); }
+.liftmark.tight .fit { color: var(--hot); }
+.fitwarn {
+  margin-top: 10px; padding: 10px 12px; border-radius: var(--r);
+  background: color-mix(in srgb, var(--hot) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hot) 30%, transparent);
+  font-size: 12.5px; line-height: 1.5; color: var(--ink-2);
+}
+.fitwarn b { color: var(--hot); }
 table.rice { width: 100%; border-collapse: collapse; }
 table.rice th {
   font: 600 10px "IBM Plex Sans", sans-serif; letter-spacing: .09em; text-transform: uppercase;
@@ -580,7 +591,7 @@ const PLAN = [
   {
     key:'tuesday', idx:2, title:'Pull', focus:'Back / Rear Delts / Biceps',
     warmup:'5 min rower, scapular pull-ups, then one light set of the first row.',
-    cardio:{ kind:'Hard run or swim', min:30, how:'Run is the better pick today \u2014 you just spent an hour pulling, and freestyle is lat-driven, so a hard swim lands on tired muscle.\nRun \u2014 8 \u00d7 2 min at 5k pace, 90 s jog between.\nSwimming instead: 10 \u00d7 75 m hard on 20 s rest, pull buoy off. Expect it to feel heavier than usual.' },
+    cardio:{ kind:'Hard run or swim', min:30, sep:true, how:'Run this one later in the day, not off the back of the lift \u2014 the gap before lunch only holds the session itself, and separating hard cardio from lifting by a few hours costs you less of the lift anyway.\nRun is the better pick today \u2014 you just spent an hour pulling, and freestyle is lat-driven, so a hard swim lands on tired muscle.\nRun \u2014 8 \u00d7 2 min at 5k pace, 90 s jog between.\nSwimming instead: 10 \u00d7 75 m hard on 20 s rest, pull buoy off. Expect it to feel heavier than usual.' },
     ex:[
       { id:'weighted_pullup', name:'Weighted Pull-Up', m:'back', tag:'lat', sets:4, rep:[6,8], rest:90, rir:2, cue:'The width builder. Stay at bodyweight until you clear 10 clean reps, then add the belt. Drive elbows down and back, not hands to the bar.' },
       { id:'chest_supp_row', name:'Chest-Supported Row', m:'back', sets:4, rep:[8,10], rest:75, rir:1, cue:'The chest pad takes your lower back out of it, so you can push these genuinely hard.' },
@@ -609,7 +620,7 @@ const PLAN = [
   {
     key:'thursday', idx:4, title:'Legs \u2014 Quads', focus:'Quads / Glutes / Calves',
     warmup:'5 min bike, leg swings, bodyweight squats, then 3 ramping squat sets.',
-    cardio:{ kind:'Hard swim or run', min:35, how:'The hardest session of the week. Your legs just worked but your lats and shoulders are fresh, which is exactly what a hard swim needs.\nWarm-up \u2014 300 m easy, then 6 \u00d7 50 m build, 15 s rest.\nMain \u2014 8 \u00d7 100 m hard, RPE 8\u20139, 20 s rest. Then 4 \u00d7 50 m all out, 30 s rest.\nDown \u2014 150 m easy. About 1,850 m.\nRunning instead: 5 \u00d7 800 m at 5k pace, 2 min jog between.' },
+    cardio:{ kind:'Hard swim or run', min:35, sep:true, how:'Later in the day, as its own trip \u2014 the window before lunch only holds the lift, and this is far too hard a session to rush.\nThe hardest session of the week. Your legs just worked but your lats and shoulders are fresh, which is exactly what a hard swim needs.\nWarm-up \u2014 300 m easy, then 6 \u00d7 50 m build, 15 s rest.\nMain \u2014 8 \u00d7 100 m hard, RPE 8\u20139, 20 s rest. Then 4 \u00d7 50 m all out, 30 s rest.\nDown \u2014 150 m easy. About 1,850 m.\nRunning instead: 5 \u00d7 800 m at 5k pace, 2 min jog between.' },
     ex:[
       { id:'back_squat', name:'Back Squat', m:'quads', sets:4, rep:[6,8], rest:90, rir:2, bar:45, cue:'Leave 2 in the tank. A grinder here costs you the rest of the session.' },
       { id:'leg_press', name:'Leg Press', m:'quads', sets:5, rep:[12,15], rest:75, rir:1, cue:'Your main machine quad movement now that the hack squat is out. Go down until your hips are just about to tuck under \u2014 that is the bottom, not the sled hitting the stops. Feet mid-platform and shoulder width; drop them lower on the platform on the last two sets to bias the quads harder, which is the job the hack squat was doing.' },
@@ -1381,7 +1392,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-09-22d';   // bump on every deploy
+const BUILD = '2026-09-22f';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
@@ -1860,7 +1871,7 @@ function cardioCard(c) {
         <span class="pip">\u2713</span>
         <span style="flex:1;min-width:0">
           <span class="ex-name">${esc(c.kind)}</span>
-          <div class="ex-meta"><span class="num">${c.min} min</span><span class="sep">\u00b7</span>after the lift<span class="sep">\u00b7</span>allow ${changeMinutes(c)} to change</div>
+          <div class="ex-meta"><span class="num">${c.min} min</span><span class="sep">\u00b7</span>${c.sep ? 'separate session' : 'after the lift'}<span class="sep">\u00b7</span>allow ${changeMinutes(c)} to change</div>
           ${c.how ? `<div class="cardio-how">${esc(c.how)}</div>` : ''}
         </span>
       </button>
@@ -2176,6 +2187,24 @@ function liftSlot(day) {
   return i === -1 ? day.m.length : i;
 }
 
+/** Does the meal plan's lift window actually fit the session it has to hold?
+ *  The window runs from the lift starting to the next meal; the session costs
+ *  the lifting, the cardio and the time spent changing for it. */
+function liftFit(key) {
+  const md = MEALS[key];
+  const d = PLAN.find(x => x.key === key);
+  if (!md || !md.liftAt || !d || !dayEx(d).length) return null;
+  const start = clockMin(md.liftAt);
+  const next = md.m[liftSlot(md)];
+  if (start == null || !next) return null;
+  const have = clockMin(next.t) - start;
+  const c = dayCardio(d);
+  // Cardio flagged as a separate session is not competing for this window.
+  const need = liftMinutes(d) + (c && !c.sep ? (+c.min || 0) + changeMinutes(c) : 0);
+  return { have, need, short: need - have, until: next.n.toLowerCase(),
+           sep: !!(c && c.sep) };
+}
+
 function riceTable() {
   const dry = new Set();
   Object.values(MEALS).forEach(d => d.m.forEach(m => m.i.forEach(x => {
@@ -2269,7 +2298,13 @@ function viewFuel() {
       </div>
       <div class="mealsum"><b>${mday.k.toLocaleString()}</b> kcal \u00b7 ${mday.p} P \u00b7 ${mday.c} C \u00b7 ${mday.f} F</div>
       ${mday.m.map((m, i) => `
-        ${i === liftSlot(mday) ? `<div class="liftmark"><span class="tm">${esc(mday.liftAt)}</span> Lift</div>` : ''}
+        ${i === liftSlot(mday) ? `${(() => { const f = liftFit(md); return f
+          ? `<div class="liftmark${f.short > 10 ? ' tight' : ''}">
+               <span class="tm">${esc(mday.liftAt)}</span> Lift
+               <i class="rule"></i>
+               <span class="fit">${f.have} min \u00b7 needs ${f.need}</span>
+             </div>`
+          : `<div class="liftmark"><span class="tm">${esc(mday.liftAt)}</span> Lift<i class="rule"></i></div>`; })()}` : ''}
         <div class="meal">
           <div class="mt">${esc(m.t)}</div>
           <div class="mn">${esc(m.n)}</div>
@@ -2277,7 +2312,17 @@ function viewFuel() {
           ${m.note ? `<div class="mnote">${esc(m.note)}</div>` : ''}
           <div class="mm">${m.k} kcal \u00b7 ${m.p} P \u00b7 ${m.c} C \u00b7 ${m.f} F</div>
         </div>`).join('')}
-      ${liftSlot(mday) === mday.m.length ? `<div class="liftmark"><span class="tm">${esc(mday.liftAt)}</span> Lift</div>` : ''}
+      ${liftSlot(mday) === mday.m.length ? `${(() => { const f = liftFit(md); return f
+          ? `<div class="liftmark${f.short > 10 ? ' tight' : ''}">
+               <span class="tm">${esc(mday.liftAt)}</span> Lift
+               <i class="rule"></i>
+               <span class="fit">${f.have} min \u00b7 needs ${f.need}</span>
+             </div>`
+          : `<div class="liftmark"><span class="tm">${esc(mday.liftAt)}</span> Lift<i class="rule"></i></div>`; })()}` : ''}
+      ${(() => { const f = liftFit(md); return f && f.short > 10
+        ? `<div class="fitwarn">That window is <b>${f.short} min short</b>. The session is ${f.need} min
+             once you count changing and the swim, but there are only ${f.have} before the ${esc(f.until)}.
+             Run the cardio later in the day and the lift itself fits with room.</div>` : ''; })()}
     </div>
 
     <div class="panel" style="margin-top:10px">
