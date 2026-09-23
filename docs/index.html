@@ -423,6 +423,9 @@ table.food .sv { display: block; font-size: 11.5px; color: var(--ink-3); margin-
 .meal ul { margin: 0; padding-left: 16px; }
 .meal li { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
 .meal .mm { font: 600 12px "IBM Plex Mono", monospace; color: var(--ink-3); margin-top: 7px; }
+.meal.block { opacity: .72; }
+.meal.block .mt { color: var(--ink-3); }
+.meal.block .mn { font-weight: 500; }
 .meal .mnote { font-size: 12.5px; color: var(--ink-3); font-style: italic; margin-top: 5px; }
 .weigh { display: flex; gap: 8px; padding: 7px 0; font-size: 13.5px; }
 .weigh + .weigh { border-top: 1px solid var(--line-soft); }
@@ -742,7 +745,7 @@ const VOL_MIN = 10, VOL_MAX = 20, VOL_SCALE = 24;
    Day totals are computed from the meals; per-meal kcal from macros at 4/4/9. */
 const MEALS = {
  "monday": {
-  "lift": "Lift 11:10 AM",
+  "lift": "Lift 2:15-3:30 PM",
   "m": [
    {
     "t": "7:45 AM",
@@ -758,33 +761,7 @@ const MEALS = {
     "f": 25
    },
    {
-    "t": "10:50 AM",
-    "n": "Pre-workout",
-    "i": [
-     "1 medium banana (taken from the smoothie)"
-    ],
-    "k": 112,
-    "p": 1,
-    "c": 27,
-    "f": 0
-   },
-   {
-    "t": "12:20 PM",
-    "n": "Post-workout smoothie",
-    "i": [
-     "35 g Orgain vanilla (2 scoops)",
-     "210 g frozen berries",
-     "60 g spinach",
-     "244 g 2% milk",
-     "Water and ice"
-    ],
-    "k": 401,
-    "p": 32,
-    "c": 48,
-    "f": 9
-   },
-   {
-    "t": "2:00 PM",
+    "t": "11:05 AM",
     "n": "Chicken-rice lunch",
     "i": [
      "147 g cooked chicken breast",
@@ -799,7 +776,57 @@ const MEALS = {
     "f": 20
    },
    {
-    "t": "4:45 PM",
+    "t": "12:30-1:30 PM",
+    "n": "Weekly meeting",
+    "i": [
+     "Bring water; no meal needed"
+    ],
+    "k": 0,
+    "p": 0,
+    "c": 0,
+    "f": 0,
+    "block": true
+   },
+   {
+    "t": "2:00 PM",
+    "n": "Pre-workout",
+    "i": [
+     "1 medium banana, taken from the smoothie"
+    ],
+    "k": 112,
+    "p": 1,
+    "c": 27,
+    "f": 0
+   },
+   {
+    "t": "2:15-3:30 PM",
+    "n": "Lift",
+    "i": [
+     "Full 75-minute training window"
+    ],
+    "k": 0,
+    "p": 0,
+    "c": 0,
+    "f": 0,
+    "block": true
+   },
+   {
+    "t": "3:40 PM",
+    "n": "Post-workout smoothie",
+    "i": [
+     "35 g Orgain vanilla (2 scoops)",
+     "210 g frozen berries",
+     "60 g spinach",
+     "244 g 2% milk",
+     "Water and ice; the banana is already eaten"
+    ],
+    "k": 401,
+    "p": 32,
+    "c": 48,
+    "f": 9
+   },
+   {
+    "t": "5:00 PM",
     "n": "Snack",
     "i": [
      "1 medium apple",
@@ -1358,7 +1385,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-09-22';   // bump on every deploy
+const BUILD = '2026-09-22b';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
@@ -2211,12 +2238,12 @@ function viewFuel() {
       </div>
       <div class="mealsum"><b>${mday.k.toLocaleString()}</b> kcal \u00b7 ${mday.p} P \u00b7 ${mday.c} C \u00b7 ${mday.f} F</div>
       ${mday.m.map(m => `
-        <div class="meal">
+        <div class="meal${m.block ? ' block' : ''}">
           <div class="mt">${esc(m.t)}</div>
           <div class="mn">${esc(m.n)}</div>
           <ul>${m.i.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
           ${m.note ? `<div class="mnote">${esc(m.note)}</div>` : ''}
-          <div class="mm">${m.k} kcal \u00b7 ${m.p} P \u00b7 ${m.c} C \u00b7 ${m.f} F</div>
+          ${m.block ? '' : `<div class="mm">${m.k} kcal \u00b7 ${m.p} P \u00b7 ${m.c} C \u00b7 ${m.f} F</div>`}
         </div>`).join('')}
     </div>
 

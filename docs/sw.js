@@ -1,7 +1,7 @@
 /* Iron Ledger service worker.
    Cache-first with a background refresh: the gym has no signal, so the app
    must open instantly from cache, then quietly update itself for next time. */
-const VERSION = 'iron-ledger-2026-09-22';
+const VERSION = 'iron-ledger-2026-09-22b';
 const SHELL = [
   './',
   './index.html',
