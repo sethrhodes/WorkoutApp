@@ -412,6 +412,9 @@ table.food .sv { display: block; font-size: 11.5px; color: var(--ink-3); margin-
 }
 .daypick button[aria-selected="true"] { background: var(--accent-sf); border-color: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--accent); }
 .daypick button.istoday::after { content: ""; display: block; width: 4px; height: 4px; border-radius: 50%; background: currentColor; margin: 3px auto 0; }
+.daypick button.did { color: var(--ink-3); text-decoration: line-through; }
+.swapnote { font-size: 12px; color: var(--ink-3); margin: -4px 0 0; }
+.swapnote button { background: none; border: 0; padding: 0; color: var(--accent); font: inherit; cursor: pointer; text-decoration: underline; }
 .mealhead { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 3px; }
 .mealhead .d { font: 700 17px Archivo, sans-serif; letter-spacing: -.02em; }
 .mealhead .l { font-size: 11.5px; color: var(--ink-3); }
@@ -1396,7 +1399,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-09-22g';   // bump on every deploy
+const BUILD = '2026-10-18a';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
@@ -1672,7 +1675,47 @@ function dayTotal(day) {
 }
 
 const estMinutes = liftMinutes;   // older call sites
-const dayFor = d => PLAN.find(x => x.idx === d.getDay()) || PLAN[0];
+const scheduledFor = d => PLAN.find(x => x.idx === d.getDay()) || PLAN[0];
+/** The day you are actually doing: the calendar's, unless you swapped it.
+ *  Swaps live in logs.swap by date, so they travel with backups. */
+const dayFor = d => {
+  const k = (logs.swap || {})[iso(d)];
+  return (k && PLAN.find(x => x.key === k)) || scheduledFor(d);
+};
+function setSwap(key) {
+  logs.swap = logs.swap || {};
+  if (key === scheduledFor(new Date()).key) delete logs.swap[TODAY];
+  else logs.swap[TODAY] = key;
+  persist('swap');
+}
+/** Program days already trained earlier this week, by what was done that day. */
+function doneThisWeek() {
+  const now = new Date(), out = new Set();
+  const d = new Date(now); d.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  for (; iso(d) < TODAY; d.setDate(d.getDate() + 1)) {
+    const k = iso(d);
+    const trained = Object.keys(logs).some(id => id !== 'swap' && (logs[id] || {})[k]);
+    if (trained) out.add(dayFor(d).key);
+  }
+  return out;
+}
+const WEEK_ORDER = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+function swapPicker() {
+  const sched = scheduledFor(new Date()), cur = dayFor(new Date()), did = doneThisWeek();
+  const name = k => k[0].toUpperCase() + k.slice(1);
+  return `
+    <div class="panel" style="margin-bottom:14px">
+      <div class="eyebrow" style="margin-bottom:9px">Doing a different day?</div>
+      <div class="daypick">
+        ${WEEK_ORDER.map((k, i) => `<button data-swapday="${k}" aria-selected="${k === cur.key}"
+          class="${[k === sched.key ? 'istoday' : '', did.has(k) && k !== cur.key ? 'did' : ''].join(' ').trim()}"
+          title="${name(k)}: ${esc(PLAN.find(x => x.key === k).title)}">${'MTWTFSS'[i]}</button>`).join('')}
+      </div>
+      <div class="swapnote">${cur.key !== sched.key
+        ? `Doing ${name(cur.key)}'s ${esc(cur.title)} instead of ${name(sched.key)}'s. <button data-swapday="${sched.key}">Undo</button>`
+        : `Today is ${name(sched.key)}. Crossed-out days are done this week.`}</div>
+    </div>`;
+}
 
 const fmtDate = s => {
   const [y, m, d] = s.split('-').map(Number);
@@ -1824,6 +1867,7 @@ function viewToday() {
         <h1>Rest</h1>
         <div class="focus">Recovery + mobility</div>
       </div>
+      ${swapPicker()}
       <div class="panel empty">
         <h3>Nothing to lift today</h3>
         Walk, stretch, hydrate, eat your protein. Muscle is built on the days you don't train \u2014
@@ -1853,6 +1897,8 @@ function viewToday() {
         <span class="num">${Math.round(pct * 100)}%</span>
       </div>
     </div>
+
+    ${swapPicker()}
 
     ${ramp ? `<div class="panel ramping" style="margin-bottom:14px"><div class="note"><b>${ramp[0]}</b>${ramp[1]}</div></div>` : ''}
 
@@ -2223,7 +2269,7 @@ const DAY_KEYS = ['monday','tuesday','wednesday','thursday','friday','saturday',
 
 function viewFuel() {
   const wk = programWeek();
-  const todayKey = DAY_KEYS[(new Date().getDay() + 6) % 7];
+  const todayKey = dayFor(new Date()).key;   // follows a swapped day
   if (!mealDay) mealDay = todayKey;
   const md = mealDay;
   const mday = MEALS[md];
@@ -2574,6 +2620,9 @@ function wire() {
       f.click();
       return;
     }
+
+    const sw = t.closest('[data-swapday]');
+    if (sw) { setSwap(sw.dataset.swapday); openEx = null; mealDay = null; render(); return; }
 
     const mdBtn = t.closest('[data-mealday]');
     if (mdBtn) { mealDay = mdBtn.dataset.mealday; render(); return; }
