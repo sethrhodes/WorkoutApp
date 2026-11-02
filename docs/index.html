@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Iron Ledger</title>
-<meta name="description" content="A six-day hypertrophy program with set logging, automatic progression and a rest timer.">
+<meta name="description" content="A three-day full-body hypertrophy program with set logging, automatic progression and a rest timer.">
 <meta name="theme-color" content="#133A61">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -572,92 +572,68 @@ table.rice td.dim { color: var(--ink-3); font-size: 12.5px; text-align: right; }
 <script>
 /* ===========================================================
    THE PROGRAM
-   Six lifting days, three cardio sessions, one full rest day.
+   Three full-body lifting days, three cardio days, one full rest day.
+   Lifting and cardio never share a day, so every session gets you fresh.
    RIR = reps in reserve: how many you leave in the tank.
    =========================================================== */
 const PLAN = [
   { key:'sunday', idx:0, title:'Rest', focus:'Recovery + mobility', ex:[] },
   {
-    key:'monday', idx:1, title:'Push', focus:'Chest / Shoulders / Triceps',
-    warmup:'5 min bike or rower, band pull-aparts, then 2 ramping sets on the first press.',
-    cardio:{ kind:'Easy swim', min:20, how:'Continuous freestyle, conversational the whole way. This is recovery, not a session \u2014 if you are breathing hard, slow down.' },
+    key:'monday', idx:1, title:'Easy swim', focus:'Cardio only \u2014 no lifting today',
+    cardio:{ kind:'Easy swim', min:25, how:'Continuous freestyle, conversational the whole way. This is recovery with a pool in it, not a session \u2014 if you are breathing hard, slow down.' },
+    ex:[]
+  },
+  {
+    key:'tuesday', idx:2, title:'Full Body A', focus:'Squat / Incline press / Pull-ups',
+    warmup:'5 min bike, bodyweight squats and band pull-aparts, then 3 ramping squat sets.',
     ex:[
-      { id:'incline_db_press', name:'Incline DB Press', m:'chest', tag:'upper', sets:4, rep:[8,10], rest:90, rir:2, cue:'Upper chest is what gives the shelf under the collarbone. 30\u00b0 bench. Feel the stretch at the bottom; don\u2019t bounce off your shoulders.' },
+      { id:'back_squat', name:'Back Squat', m:'quads', sets:3, rep:[6,8], rest:90, rir:2, bar:45, cue:'Leave 2 in the tank. A grinder here costs you the rest of the session.' },
+      { id:'incline_db_press', name:'Incline DB Press', m:'chest', tag:'upper', sets:3, rep:[8,10], rest:90, rir:2, cue:'Upper chest is what gives the shelf under the collarbone. 30\u00b0 bench. Feel the stretch at the bottom; don\u2019t bounce off your shoulders.' },
+      { id:'weighted_pullup', name:'Weighted Pull-Up', m:'back', tag:'lat', sets:3, rep:[6,8], rest:90, rir:2, cue:'The width builder. Stay at bodyweight until you clear 10 clean reps, then add the belt. Drive elbows down and back, not hands to the bar.' },
+      { id:'cable_lateral', name:'Cable Lateral Raise', m:'delts', tag:'side', sets:3, rep:[12,15], rest:45, rir:0, cue:'The single biggest lever on how wide your shoulders look. Cable beats dumbbells \u2014 it keeps tension at the bottom, where the delt is stretched. Lead with the elbow, never the hand.' },
+      { id:'oh_tri_ext', name:'Overhead Triceps Extension', m:'triceps', sets:2, rep:[10,12], rest:45, rir:1, cue:'Your only direct triceps work today, and the right one to keep. The long head is most of the muscle and it only loads with your arm overhead \u2014 pushdowns train the heads that every press already hammers. Deep stretch at the bottom, elbows in.' },
+      { id:'cable_crunch', name:'Weighted Cable Crunch', m:'abs', sets:3, rep:[8,12], rest:75, rir:1, cue:'Spinal flexion, heavy \u2014 treat it like a compound and add weight weekly the same way you would on a row. The weighted crunch machine does this job just as well, so use whichever is free and lets you load heaviest; just stay on one of them long enough to progress it.' },
+      { id:'pallof', name:'Pallof Press', m:'rot', sets:2, rep:[10,12], rest:45, rir:1, cue:'Anti-rotation, per side. Refusing to rotate is what holds your line in the water. Press slow, let nothing move but your arms.' }
+    ]
+  },
+  {
+    key:'wednesday', idx:3, title:'Intervals', focus:'The one hard cardio session \u2014 no lifting today',
+    cardio:{ kind:'Hard swim or run', min:30, how:'The only hard cardio of the week, on a day with no lifting so you can actually push it.\nSwim: 10 \u00d7 75 m hard on 20 s rest.\nRun instead: 8 \u00d7 2 min at 5k pace, 90 s jog between.\nIf you wake up wrecked, swap it for an easy 25 minutes \u2014 one skipped hard session costs nothing.' },
+    ex:[]
+  },
+  {
+    key:'thursday', idx:4, title:'Full Body B', focus:'Hinge / Rows / Flat bench',
+    warmup:'5 min rower, hip hinges with a dowel, 2 ramping RDL sets.',
+    ex:[
+      { id:'rdl', name:'Romanian Deadlift', m:'hams', sets:3, rep:[8,10], rest:90, rir:2, bar:45, cue:'Hips back, soft knees. Stop when the stretch runs out, not when the plates touch.' },
+      { id:'chest_supp_row', name:'Chest-Supported Row', m:'back', sets:3, rep:[8,10], rest:75, rir:1, cue:'The chest pad takes your lower back out of it, so you can push these genuinely hard.' },
       { id:'flat_bench', name:'Flat Barbell Bench', m:'chest', sets:3, rep:[6,8], rest:90, rir:2, bar:45 },
-      { id:'seated_ohp', name:'Seated DB Overhead Press', m:'delts', sets:3, rep:[8,10], rest:75, rir:2 },
-      { id:'cable_lateral', name:'Cable Lateral Raise', m:'delts', tag:'side', sets:4, rep:[12,15], rest:45, rir:0, cue:'The single biggest lever on how wide your shoulders look. Cable beats dumbbells \u2014 it keeps tension at the bottom, where the delt is stretched. Lead with the elbow, never the hand.' },
-      { id:'weighted_dip', name:'Weighted Dip', m:'chest', sets:3, rep:[8,10], rest:75, rir:1, cue:'Lean forward to bias the chest.' },
-      { id:'incline_cable_fly', name:'Incline Cable Fly', m:'chest', tag:'upper', sets:3, rep:[12,15], rest:45, rir:0, cue:'Low to high, bench at 30\u00b0 or standing with the pulleys at your ankles. Everything else you do for chest is a press, and a press never loads the stretched position \u2014 this does, and that is where the pec actually grows. Let your hands travel behind the line of your chest at the bottom, then squeeze them together and slightly up, as if hugging round a barrel.' },
-      { id:'oh_tri_ext', name:'Overhead Triceps Extension', m:'triceps', sets:3, rep:[10,12], rest:45, rir:1, cue:'Your only direct triceps work today, and the right one to keep. The long head is most of the muscle and it only loads with your arm overhead \u2014 pushdowns train the heads that every press already hammers. Deep stretch at the bottom, elbows in.' }
-    ]
-  },
-  {
-    key:'tuesday', idx:2, title:'Pull', focus:'Back / Rear Delts / Biceps',
-    warmup:'5 min rower, scapular pull-ups, then one light set of the first row.',
-    cardio:{ kind:'Hard run or swim', min:30, sep:true, how:'Run this one later in the day, not off the back of the lift \u2014 the gap before lunch only holds the session itself, and separating hard cardio from lifting by a few hours costs you less of the lift anyway.\nRun is the better pick today \u2014 you just spent an hour pulling, and freestyle is lat-driven, so a hard swim lands on tired muscle.\nRun \u2014 8 \u00d7 2 min at 5k pace, 90 s jog between.\nSwimming instead: 10 \u00d7 75 m hard on 20 s rest, pull buoy off. Expect it to feel heavier than usual.' },
-    ex:[
-      { id:'weighted_pullup', name:'Weighted Pull-Up', m:'back', tag:'lat', sets:4, rep:[6,8], rest:90, rir:2, cue:'The width builder. Stay at bodyweight until you clear 10 clean reps, then add the belt. Drive elbows down and back, not hands to the bar.' },
-      { id:'chest_supp_row', name:'Chest-Supported Row', m:'back', sets:4, rep:[8,10], rest:75, rir:1, cue:'The chest pad takes your lower back out of it, so you can push these genuinely hard.' },
       { id:'lat_pulldown', name:'Wide-Grip Lat Pulldown', m:'back', tag:'lat', sets:3, rep:[10,12], rest:60, rir:1, cue:'Grip outside shoulder width. The wider path biases the upper-outer lat and teres major \u2014 the muscles that flare the V.' },
-      { id:'cable_row', name:'Seated Cable Row', m:'back', sets:3, rep:[10,12], rest:60, rir:1 },
-      { id:'face_pull', name:'Face Pull', m:'rear', sets:3, rep:[15,20], rest:45, rir:0, cue:'Rear delts and shoulder health \u2014 cheap insurance against six days of pressing.' },
-      { id:'cable_lateral_tue', name:'Cable Lateral Raise', m:'delts', tag:'side', sets:4, rep:[12,15], rest:45, rir:0, cue:'Third hit of the week. Your shoulders are fresh on pull day \u2014 no pressing has pre-fatigued them, so these are often your best sets.' },
+      { id:'cable_lateral_tue', name:'Cable Lateral Raise', m:'delts', tag:'side', sets:3, rep:[12,15], rest:45, rir:0, cue:'Second of three weekly hits. Nothing before it today presses overhead, so your shoulders are fresh and these are often your best sets.' },
       { id:'incline_curl', name:'Incline DB Curl', m:'biceps', sets:3, rep:[10,12], rest:45, rir:0, cue:'Arms behind your torso is the most stretched position you can load a biceps in. No swing.' },
-      { id:'hammer_curl', name:'Hammer Curl', m:'biceps', sets:3, rep:[10,12], rest:45, rir:0, cue:'Brachialis \u2014 the muscle underneath that pushes the biceps up and thickens the arm.' }
+      { id:'hanging_raise', name:'Weighted Hanging Leg Raise', m:'abs', sets:3, rep:[8,12], rest:75, rir:1, cue:'Lower abs. Ankle weight or a DB between the feet. Curl the pelvis up; don\u2019t just swing the legs.' },
+      { id:'db_side_bend', name:'DB Side Bend', m:'obl', sets:2, rep:[15,20], rest:45, rir:1, cue:'Lateral flexion. One heavy DB, opposite hand behind your head, full stretch at the bottom. The 15\u201320 range is for your spine, not your waistline \u2014 growth is the same across rep ranges when effort matches.' }
     ]
   },
   {
-    key:'wednesday', idx:3, title:'Abs', focus:'Every direction the trunk works \u2014 the short day',
-    warmup:'5 min easy cardio, dead bugs and bird dogs, then one light set of cable crunches.',
-    ex:[
-      { id:'cable_crunch', name:'Weighted Cable Crunch', m:'abs', sets:4, rep:[8,12], rest:75, rir:1, cue:'Spinal flexion, heavy \u2014 treat it like a compound and add weight weekly the same way you would on a row. The weighted crunch machine does this job just as well, so use whichever is free and lets you load heaviest; just stay on one of them long enough to progress it.' },
-      { id:'hanging_raise', name:'Weighted Hanging Leg Raise', m:'abs', sets:4, rep:[8,12], rest:75, rir:1, cue:'Lower abs. Ankle weight or a DB between the feet. Curl the pelvis up; don\u2019t just swing the legs.' },
-      { id:'incline_situp', name:'Incline Sit-Up', m:'abs', sets:3, rep:[10,12], rest:60, rir:1, cue:'Plate held at the chest once bodyweight gets easy. Curl up through the spine rather than hinging at the hips in one rigid piece \u2014 that keeps the work in the abs instead of the hip flexors. Lower under control; the way down is half the set.' },
-      { id:'ab_wheel', name:'Ab Wheel Rollout', m:'abs', sets:3, rep:[8,12], rest:60, rir:1, cue:'Anti-extension \u2014 resisting the arch is the job your abs actually do all day. Ribs down, no sag through the hips.' },
-      { id:'db_side_bend', name:'DB Side Bend', m:'obl', sets:4, rep:[15,20], rest:45, rir:1, cue:'Lateral flexion. One heavy DB, opposite hand behind your head, full stretch at the bottom. The 15\u201320 range is for your spine, not your waistline \u2014 growth is the same across rep ranges when effort matches.' },
-      { id:'rotary_torso', name:'Rotary Torso Machine', m:'rot', sets:3, rep:[12,15], rest:45, rir:1, cue:'Per side. Set the range conservatively \u2014 this machine will happily rotate you further than your lower back wants to go. Turn through the mid-back with the abs braced, and control the return instead of letting the stack drag you back.' },
-      { id:'cable_chop', name:'Cable Chop', m:'rot', sets:3, rep:[10,12], rest:60, rir:1, cue:'Rotation, per side, high to low. Alternate with low-to-high week to week. Drive from the hips with the abs braced \u2014 the spine itself barely twists.' },
-      { id:'pallof', name:'Pallof Press', m:'rot', sets:3, rep:[10,12], rest:45, rir:1, cue:'Anti-rotation, per side. Refusing to rotate is what holds your line in the water. Press slow, let nothing move but your arms.' }
-    ]
+    key:'friday', idx:5, title:'Easy cardio', focus:'Cardio only \u2014 no lifting today',
+    cardio:{ kind:'Easy swim or run', min:25, how:'Easy aerobic work the day before your last lift. Swim or run, whichever your legs prefer \u2014 conversational pace throughout.' },
+    ex:[]
   },
   {
-    key:'thursday', idx:4, title:'Legs \u2014 Quads', focus:'Quads / Glutes / Calves',
-    warmup:'5 min bike, leg swings, bodyweight squats, then 3 ramping squat sets.',
-    cardio:{ kind:'Hard swim or run', min:35, sep:true, how:'Later in the day, as its own trip \u2014 the window before lunch only holds the lift, and this is far too hard a session to rush.\nThe hardest session of the week. Your legs just worked but your lats and shoulders are fresh, which is exactly what a hard swim needs.\nWarm-up \u2014 300 m easy, then 6 \u00d7 50 m build, 15 s rest.\nMain \u2014 8 \u00d7 100 m hard, RPE 8\u20139, 20 s rest. Then 4 \u00d7 50 m all out, 30 s rest.\nDown \u2014 150 m easy. About 1,850 m.\nRunning instead: 5 \u00d7 800 m at 5k pace, 2 min jog between.' },
+    key:'saturday', idx:6, title:'Full Body C', focus:'Legs / Incline bench / Arms + core',
+    warmup:'5 min bike, leg swings, 2 ramping sets on incline bench.',
     ex:[
-      { id:'back_squat', name:'Back Squat', m:'quads', sets:4, rep:[6,8], rest:90, rir:2, bar:45, cue:'Leave 2 in the tank. A grinder here costs you the rest of the session.' },
-      { id:'leg_press', name:'Leg Press', m:'quads', sets:5, rep:[12,15], rest:75, rir:1, cue:'Your main machine quad movement now that the hack squat is out. Go down until your hips are just about to tuck under \u2014 that is the bottom, not the sled hitting the stops. Feet mid-platform and shoulder width; drop them lower on the platform on the last two sets to bias the quads harder, which is the job the hack squat was doing.' },
-      { id:'leg_ext', name:'Leg Extension', m:'quads', sets:4, rep:[12,15], rest:45, rir:0, cue:'The only move that trains rectus femoris with the hip extended. Worth its slot.' },
-      { id:'seated_calf', name:'Seated Calf Raise', m:'calves', sets:4, rep:[10,12], rest:45, rir:0, cue:'Bent knee targets the soleus. Pause 2 s at the bottom.' },
-      { id:'standing_calf_w', name:'Standing Calf Raise', m:'calves', sets:3, rep:[15,20], rest:45, rir:0, opt:true }
-    ]
-  },
-  {
-    key:'friday', idx:5, title:'Upper', focus:'Second chest + back exposure',
-    warmup:'5 min rower, band pull-aparts, 2 ramping sets on incline bench.',
-    ex:[
-      { id:'incline_bb', name:'Incline Barbell Bench', m:'chest', tag:'upper', sets:4, rep:[6,8], rest:90, rir:2, bar:45, cue:'Second upper-chest session. Heavier and lower-rep than Monday so the two do different jobs.' },
+      { id:'leg_press', name:'Leg Press', m:'quads', sets:3, rep:[12,15], rest:75, rir:1, cue:'Your main machine quad movement now that the hack squat is out. Go down until your hips are just about to tuck under \u2014 that is the bottom, not the sled hitting the stops. Feet mid-platform and shoulder width; drop them lower on the platform on the last two sets to bias the quads harder, which is the job the hack squat was doing.' },
+      { id:'incline_bb', name:'Incline Barbell Bench', m:'chest', tag:'upper', sets:3, rep:[6,8], rest:90, rir:2, bar:45, cue:'Second upper-chest session. Heavier and lower-rep than Tuesday so the two do different jobs.' },
       { id:'db_row', name:'Single-Arm DB Row', m:'back', sets:3, rep:[10,12], rest:75, rir:1, cue:'Per side, knee and hand on the bench. Row toward your hip rather than your armpit, and let the shoulder blade travel at the bottom of each rep. Same job the Meadows row was doing, without needing a landmine.' },
-      { id:'machine_press', name:'Machine Chest Press', m:'chest', sets:3, rep:[10,12], rest:60, rir:0, cue:'It\u2019s a machine \u2014 take the last set to true failure. Nothing to drop on yourself.' },
-      { id:'straight_arm', name:'Straight-Arm Pulldown', m:'back', tag:'lat', sets:3, rep:[12,15], rest:45, rir:0, cue:'Pure lat, no biceps. Keeps the width work going once your arms are the thing giving out.' },
-      { id:'db_lateral', name:'DB Lateral Raise', m:'delts', tag:'side', sets:4, rep:[12,15], rest:45, rir:0, cue:'Second of three weekly hits. Side delts are small, recover fast, and grow on frequency \u2014 this is why they appear three times a week and your chest does not.' },
-      { id:'rear_fly', name:'Rear Delt Fly', m:'rear', sets:3, rep:[15,20], rest:45, rir:0, cue:'Rear delts do not add width from the front, but they stop your shoulders rounding forward \u2014 which is what actually makes a wide frame read as wide.' },
-      { id:'bb_curl', name:'Barbell Curl', m:'biceps', sets:4, rep:[8,10], rest:60, rir:0, bar:45, cue:'Moved here from Saturday when that became a core day. Arms still need two sessions a week.' },
-      { id:'skullcrusher', name:'EZ-Bar Skull Crusher', m:'triceps', sets:4, rep:[8,10], rest:60, rir:0, bar:25, cue:'Lower behind your head, not to your forehead \u2014 keeps the long head under stretch.' }
-    ]
-  },
-  {
-    key:'saturday', idx:6, title:'Legs \u2014 Posterior', focus:'Hamstrings / Glutes / Low back',
-    warmup:'5 min bike, hip hinges with a dowel, 2 ramping RDL sets.',
-    cardio:{ kind:'Easy swim', min:20, how:'Continuous and easy to close the week out. Water is the right call after a hamstring day \u2014 no impact, and the kick flushes the legs rather than beating them up.' },
-    ex:[
-      { id:'rdl', name:'Romanian Deadlift', m:'hams', sets:4, rep:[8,10], rest:90, rir:2, bar:45, cue:'Hips back, soft knees. Stop when the stretch runs out, not when the plates touch.' },
-      { id:'pull_through', name:'Cable Pull-Through', m:'glutes', sets:4, rep:[12,15], rest:60, rir:1, cue:'Rope between your legs, facing away from the stack, walk out a step. Hinge back until the hamstrings load, then drive the hips forward and squeeze hard at the top. Trains the same hip extension a thrust does, with nothing digging into your hips and no bar to set up.' },
-      { id:'seated_curl', name:'Seated Leg Curl', m:'hams', sets:4, rep:[10,12], rest:60, rir:0, cue:'Seated beats lying \u2014 the flexed hip puts the hamstring under a harder stretch.' },
-      { id:'back_ext', name:'45-Degree Back Extension', m:'lower', sets:4, rep:[10,12], rest:75, rir:1, cue:'Hold a plate at your chest. Same day as your RDLs on purpose \u2014 train the erectors together, then give them a full week. Load it for reps, not for a max.' },
-      { id:'nordic', name:'Nordic Curl (assisted)', m:'hams', sets:3, rep:[5,8], rest:60, rir:1, opt:true, cue:'4-second lower. The best hamstring injury insurance there is.' },
-      { id:'reverse_hyper', name:'Reverse Hyperextension', m:'lower', sets:3, rep:[12,15], rest:60, rir:1, opt:true, cue:'Decompresses the spine while it trains it. No machine? Do these off the end of a bench.' },
-      { id:'standing_calf_f', name:'Standing Calf Raise', m:'calves', sets:4, rep:[10,12], rest:45, rir:0 }
+      { id:'seated_curl', name:'Seated Leg Curl', m:'hams', sets:3, rep:[10,12], rest:60, rir:0, cue:'Seated beats lying \u2014 the flexed hip puts the hamstring under a harder stretch.' },
+      { id:'db_lateral', name:'DB Lateral Raise', m:'delts', tag:'side', sets:3, rep:[12,15], rest:45, rir:0, cue:'Third weekly hit. Side delts are small, recover fast, and grow on frequency \u2014 this is why they appear in every session and your chest does not need to.' },
+      { id:'face_pull', name:'Face Pull', m:'rear', sets:2, rep:[15,20], rest:45, rir:0, cue:'Rear delts and shoulder health \u2014 cheap insurance against all the pressing.' },
+      { id:'skullcrusher', name:'EZ-Bar Skull Crusher', m:'triceps', sets:2, rep:[8,10], rest:60, rir:0, bar:25, cue:'Lower behind your head, not to your forehead \u2014 keeps the long head under stretch.' },
+      { id:'ab_wheel', name:'Ab Wheel Rollout', m:'abs', sets:3, rep:[8,12], rest:60, rir:1, cue:'Anti-extension \u2014 resisting the arch is the job your abs actually do all day. Ribs down, no sag through the hips.' },
+      { id:'cable_chop', name:'Cable Chop', m:'rot', sets:2, rep:[10,12], rest:60, rir:1, cue:'Rotation, per side, high to low. Alternate with low-to-high week to week. Drive from the hips with the abs braced \u2014 the spine itself barely twists.' },
+      { id:'standing_calf_f', name:'Standing Calf Raise', m:'calves', sets:3, rep:[10,12], rest:45, rir:0 }
     ]
   }
 ];
@@ -670,7 +646,7 @@ PLAN.forEach(d => d.ex.forEach(e => { BASE_EX[e.id] = e; e.day = d.key; }));
    Every field you change is stored as an override on top of
    it, so the defaults stay intact and "reset" always works.
    --------------------------------------------------------- */
-let edits = { ov: {}, add: {}, rm: {}, fuel: {}, cardio: {}, at: 0 };
+let edits = { ov: {}, add: {}, rm: {}, fuel: {}, cardio: {}, at: 0, prog: 2 };
 
 const withOv = e => { const o = edits.ov[e.id]; return o ? Object.assign({}, e, o) : e; };
 
@@ -684,6 +660,24 @@ function dayEx(day) {
 /* Exercises the program no longer prescribes. Kept resolvable so that
    anything you already logged against them still shows in Progress. */
 const ARCHIVE = {
+  seated_ohp: { id:'seated_ohp', name:'Seated DB Overhead Press', m:'delts', sets:3, rep:[8,10], rest:75, rir:2 },
+  weighted_dip: { id:'weighted_dip', name:'Weighted Dip', m:'chest', sets:3, rep:[8,10], rest:75, rir:1, cue:'Lean forward to bias the chest.' },
+  incline_cable_fly: { id:'incline_cable_fly', name:'Incline Cable Fly', m:'chest', tag:'upper', sets:3, rep:[12,15], rest:45, rir:0, cue:'Low to high, bench at 30\u00b0 or standing with the pulleys at your ankles. Everything else you do for chest is a press, and a press never loads the stretched position \u2014 this does, and that is where the pec actually grows. Let your hands travel behind the line of your chest at the bottom, then squeeze them together and slightly up, as if hugging round a barrel.' },
+  cable_row: { id:'cable_row', name:'Seated Cable Row', m:'back', sets:3, rep:[10,12], rest:60, rir:1 },
+  hammer_curl: { id:'hammer_curl', name:'Hammer Curl', m:'biceps', sets:3, rep:[10,12], rest:45, rir:0, cue:'Brachialis \u2014 the muscle underneath that pushes the biceps up and thickens the arm.' },
+  incline_situp: { id:'incline_situp', name:'Incline Sit-Up', m:'abs', sets:3, rep:[10,12], rest:60, rir:1, cue:'Plate held at the chest once bodyweight gets easy. Curl up through the spine rather than hinging at the hips in one rigid piece \u2014 that keeps the work in the abs instead of the hip flexors. Lower under control; the way down is half the set.' },
+  rotary_torso: { id:'rotary_torso', name:'Rotary Torso Machine', m:'rot', sets:3, rep:[12,15], rest:45, rir:1, cue:'Per side. Set the range conservatively \u2014 this machine will happily rotate you further than your lower back wants to go. Turn through the mid-back with the abs braced, and control the return instead of letting the stack drag you back.' },
+  leg_ext: { id:'leg_ext', name:'Leg Extension', m:'quads', sets:4, rep:[12,15], rest:45, rir:0, cue:'The only move that trains rectus femoris with the hip extended. Worth its slot.' },
+  seated_calf: { id:'seated_calf', name:'Seated Calf Raise', m:'calves', sets:4, rep:[10,12], rest:45, rir:0, cue:'Bent knee targets the soleus. Pause 2 s at the bottom.' },
+  standing_calf_w: { id:'standing_calf_w', name:'Standing Calf Raise', m:'calves', sets:3, rep:[15,20], rest:45, rir:0, opt:true },
+  machine_press: { id:'machine_press', name:'Machine Chest Press', m:'chest', sets:3, rep:[10,12], rest:60, rir:0, cue:'It\u2019s a machine \u2014 take the last set to true failure. Nothing to drop on yourself.' },
+  straight_arm: { id:'straight_arm', name:'Straight-Arm Pulldown', m:'back', tag:'lat', sets:3, rep:[12,15], rest:45, rir:0, cue:'Pure lat, no biceps. Keeps the width work going once your arms are the thing giving out.' },
+  rear_fly: { id:'rear_fly', name:'Rear Delt Fly', m:'rear', sets:3, rep:[15,20], rest:45, rir:0, cue:'Rear delts do not add width from the front, but they stop your shoulders rounding forward \u2014 which is what actually makes a wide frame read as wide.' },
+  bb_curl: { id:'bb_curl', name:'Barbell Curl', m:'biceps', sets:4, rep:[8,10], rest:60, rir:0, bar:45, cue:'Moved here from Saturday when that became a core day. Arms still need two sessions a week.' },
+  pull_through: { id:'pull_through', name:'Cable Pull-Through', m:'glutes', sets:4, rep:[12,15], rest:60, rir:1, cue:'Rope between your legs, facing away from the stack, walk out a step. Hinge back until the hamstrings load, then drive the hips forward and squeeze hard at the top. Trains the same hip extension a thrust does, with nothing digging into your hips and no bar to set up.' },
+  back_ext: { id:'back_ext', name:'45-Degree Back Extension', m:'lower', sets:4, rep:[10,12], rest:75, rir:1, cue:'Hold a plate at your chest. Same day as your RDLs on purpose \u2014 train the erectors together, then give them a full week. Load it for reps, not for a max.' },
+  nordic: { id:'nordic', name:'Nordic Curl (assisted)', m:'hams', sets:3, rep:[5,8], rest:60, rir:1, opt:true, cue:'4-second lower. The best hamstring injury insurance there is.' },
+  reverse_hyper: { id:'reverse_hyper', name:'Reverse Hyperextension', m:'lower', sets:3, rep:[12,15], rest:60, rir:1, opt:true, cue:'Decompresses the spine while it trains it. No machine? Do these off the end of a bench.' },
   meadows_row: { id:'meadows_row', name:'Meadows Row', m:'back', sets:3, rep:[8,10], rest:75, rir:1, cue:'Per side.' },
   suitcase_carry: { id:'suitcase_carry', name:'Suitcase Carry', m:'abs', sets:3, rep:[30,40], rest:45, rir:1, cue:'Anti-lateral-flexion. One heavy DB, steps per side, log steps as reps. Stay perfectly upright \u2014 the work is in not leaning.' },
   med_ball_throw: { id:'med_ball_throw', name:'Med Ball Rotational Throw', m:'rot', sets:3, rep:[5,5], rest:45, rir:3, cue:'Power, not fatigue \u2014 throw as hard as you can and stop when the ball slows down, never when you are tired. First thing, while you are fresh. Per side, into a wall. Drive from the hip and let the torso follow. No ball? Do these as a cable rotational throw and let go of the tension at the end.' },
@@ -756,6 +750,7 @@ function cardioThisWeek() {
   return Object.keys(done).filter(d => d >= from)
     .reduce((a, d) => ({ n: a.n + 1, min: a.min + (done[d].min || 0) }), { n: 0, min: 0 });
 }
+const liftDayCount = () => PLAN.filter(d => dayEx(d).length).length;
 const weeklyCardioPlan = () => PLAN.reduce((a, d) => {
   const c = dayCardio(d);
   return c ? { n: a.n + 1, min: a.min + (+c.min || 0) } : a;
@@ -772,7 +767,7 @@ const VOL_MIN = 10, VOL_MAX = 20, VOL_SCALE = 24;
    Day totals are computed from the meals; per-meal kcal from macros at 4/4/9. */
 const MEALS = {
  "monday": {
-  "lift": "Lift 2:15-3:30 PM",
+  "lift": "Swim 2:15-3:30 PM",
   "m": [
    {
     "t": "7:45 AM",
@@ -948,7 +943,7 @@ const MEALS = {
   "liftAt": "10:00-11:30 AM"
  },
  "wednesday": {
-  "lift": "Lift 1:45-3:15 PM",
+  "lift": "Cardio 1:45-3:15 PM",
   "m": [
    {
     "t": "7:30 AM",
@@ -1114,7 +1109,7 @@ const MEALS = {
   "liftAt": "10:00-11:30 AM"
  },
  "friday": {
-  "lift": "Lift 10:30 AM",
+  "lift": "Cardio 10:30 AM",
   "m": [
    {
     "t": "7:30 AM",
@@ -1365,23 +1360,25 @@ const MEALS = {
  }
 };
 const WEIGH = [["Chicken", "110 g in every bowl, weighed after cooking \u2014 440 g cooked fills a batch of four"], ["Rice", "80 g dry in every bowl \u2014 320 g dry cooks a batch of four"], ["Black beans", "125 g rinsed and drained, about half a 15 oz can"], ["Goodles", "use the full 150 g dry box"], ["Produce", "weigh the edible portion"], ["Whey isolate", "30 g is 1 scoop (27 g protein); Tuesday and Friday take 2"], ["Greek yogurt", "340 g is 2 label servings (44 g protein)"], ["Eggs, toast, bananas, apples", "counted whole, not weighed"]];
-const PLAN_NOTES = ["Rebalanced so every day hits the same target: 190 g protein, 355 g carbs, 80 g fat. That is exactly the Phase 1 comeback target above, so the plan and the number now agree.", "Macros are estimates from the supplied labels plus standard values for produce, chicken, milk and sauces. Per-meal calories are worked out from the macros at 4/4/9, so the meals always add up to the day.", "Every bowl uses the same 110 g cooked chicken and 80 g dry rice, and every broccoli bowl the same 234 g broccoli, so twelve bowls a week cook as three batches of four: one of burrito bowls, two of chicken-rice. Monday, Wednesday, Thursday and Saturday lunch is the burrito bowl, with bell pepper and carrots on the side instead of broccoli. Meals are spread so nothing runs more than two days in a row: burrito bowls and egg breakfasts Monday, Wednesday, Thursday and Saturday; broccoli bowls and yogurt breakfasts Tuesday, Friday and Sunday. Edamame, berries and oil change a little day to day to keep each day on target; Tuesday and Friday, with only one chicken meal, take a second scoop of whey and 1.5 servings of yogurt instead of 2.", "Tuesday and Friday swap the chicken-rice dinner for Goodles, served with the cucumber, pepper and carrot mix. Broccoli only goes with chicken and rice.", "Protein now comes from Earth Fed Muscle whey isolate (1 scoop: 110 kcal, 27 g P) and nonfat Greek yogurt (170 g: 120 kcal, 22 g P, 0 g fat). That extra protein replaced chicken: about 1,320 g cooked a week, and no two days in a row go over 440 g. Rice and oil were topped up to cover the carbs and fat the old powder and yogurt used to provide.", "The source PDF was written with Saturday as a rest day, but it is a full training day \u2014 Legs - Posterior plus an easy swim. Only the schedule needed fixing: every day carries the same 2,900 kcal, so nothing about the food changes."];
+const PLAN_NOTES = ["Rebalanced so every day hits the same target: 190 g protein, 355 g carbs, 80 g fat. That is exactly the Phase 1 comeback target above, so the plan and the number now agree.", "Macros are estimates from the supplied labels plus standard values for produce, chicken, milk and sauces. Per-meal calories are worked out from the macros at 4/4/9, so the meals always add up to the day.", "Every bowl uses the same 110 g cooked chicken and 80 g dry rice, and every broccoli bowl the same 234 g broccoli, so twelve bowls a week cook as three batches of four: one of burrito bowls, two of chicken-rice. Monday, Wednesday, Thursday and Saturday lunch is the burrito bowl, with bell pepper and carrots on the side instead of broccoli. Meals are spread so nothing runs more than two days in a row: burrito bowls and egg breakfasts Monday, Wednesday, Thursday and Saturday; broccoli bowls and yogurt breakfasts Tuesday, Friday and Sunday. Edamame, berries and oil change a little day to day to keep each day on target; Tuesday and Friday, with only one chicken meal, take a second scoop of whey and 1.5 servings of yogurt instead of 2.", "Tuesday and Friday swap the chicken-rice dinner for Goodles, served with the cucumber, pepper and carrot mix. Broccoli only goes with chicken and rice.", "Protein now comes from Earth Fed Muscle whey isolate (1 scoop: 110 kcal, 27 g P) and nonfat Greek yogurt (170 g: 120 kcal, 22 g P, 0 g fat). That extra protein replaced chicken: about 1,320 g cooked a week, and no two days in a row go over 440 g. Rice and oil were topped up to cover the carbs and fat the old powder and yogurt used to provide.", "Lifting is Tuesday, Thursday and Saturday; Monday, Wednesday and Friday are cardio only, in the same time slots. The food is the same every day either way \u2014 the swim and interval days burn about as much as a full-body lift, and a tired body recovers on food, not less of it."];
 
 /* Nutrition. Maintenance \u2248 2,900 kcal: Mifflin-St Jeor at 6'2"/170 lb \u00d7 1.6
-   for six lifts and four cardio sessions a week. */
+   for six lifts and four cardio sessions a week. Kept there after the
+   move to three lifts and three cardio days: recovery is the point of that
+   change, and the weigh-in rules below will say if it needs to come down. */
 const FUEL = {
   maintenance: 2900,
   bridge: { key:'bridge', label:'Bridge \u2014 before day one', detail:'From today until you start lifting. You have been under-eating on low protein, so your maintenance has drifted down with you. Walk it up rather than jumping, and get the protein right immediately \u2014 that is the single biggest lever you have this week.', p:190, f:75, c:315 },
   comeback: { key:'comeback', label:'Phase 1 \u2014 Comeback', detail:'Weeks 1\u201310. Maintenance, not a surplus. Regaining muscle you already built costs almost no extra energy, so this is the window where you add muscle and lose fat at the same time.', p:190, f:80, c:355 },
   simple: { key:'simple', label:'Phase 2 \u2014 Lean bulk', detail:'Week 11 onward, once the scale and your lifts both stall at maintenance. That stall is the signal the free gains are done.', p:185, f:85, c:400 },
   split: [
-    { key:'training', label:'Training days', detail:'Monday through Saturday', p:185, f:85, c:415 },
+    { key:'training', label:'Training days', detail:'Monday through Saturday \u2014 lift or cardio', p:185, f:85, c:415 },
     { key:'rest', label:'Rest day', detail:'Sunday', p:185, f:85, c:310 }
   ],
   timing: [
     ['Protein every 3\u20134 hours', 'Four or five feedings of 40\u201350 g beats two big ones. Muscle protein synthesis responds to each dose, not just the daily total.'],
     ['Carbs before you train', '60\u201380 g of carbs and 30\u201340 g of protein in the two hours before lifting. This is the biggest single lever on how the last third of a 90-minute session feels.'],
-    ['Refuel after swimming', 'Cold water blunts appetite and swimming burns more than it feels like. An easy 20 minutes is 200\u2013300 kcal; a hard 35-minute set is closer to 400\u2013500. Eat it back on Wednesday and Saturday or the surplus quietly disappears.'],
+    ['Refuel after swimming', 'Cold water blunts appetite and swimming burns more than it feels like. An easy 20 minutes is 200\u2013300 kcal; a hard 35-minute set is closer to 400\u2013500. Eat it back on swim days or the surplus quietly disappears.'],
     ['Creatine monohydrate, 5 g daily', 'The only supplement with hypertrophy evidence strong enough to bother with. Any time of day, no loading phase.'],
     ['Fiber and water', '35\u201340 g of fiber. Roughly a gallon of water a day, more on swim days \u2014 chlorine and heated pools dehydrate you more than you notice.']
   ],
@@ -1399,7 +1396,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-10-18a';   // bump on every deploy
+const BUILD = '2026-11-02a';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
@@ -1413,11 +1410,24 @@ function saveLocal() {
   try { localStorage.setItem(LS, JSON.stringify(logs)); } catch (e) {}
 }
 
+/* Edits saved per day were written against the old six-day split. Cardio
+   overrides and added exercises keyed to a weekday would land on the wrong
+   session now, so they are dropped once; per-exercise edits carry over. */
+const PROGRAM_VERSION = 2;
+function migrateEdits() {
+  if ((edits.prog || 1) >= PROGRAM_VERSION) return;
+  edits.cardio = {};
+  PLAN.forEach(d => { if (!d.ex.length) delete edits.add[d.key]; });
+  edits.prog = PROGRAM_VERSION;
+  try { localStorage.setItem(LSE, JSON.stringify(edits)); } catch (e) {}
+}
+
 function loadEdits() {
   try {
     const e = JSON.parse(localStorage.getItem(LSE) || 'null');
     if (e) edits = Object.assign({ ov:{}, add:{}, rm:{}, fuel:{}, cardio:{}, at:0 }, e);
   } catch (e) {}
+  migrateEdits();
 }
 function saveEdits() {
   edits.at = Date.now();
@@ -1465,6 +1475,7 @@ function importBackup(file) {
     if (d.logs) { logs = d.logs; saveLocal(); }
     if (d.edits) {
       edits = Object.assign({ ov:{}, add:{}, rm:{}, fuel:{}, cardio:{}, at:0 }, d.edits);
+      migrateEdits();
       try { localStorage.setItem(LSE, JSON.stringify(edits)); } catch (e) {}
     }
     draft = {};
@@ -1623,10 +1634,10 @@ function plateMath(total, bar) {
    stays tight underneath all of it. Tracked apart from the muscle
    chart because these are the ones the look actually depends on. */
 const SHAPE = [
-  ['side',  'Side delts',  'shoulder width \u2014 the biggest lever', 12, 18],
-  ['lat',   'Lat width',   'vertical pulls, the flare',               8, 14],
+  ['side',  'Side delts',  'shoulder width \u2014 the biggest lever',  9, 15],
+  ['lat',   'Lat width',   'vertical pulls, the flare',               6, 12],
   ['upper', 'Upper chest', 'the shelf under the collarbone',          6, 12],
-  ['abs',   'Abs',         'the taper needs a tight waist',          12, 20]
+  ['abs',   'Abs',         'the taper needs a tight waist',           9, 16]
 ];
 
 function weeklyShape() {
@@ -1860,6 +1871,20 @@ function viewToday() {
     ? `<span class="wkchip">Starts in ${wk.until} day${wk.until === 1 ? '' : 's'}</span>`
     : `<span class="wkchip">Week ${wk.n}</span>`;
 
+  const cardioOnly = !list.length && dayCardio(day);
+  if (cardioOnly) {
+    const c = dayCardio(day);
+    return `
+      <div class="head">
+        <div class="eyebrow">${dateLabel} ${weekChip}</div>
+        <h1>${esc(day.title)}</h1>
+        <div class="focus">${esc(day.focus)}</div>
+        <div class="len">${c.min} min${changeMinutes(c) ? ` \u00b7 <b style="color:var(--ink-2)">${c.min + changeMinutes(c)} min door to door</b>` : ''}</div>
+      </div>
+      ${swapPicker()}
+      <div class="stack">${cardioCard(c)}</div>
+      <div class="sync" id="syncline"></div>`;
+  }
   if (!list.length) {
     return `
       <div class="head">
@@ -2066,7 +2091,7 @@ function viewPlan() {
   return `
     <div class="head">
       <h1>The Split</h1>
-      <div class="focus">Six lifting days, ${wc.n} cardio session${wc.n === 1 ? '' : 's'}, one full rest day.</div>
+      <div class="focus">${liftDayCount()} lifting days, ${wc.n} cardio day${wc.n === 1 ? '' : 's'}, never on the same day.</div>
     </div>
 
     <div class="panel" style="margin-bottom:14px">
@@ -2097,7 +2122,7 @@ function viewPlan() {
         <b class="ramp${!wk.before && wk.n >= 4 ? ' now' : ''}">Week 4</b> &mdash; the program as written.
         <br><br>
         You will be tempted to skip this because the weights feel light. The weights are not the
-        problem &mdash; week-one soreness is what ends six-day schedules.
+        problem &mdash; week-one soreness is what ends new schedules.
       </div>
     </div>
 
@@ -2147,15 +2172,16 @@ function viewPlan() {
       </div>
       <div class="note" style="margin-top:12px;border:0;padding-left:0">
         The shaded band is ${VOL_MIN}\u2013${VOL_MAX} sets \u2014 the range where more volume still buys growth
-        rather than just fatigue. Every muscle is trained at least twice a week, which matters more
-        than what any single session looks like.
+        rather than just fatigue. Three full-body days sit near the bottom of it on purpose: recovery
+        first. Once you feel fresh most days, add a set to the lifts you care about most.
       </div>
     </div>
 
     <div class="stack">
       ${ordered.map(d => {
         const list = dayEx(d);
-        const rest = !list.length;
+        const cOnly = !list.length && dayCardio(d);
+        const rest = !list.length && !cOnly;
         const isToday = d.key === todayKey;
         const open = openDay === d.key;
         const editing = editDay === d.key;
@@ -2166,12 +2192,13 @@ function viewPlan() {
                 <span class="eyebrow">${d.key[0].toUpperCase() + d.key.slice(1)}</span>
                 ${isToday ? '<span class="badge now">Today</span>'
                   : rest ? '<span class="badge">Rest</span>'
+                  : cOnly ? `<span class="cnt">${dayCardio(d).min} min</span>`
                   : `<span class="cnt">${list.length} \u00b7 ${liftMinutes(d)}${
                       dayCardio(d) ? '+' + (dayTotal(d) - liftMinutes(d)) : ''} min</span>`}
               </div>
               <h3>${esc(d.title)}</h3>
               <div class="focus">${esc(d.focus)}</div>
-              ${d.cardio ? `<div class="cd">+ ${esc(d.cardio.kind)} \u00b7 ${d.cardio.min} min</div>` : ''}
+              ${!cOnly && dayCardio(d) ? `<div class="cd">+ ${esc(dayCardio(d).kind)} \u00b7 ${dayCardio(d).min} min</div>` : ''}
             </button>
             ${open && !rest ? `
               <div class="panel" style="margin-top:8px">
@@ -2193,7 +2220,7 @@ function viewPlan() {
                       <td class="p" style="color:var(--ink-2)">${e.sets}\u00d7${e.rep[0]}\u2013${e.rep[1]}</td>
                     </tr>`).join('')}
                   </table>
-                  ${d.cardio ? `<div class="note cardio" style="margin-top:12px"><b>${esc(d.cardio.kind)} \u00b7 ${d.cardio.min} min</b>${esc(d.cardio.how)}</div>` : ''}
+                  ${dayCardio(d) ? `<div class="note cardio" style="margin-top:${list.length ? 12 : 0}px"><b>${esc(dayCardio(d).kind)} \u00b7 ${dayCardio(d).min} min</b>${esc(dayCardio(d).how)}</div>` : ''}
                 `}
               </div>` : ''}
           </div>`;
@@ -2229,6 +2256,13 @@ function clockMin(label) {
 }
 
 /** Where the lift falls in the day's run of meals. */
+/** What the session marker in the meal timeline should call that day's session. */
+function sessionWord(key) {
+  const d = PLAN.find(x => x.key === key);
+  if (!d || dayEx(d).length) return 'Lift';
+  return /swim/i.test((dayCardio(d) || {}).kind || '') ? 'Swim' : 'Cardio';
+}
+
 function liftSlot(day) {
   if (!day.liftAt) return -1;
   const at = clockMin(day.liftAt);
@@ -2350,11 +2384,11 @@ function viewFuel() {
       ${mday.m.map((m, i) => `
         ${i === liftSlot(mday) ? `${(() => { const f = liftFit(md); return f
           ? `<div class="liftmark${f.short > 10 ? ' tight' : ''}">
-               <span class="tm">${esc(mday.liftAt)}</span> Lift
+               <span class="tm">${esc(mday.liftAt)}</span> ${sessionWord(md)}
                <i class="rule"></i>
                <span class="fit">${f.have} min \u00b7 needs ${f.need}</span>
              </div>`
-          : `<div class="liftmark"><span class="tm">${esc(mday.liftAt)}</span> Lift<i class="rule"></i></div>`; })()}` : ''}
+          : `<div class="liftmark"><span class="tm">${esc(mday.liftAt)}</span> ${sessionWord(md)}<i class="rule"></i></div>`; })()}` : ''}
         <div class="meal">
           <div class="mt">${esc(m.t)}</div>
           <div class="mn">${esc(m.n)}</div>
@@ -2364,11 +2398,11 @@ function viewFuel() {
         </div>`).join('')}
       ${liftSlot(mday) === mday.m.length ? `${(() => { const f = liftFit(md); return f
           ? `<div class="liftmark${f.short > 10 ? ' tight' : ''}">
-               <span class="tm">${esc(mday.liftAt)}</span> Lift
+               <span class="tm">${esc(mday.liftAt)}</span> ${sessionWord(md)}
                <i class="rule"></i>
                <span class="fit">${f.have} min \u00b7 needs ${f.need}</span>
              </div>`
-          : `<div class="liftmark"><span class="tm">${esc(mday.liftAt)}</span> Lift<i class="rule"></i></div>`; })()}` : ''}
+          : `<div class="liftmark"><span class="tm">${esc(mday.liftAt)}</span> ${sessionWord(md)}<i class="rule"></i></div>`; })()}` : ''}
       ${(() => { const f = liftFit(md); return f && f.short > 10
         ? `<div class="fitwarn">That window is <b>${f.short} min short</b>. The session is ${f.need} min
              once you count changing and the swim, but there are only ${f.have} before the ${esc(f.until)}.
@@ -2410,7 +2444,7 @@ function viewFuel() {
     <div class="panel" style="margin-top:16px">
       <div class="eyebrow" style="margin-bottom:8px">Where the number comes from</div>
       <div class="mathrow"><span>Resting burn</span><b class="num">1,810 kcal</b></div>
-      <div class="mathrow"><span>With six lifts + ${weeklyCardioPlan().n} cardio</span><b class="num">${FUEL.maintenance.toLocaleString()} kcal</b></div>
+      <div class="mathrow"><span>With ${liftDayCount()} lifts + ${weeklyCardioPlan().n} cardio</span><b class="num">${FUEL.maintenance.toLocaleString()} kcal</b></div>
       <div class="mathrow sum"><span>Surplus</span><b class="num">${surplus >= 0 ? '+' : ''}${surplus.toLocaleString()} kcal</b></div>
       <div class="note" style="margin-top:11px;border:0;padding-left:0">
         ${fuelMode === 'bridge'
@@ -2708,7 +2742,7 @@ function wire() {
     }
 
     if (t.closest('[data-resetall]')) {
-      edits = { ov: {}, add: {}, rm: {}, fuel: {}, cardio: {}, at: 0 };
+      edits = { ov: {}, add: {}, rm: {}, fuel: {}, cardio: {}, at: 0, prog: PROGRAM_VERSION };
       saveEdits();
       editDay = null;
       render();
