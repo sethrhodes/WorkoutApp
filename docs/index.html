@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Iron Ledger</title>
-<meta name="description" content="A three-day full-body hypertrophy program with set logging, automatic progression and a rest timer.">
+<meta name="description" content="A four-day upper/lower hypertrophy program with set logging, automatic progression and a rest timer.">
 <meta name="theme-color" content="#133A61">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -572,68 +572,70 @@ table.rice td.dim { color: var(--ink-3); font-size: 12.5px; text-align: right; }
 <script>
 /* ===========================================================
    THE PROGRAM
-   Three full-body lifting days, three cardio days, one full rest day.
-   Lifting and cardio never share a day, so every session gets you fresh.
+   Upper/lower twice a week, three cardio sessions, one full rest day.
+   Only the short Saturday leg day shares its slot with cardio, an easy swim.
    RIR = reps in reserve: how many you leave in the tank.
    =========================================================== */
 const PLAN = [
   { key:'sunday', idx:0, title:'Rest', focus:'Recovery + mobility', ex:[] },
   {
-    key:'monday', idx:1, title:'Easy swim', focus:'Cardio only \u2014 no lifting today',
-    cardio:{ kind:'Easy swim', min:25, how:'Continuous freestyle, conversational the whole way. This is recovery with a pool in it, not a session \u2014 if you are breathing hard, slow down.' },
-    ex:[]
-  },
-  {
-    key:'tuesday', idx:2, title:'Full Body A', focus:'Squat / Incline press / Pull-ups',
-    warmup:'5 min bike, bodyweight squats and band pull-aparts, then 3 ramping squat sets.',
+    key:'monday', idx:1, title:'Upper A', focus:'Chest + lat width',
+    warmup:'5 min rower, band pull-aparts, then 2 ramping sets on the first press.',
     ex:[
-      { id:'back_squat', name:'Back Squat', m:'quads', sets:3, rep:[6,8], rest:90, rir:2, bar:45, cue:'Leave 2 in the tank. A grinder here costs you the rest of the session.' },
       { id:'incline_db_press', name:'Incline DB Press', m:'chest', tag:'upper', sets:3, rep:[8,10], rest:90, rir:2, cue:'Upper chest is what gives the shelf under the collarbone. 30\u00b0 bench. Feel the stretch at the bottom; don\u2019t bounce off your shoulders.' },
       { id:'weighted_pullup', name:'Weighted Pull-Up', m:'back', tag:'lat', sets:3, rep:[6,8], rest:90, rir:2, cue:'The width builder. Stay at bodyweight until you clear 10 clean reps, then add the belt. Drive elbows down and back, not hands to the bar.' },
+      { id:'flat_bench', name:'Flat Barbell Bench', m:'chest', sets:3, rep:[6,8], rest:90, rir:2, bar:45 },
+      { id:'chest_supp_row', name:'Chest-Supported Row', m:'back', sets:3, rep:[8,10], rest:75, rir:1, cue:'The chest pad takes your lower back out of it, so you can push these genuinely hard.' },
       { id:'cable_lateral', name:'Cable Lateral Raise', m:'delts', tag:'side', sets:3, rep:[12,15], rest:45, rir:0, cue:'The single biggest lever on how wide your shoulders look. Cable beats dumbbells \u2014 it keeps tension at the bottom, where the delt is stretched. Lead with the elbow, never the hand.' },
-      { id:'oh_tri_ext', name:'Overhead Triceps Extension', m:'triceps', sets:2, rep:[10,12], rest:45, rir:1, cue:'Your only direct triceps work today, and the right one to keep. The long head is most of the muscle and it only loads with your arm overhead \u2014 pushdowns train the heads that every press already hammers. Deep stretch at the bottom, elbows in.' },
-      { id:'cable_crunch', name:'Weighted Cable Crunch', m:'abs', sets:3, rep:[8,12], rest:75, rir:1, cue:'Spinal flexion, heavy \u2014 treat it like a compound and add weight weekly the same way you would on a row. The weighted crunch machine does this job just as well, so use whichever is free and lets you load heaviest; just stay on one of them long enough to progress it.' },
-      { id:'pallof', name:'Pallof Press', m:'rot', sets:2, rep:[10,12], rest:45, rir:1, cue:'Anti-rotation, per side. Refusing to rotate is what holds your line in the water. Press slow, let nothing move but your arms.' }
+      { id:'incline_cable_fly', name:'Incline Cable Fly', m:'chest', tag:'upper', sets:2, rep:[12,15], rest:45, rir:0, cue:'Low to high, bench at 30\u00b0 or standing with the pulleys at your ankles. Everything else you do for chest is a press, and a press never loads the stretched position \u2014 this does, and that is where the pec actually grows. Let your hands travel behind the line of your chest at the bottom, then squeeze them together and slightly up, as if hugging round a barrel.' },
+      { id:'oh_tri_ext', name:'Overhead Triceps Extension', m:'triceps', sets:2, rep:[10,12], rest:45, rir:1, cue:'Your only direct triceps work today, and the right one to keep. The long head is most of the muscle and it only loads with your arm overhead \u2014 pushdowns train the heads that every press already hammers. Deep stretch at the bottom, elbows in.' }
+    ]
+  },
+  {
+    key:'tuesday', idx:2, title:'Lower A', focus:'Quads + abs',
+    warmup:'5 min bike, leg swings, bodyweight squats, then 3 ramping squat sets.',
+    ex:[
+      { id:'back_squat', name:'Back Squat', m:'quads', sets:3, rep:[6,8], rest:90, rir:2, bar:45, cue:'Leave 2 in the tank. A grinder here costs you the rest of the session.' },
+      { id:'leg_press', name:'Leg Press', m:'quads', sets:3, rep:[12,15], rest:75, rir:1, cue:'Your main machine quad movement now that the hack squat is out. Go down until your hips are just about to tuck under \u2014 that is the bottom, not the sled hitting the stops. Feet mid-platform and shoulder width; drop them lower on the platform on the last two sets to bias the quads harder, which is the job the hack squat was doing.' },
+      { id:'leg_ext', name:'Leg Extension', m:'quads', sets:3, rep:[12,15], rest:45, rir:0, cue:'The only move that trains rectus femoris with the hip extended. Worth its slot.' },
+      { id:'seated_curl_tue', name:'Seated Leg Curl', m:'hams', sets:2, rep:[10,12], rest:60, rir:0, cue:'Same curl as Saturday, two sets here so the hamstrings get a second weekly hit without costing the quads anything.' },
+      { id:'cable_crunch', name:'Weighted Cable Crunch', m:'abs', sets:4, rep:[8,12], rest:75, rir:1, cue:'Spinal flexion, heavy \u2014 treat it like a compound and add weight weekly the same way you would on a row. The weighted crunch machine does this job just as well, so use whichever is free and lets you load heaviest; just stay on one of them long enough to progress it.' },
+      { id:'hanging_raise', name:'Weighted Hanging Leg Raise', m:'abs', sets:3, rep:[8,12], rest:75, rir:1, cue:'Lower abs. Ankle weight or a DB between the feet. Curl the pelvis up; don\u2019t just swing the legs.' }
     ]
   },
   {
     key:'wednesday', idx:3, title:'Intervals', focus:'The one hard cardio session \u2014 no lifting today',
-    cardio:{ kind:'Hard swim or run', min:30, how:'The only hard cardio of the week, on a day with no lifting so you can actually push it.\nSwim: 10 \u00d7 75 m hard on 20 s rest.\nRun instead: 8 \u00d7 2 min at 5k pace, 90 s jog between.\nIf you wake up wrecked, swap it for an easy 25 minutes \u2014 one skipped hard session costs nothing.' },
+    cardio:{ kind:'Hard swim', min:30, how:'The only hard cardio of the week, on a day with no lifting so you can actually push it.\n10 \u00d7 75 m hard on 20 s rest.\nSwim rather than run: your quads trained yesterday, and running intervals on them works against the leg growth you are after.\nIf you wake up wrecked, make it an easy 25 minutes instead \u2014 one skipped hard session costs nothing.' },
     ex:[]
   },
   {
-    key:'thursday', idx:4, title:'Full Body B', focus:'Hinge / Rows / Flat bench',
-    warmup:'5 min rower, hip hinges with a dowel, 2 ramping RDL sets.',
+    key:'thursday', idx:4, title:'Upper B', focus:'Upper chest + back',
+    warmup:'5 min rower, scapular pull-ups, 2 ramping sets on incline bench.',
     ex:[
-      { id:'rdl', name:'Romanian Deadlift', m:'hams', sets:3, rep:[8,10], rest:90, rir:2, bar:45, cue:'Hips back, soft knees. Stop when the stretch runs out, not when the plates touch.' },
-      { id:'chest_supp_row', name:'Chest-Supported Row', m:'back', sets:3, rep:[8,10], rest:75, rir:1, cue:'The chest pad takes your lower back out of it, so you can push these genuinely hard.' },
-      { id:'flat_bench', name:'Flat Barbell Bench', m:'chest', sets:3, rep:[6,8], rest:90, rir:2, bar:45 },
+      { id:'incline_bb', name:'Incline Barbell Bench', m:'chest', tag:'upper', sets:3, rep:[6,8], rest:90, rir:2, bar:45, cue:'Second upper-chest session. Heavier and lower-rep than Monday so the two do different jobs.' },
       { id:'lat_pulldown', name:'Wide-Grip Lat Pulldown', m:'back', tag:'lat', sets:3, rep:[10,12], rest:60, rir:1, cue:'Grip outside shoulder width. The wider path biases the upper-outer lat and teres major \u2014 the muscles that flare the V.' },
-      { id:'cable_lateral_tue', name:'Cable Lateral Raise', m:'delts', tag:'side', sets:3, rep:[12,15], rest:45, rir:0, cue:'Second of three weekly hits. Nothing before it today presses overhead, so your shoulders are fresh and these are often your best sets.' },
-      { id:'incline_curl', name:'Incline DB Curl', m:'biceps', sets:3, rep:[10,12], rest:45, rir:0, cue:'Arms behind your torso is the most stretched position you can load a biceps in. No swing.' },
-      { id:'hanging_raise', name:'Weighted Hanging Leg Raise', m:'abs', sets:3, rep:[8,12], rest:75, rir:1, cue:'Lower abs. Ankle weight or a DB between the feet. Curl the pelvis up; don\u2019t just swing the legs.' },
-      { id:'db_side_bend', name:'DB Side Bend', m:'obl', sets:2, rep:[15,20], rest:45, rir:1, cue:'Lateral flexion. One heavy DB, opposite hand behind your head, full stretch at the bottom. The 15\u201320 range is for your spine, not your waistline \u2014 growth is the same across rep ranges when effort matches.' }
+      { id:'machine_press', name:'Machine Chest Press', m:'chest', sets:3, rep:[10,12], rest:60, rir:0, cue:'It\u2019s a machine \u2014 take the last set to true failure. Nothing to drop on yourself.' },
+      { id:'db_row', name:'Single-Arm DB Row', m:'back', sets:3, rep:[10,12], rest:75, rir:1, cue:'Per side, knee and hand on the bench. Row toward your hip rather than your armpit, and let the shoulder blade travel at the bottom of each rep. Same job the Meadows row was doing, without needing a landmine.' },
+      { id:'straight_arm', name:'Straight-Arm Pulldown', m:'back', tag:'lat', sets:2, rep:[12,15], rest:45, rir:0, cue:'Pure lat, no biceps. Keeps the width work going once your arms are the thing giving out.' },
+      { id:'db_lateral', name:'DB Lateral Raise', m:'delts', tag:'side', sets:3, rep:[12,15], rest:45, rir:0, cue:'Second weekly hit. Side delts are small, recover fast and grow on frequency, so they show up on both upper days.' },
+      { id:'incline_curl', name:'Incline DB Curl', m:'biceps', sets:2, rep:[10,12], rest:45, rir:0, cue:'Arms behind your torso is the most stretched position you can load a biceps in. No swing.' },
+      { id:'face_pull', name:'Face Pull', m:'rear', sets:2, rep:[15,20], rest:45, rir:0, cue:'Rear delts and shoulder health \u2014 cheap insurance against all the pressing.' }
     ]
   },
   {
     key:'friday', idx:5, title:'Easy cardio', focus:'Cardio only \u2014 no lifting today',
-    cardio:{ kind:'Easy swim or run', min:25, how:'Easy aerobic work the day before your last lift. Swim or run, whichever your legs prefer \u2014 conversational pace throughout.' },
+    cardio:{ kind:'Easy swim or run', min:25, how:'Easy aerobic work, conversational pace throughout. Swim or run, whichever your body prefers today.' },
     ex:[]
   },
   {
-    key:'saturday', idx:6, title:'Full Body C', focus:'Legs / Incline bench / Arms + core',
-    warmup:'5 min bike, leg swings, 2 ramping sets on incline bench.',
+    key:'saturday', idx:6, title:'Lower B', focus:'Hamstrings + abs \u2014 the short day, then a swim',
+    warmup:'5 min bike, hip hinges with a dowel, 2 ramping RDL sets.',
+    cardio:{ kind:'Easy swim', min:20, how:'Straight after the lift. Continuous and easy \u2014 water is the right call after a hamstring day: no impact, and the kick flushes the legs rather than beating them up.' },
     ex:[
-      { id:'leg_press', name:'Leg Press', m:'quads', sets:3, rep:[12,15], rest:75, rir:1, cue:'Your main machine quad movement now that the hack squat is out. Go down until your hips are just about to tuck under \u2014 that is the bottom, not the sled hitting the stops. Feet mid-platform and shoulder width; drop them lower on the platform on the last two sets to bias the quads harder, which is the job the hack squat was doing.' },
-      { id:'incline_bb', name:'Incline Barbell Bench', m:'chest', tag:'upper', sets:3, rep:[6,8], rest:90, rir:2, bar:45, cue:'Second upper-chest session. Heavier and lower-rep than Tuesday so the two do different jobs.' },
-      { id:'db_row', name:'Single-Arm DB Row', m:'back', sets:3, rep:[10,12], rest:75, rir:1, cue:'Per side, knee and hand on the bench. Row toward your hip rather than your armpit, and let the shoulder blade travel at the bottom of each rep. Same job the Meadows row was doing, without needing a landmine.' },
+      { id:'rdl', name:'Romanian Deadlift', m:'hams', sets:3, rep:[8,10], rest:90, rir:2, bar:45, cue:'Hips back, soft knees. Stop when the stretch runs out, not when the plates touch.' },
+      { id:'leg_press_sat', name:'Leg Press', m:'quads', sets:3, rep:[12,15], rest:75, rir:1, cue:'Second leg press of the week, after the hinge. Same depth rule as Tuesday: down until your hips are just about to tuck under.' },
       { id:'seated_curl', name:'Seated Leg Curl', m:'hams', sets:3, rep:[10,12], rest:60, rir:0, cue:'Seated beats lying \u2014 the flexed hip puts the hamstring under a harder stretch.' },
-      { id:'db_lateral', name:'DB Lateral Raise', m:'delts', tag:'side', sets:3, rep:[12,15], rest:45, rir:0, cue:'Third weekly hit. Side delts are small, recover fast, and grow on frequency \u2014 this is why they appear in every session and your chest does not need to.' },
-      { id:'face_pull', name:'Face Pull', m:'rear', sets:2, rep:[15,20], rest:45, rir:0, cue:'Rear delts and shoulder health \u2014 cheap insurance against all the pressing.' },
-      { id:'skullcrusher', name:'EZ-Bar Skull Crusher', m:'triceps', sets:2, rep:[8,10], rest:60, rir:0, bar:25, cue:'Lower behind your head, not to your forehead \u2014 keeps the long head under stretch.' },
-      { id:'ab_wheel', name:'Ab Wheel Rollout', m:'abs', sets:3, rep:[8,12], rest:60, rir:1, cue:'Anti-extension \u2014 resisting the arch is the job your abs actually do all day. Ribs down, no sag through the hips.' },
-      { id:'cable_chop', name:'Cable Chop', m:'rot', sets:2, rep:[10,12], rest:60, rir:1, cue:'Rotation, per side, high to low. Alternate with low-to-high week to week. Drive from the hips with the abs braced \u2014 the spine itself barely twists.' },
-      { id:'standing_calf_f', name:'Standing Calf Raise', m:'calves', sets:3, rep:[10,12], rest:45, rir:0 }
+      { id:'ab_wheel', name:'Ab Wheel Rollout', m:'abs', sets:3, rep:[8,12], rest:60, rir:1, cue:'Anti-extension \u2014 resisting the arch is the job your abs actually do all day. Ribs down, no sag through the hips.' }
     ]
   }
 ];
@@ -662,16 +664,12 @@ function dayEx(day) {
 const ARCHIVE = {
   seated_ohp: { id:'seated_ohp', name:'Seated DB Overhead Press', m:'delts', sets:3, rep:[8,10], rest:75, rir:2 },
   weighted_dip: { id:'weighted_dip', name:'Weighted Dip', m:'chest', sets:3, rep:[8,10], rest:75, rir:1, cue:'Lean forward to bias the chest.' },
-  incline_cable_fly: { id:'incline_cable_fly', name:'Incline Cable Fly', m:'chest', tag:'upper', sets:3, rep:[12,15], rest:45, rir:0, cue:'Low to high, bench at 30\u00b0 or standing with the pulleys at your ankles. Everything else you do for chest is a press, and a press never loads the stretched position \u2014 this does, and that is where the pec actually grows. Let your hands travel behind the line of your chest at the bottom, then squeeze them together and slightly up, as if hugging round a barrel.' },
   cable_row: { id:'cable_row', name:'Seated Cable Row', m:'back', sets:3, rep:[10,12], rest:60, rir:1 },
   hammer_curl: { id:'hammer_curl', name:'Hammer Curl', m:'biceps', sets:3, rep:[10,12], rest:45, rir:0, cue:'Brachialis \u2014 the muscle underneath that pushes the biceps up and thickens the arm.' },
   incline_situp: { id:'incline_situp', name:'Incline Sit-Up', m:'abs', sets:3, rep:[10,12], rest:60, rir:1, cue:'Plate held at the chest once bodyweight gets easy. Curl up through the spine rather than hinging at the hips in one rigid piece \u2014 that keeps the work in the abs instead of the hip flexors. Lower under control; the way down is half the set.' },
   rotary_torso: { id:'rotary_torso', name:'Rotary Torso Machine', m:'rot', sets:3, rep:[12,15], rest:45, rir:1, cue:'Per side. Set the range conservatively \u2014 this machine will happily rotate you further than your lower back wants to go. Turn through the mid-back with the abs braced, and control the return instead of letting the stack drag you back.' },
-  leg_ext: { id:'leg_ext', name:'Leg Extension', m:'quads', sets:4, rep:[12,15], rest:45, rir:0, cue:'The only move that trains rectus femoris with the hip extended. Worth its slot.' },
   seated_calf: { id:'seated_calf', name:'Seated Calf Raise', m:'calves', sets:4, rep:[10,12], rest:45, rir:0, cue:'Bent knee targets the soleus. Pause 2 s at the bottom.' },
   standing_calf_w: { id:'standing_calf_w', name:'Standing Calf Raise', m:'calves', sets:3, rep:[15,20], rest:45, rir:0, opt:true },
-  machine_press: { id:'machine_press', name:'Machine Chest Press', m:'chest', sets:3, rep:[10,12], rest:60, rir:0, cue:'It\u2019s a machine \u2014 take the last set to true failure. Nothing to drop on yourself.' },
-  straight_arm: { id:'straight_arm', name:'Straight-Arm Pulldown', m:'back', tag:'lat', sets:3, rep:[12,15], rest:45, rir:0, cue:'Pure lat, no biceps. Keeps the width work going once your arms are the thing giving out.' },
   rear_fly: { id:'rear_fly', name:'Rear Delt Fly', m:'rear', sets:3, rep:[15,20], rest:45, rir:0, cue:'Rear delts do not add width from the front, but they stop your shoulders rounding forward \u2014 which is what actually makes a wide frame read as wide.' },
   bb_curl: { id:'bb_curl', name:'Barbell Curl', m:'biceps', sets:4, rep:[8,10], rest:60, rir:0, bar:45, cue:'Moved here from Saturday when that became a core day. Arms still need two sessions a week.' },
   pull_through: { id:'pull_through', name:'Cable Pull-Through', m:'glutes', sets:4, rep:[12,15], rest:60, rir:1, cue:'Rope between your legs, facing away from the stack, walk out a step. Hinge back until the hamstrings load, then drive the hips forward and squeeze hard at the top. Trains the same hip extension a thrust does, with nothing digging into your hips and no bar to set up.' },
@@ -687,7 +685,13 @@ const ARCHIVE = {
   bulgarian: { id:'bulgarian', name:'Bulgarian Split Squat', m:'quads', sets:3, rep:[8,10], rest:60, rir:1, cue:'Per leg.' },
   rope_pushdown: { id:'rope_pushdown', name:'Rope Pushdown', m:'triceps', sets:3, rep:[12,15], rest:45, rir:0 },
   hanging_oblique: { id:'hanging_oblique', name:'Hanging Oblique Raise', m:'obl', sets:3, rep:[10,12], rest:60, rir:1, cue:'Per side. Knees up and across toward one armpit. Loads the oblique in a lengthened position, which is where it grows best \u2014 the highest-value oblique builder there is. Add an ankle weight once you clear 12 clean reps a side.' },
-  decline_situp: { id:'decline_situp', name:'Decline Weighted Sit-Up', m:'abs', sets:3, rep:[8,10], rest:75, rir:1 }
+  decline_situp: { id:'decline_situp', name:'Decline Weighted Sit-Up', m:'abs', sets:3, rep:[8,10], rest:75, rir:1 },
+  pallof: { id:'pallof', name:'Pallof Press', m:'rot', sets:2, rep:[10,12], rest:45, rir:1, cue:'Anti-rotation, per side. Refusing to rotate is what holds your line in the water. Press slow, let nothing move but your arms.' },
+  cable_lateral_tue: { id:'cable_lateral_tue', name:'Cable Lateral Raise', m:'delts', tag:'side', sets:3, rep:[12,15], rest:45, rir:0, cue:'Second of three weekly hits. Nothing before it today presses overhead, so your shoulders are fresh and these are often your best sets.' },
+  db_side_bend: { id:'db_side_bend', name:'DB Side Bend', m:'obl', sets:2, rep:[15,20], rest:45, rir:1, cue:'Lateral flexion. One heavy DB, opposite hand behind your head, full stretch at the bottom. The 15\u201320 range is for your spine, not your waistline \u2014 growth is the same across rep ranges when effort matches.' },
+  skullcrusher: { id:'skullcrusher', name:'EZ-Bar Skull Crusher', m:'triceps', sets:2, rep:[8,10], rest:60, rir:0, bar:25, cue:'Lower behind your head, not to your forehead \u2014 keeps the long head under stretch.' },
+  cable_chop: { id:'cable_chop', name:'Cable Chop', m:'rot', sets:2, rep:[10,12], rest:60, rir:1, cue:'Rotation, per side, high to low. Alternate with low-to-high week to week. Drive from the hips with the abs braced \u2014 the spine itself barely twists.' },
+  standing_calf_f: { id:'standing_calf_f', name:'Standing Calf Raise', m:'calves', sets:3, rep:[10,12], rest:45, rir:0 }
 };
 
 function customById(id) {
@@ -767,7 +771,7 @@ const VOL_MIN = 10, VOL_MAX = 20, VOL_SCALE = 24;
    Day totals are computed from the meals; per-meal kcal from macros at 4/4/9. */
 const MEALS = {
  "monday": {
-  "lift": "Swim 2:15-3:30 PM",
+  "lift": "Lift 2:15-3:30 PM",
   "m": [
    {
     "t": "7:45 AM",
@@ -1360,11 +1364,11 @@ const MEALS = {
  }
 };
 const WEIGH = [["Chicken", "110 g in every bowl, weighed after cooking \u2014 440 g cooked fills a batch of four"], ["Rice", "80 g dry in every bowl \u2014 320 g dry cooks a batch of four"], ["Black beans", "125 g rinsed and drained, about half a 15 oz can"], ["Goodles", "use the full 150 g dry box"], ["Produce", "weigh the edible portion"], ["Whey isolate", "30 g is 1 scoop (27 g protein); Tuesday and Friday take 2"], ["Greek yogurt", "340 g is 2 label servings (44 g protein)"], ["Eggs, toast, bananas, apples", "counted whole, not weighed"]];
-const PLAN_NOTES = ["Rebalanced so every day hits the same target: 190 g protein, 355 g carbs, 80 g fat. That is exactly the Phase 1 comeback target above, so the plan and the number now agree.", "Macros are estimates from the supplied labels plus standard values for produce, chicken, milk and sauces. Per-meal calories are worked out from the macros at 4/4/9, so the meals always add up to the day.", "Every bowl uses the same 110 g cooked chicken and 80 g dry rice, and every broccoli bowl the same 234 g broccoli, so twelve bowls a week cook as three batches of four: one of burrito bowls, two of chicken-rice. Monday, Wednesday, Thursday and Saturday lunch is the burrito bowl, with bell pepper and carrots on the side instead of broccoli. Meals are spread so nothing runs more than two days in a row: burrito bowls and egg breakfasts Monday, Wednesday, Thursday and Saturday; broccoli bowls and yogurt breakfasts Tuesday, Friday and Sunday. Edamame, berries and oil change a little day to day to keep each day on target; Tuesday and Friday, with only one chicken meal, take a second scoop of whey and 1.5 servings of yogurt instead of 2.", "Tuesday and Friday swap the chicken-rice dinner for Goodles, served with the cucumber, pepper and carrot mix. Broccoli only goes with chicken and rice.", "Protein now comes from Earth Fed Muscle whey isolate (1 scoop: 110 kcal, 27 g P) and nonfat Greek yogurt (170 g: 120 kcal, 22 g P, 0 g fat). That extra protein replaced chicken: about 1,320 g cooked a week, and no two days in a row go over 440 g. Rice and oil were topped up to cover the carbs and fat the old powder and yogurt used to provide.", "Lifting is Tuesday, Thursday and Saturday; Monday, Wednesday and Friday are cardio only, in the same time slots. The food is the same every day either way \u2014 the swim and interval days burn about as much as a full-body lift, and a tired body recovers on food, not less of it."];
+const PLAN_NOTES = ["Rebalanced so every day hits the same target: 190 g protein, 355 g carbs, 80 g fat. That is exactly the Phase 1 comeback target above, so the plan and the number now agree.", "Macros are estimates from the supplied labels plus standard values for produce, chicken, milk and sauces. Per-meal calories are worked out from the macros at 4/4/9, so the meals always add up to the day.", "Every bowl uses the same 110 g cooked chicken and 80 g dry rice, and every broccoli bowl the same 234 g broccoli, so twelve bowls a week cook as three batches of four: one of burrito bowls, two of chicken-rice. Monday, Wednesday, Thursday and Saturday lunch is the burrito bowl, with bell pepper and carrots on the side instead of broccoli. Meals are spread so nothing runs more than two days in a row: burrito bowls and egg breakfasts Monday, Wednesday, Thursday and Saturday; broccoli bowls and yogurt breakfasts Tuesday, Friday and Sunday. Edamame, berries and oil change a little day to day to keep each day on target; Tuesday and Friday, with only one chicken meal, take a second scoop of whey and 1.5 servings of yogurt instead of 2.", "Tuesday and Friday swap the chicken-rice dinner for Goodles, served with the cucumber, pepper and carrot mix. Broccoli only goes with chicken and rice.", "Protein now comes from Earth Fed Muscle whey isolate (1 scoop: 110 kcal, 27 g P) and nonfat Greek yogurt (170 g: 120 kcal, 22 g P, 0 g fat). That extra protein replaced chicken: about 1,320 g cooked a week, and no two days in a row go over 440 g. Rice and oil were topped up to cover the carbs and fat the old powder and yogurt used to provide.", "Lifting is Monday, Tuesday, Thursday and Saturday (upper/lower, twice each); Wednesday and Friday are cardio only, in the same time slots, and Saturday adds an easy swim after a short leg day. The food is the same every day either way \u2014 the cardio days burn about as much as a lift, and a tired body recovers on food, not less of it."];
 
 /* Nutrition. Maintenance \u2248 2,900 kcal: Mifflin-St Jeor at 6'2"/170 lb \u00d7 1.6
    for six lifts and four cardio sessions a week. Kept there after the
-   move to three lifts and three cardio days: recovery is the point of that
+   move to four lifts and three cardio sessions: recovery is the point of that
    change, and the weigh-in rules below will say if it needs to come down. */
 const FUEL = {
   maintenance: 2900,
@@ -1396,7 +1400,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-11-02a';   // bump on every deploy
+const BUILD = '2026-11-03a';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
@@ -2091,7 +2095,7 @@ function viewPlan() {
   return `
     <div class="head">
       <h1>The Split</h1>
-      <div class="focus">${liftDayCount()} lifting days, ${wc.n} cardio day${wc.n === 1 ? '' : 's'}, never on the same day.</div>
+      <div class="focus">${liftDayCount()} lifting days, ${wc.n} cardio session${wc.n === 1 ? '' : 's'}, one full rest day.</div>
     </div>
 
     <div class="panel" style="margin-bottom:14px">
@@ -2172,8 +2176,8 @@ function viewPlan() {
       </div>
       <div class="note" style="margin-top:12px;border:0;padding-left:0">
         The shaded band is ${VOL_MIN}\u2013${VOL_MAX} sets \u2014 the range where more volume still buys growth
-        rather than just fatigue. Three full-body days sit near the bottom of it on purpose: recovery
-        first. Once you feel fresh most days, add a set to the lifts you care about most.
+        rather than just fatigue. Chest, back and thighs each get two sessions a week. Volume sits toward the
+        bottom of the band on purpose: recovery first. Once you feel fresh most days, add a set to the lifts you care about most.
       </div>
     </div>
 
