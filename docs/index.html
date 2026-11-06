@@ -415,6 +415,11 @@ table.food .sv { display: block; font-size: 11.5px; color: var(--ink-3); margin-
 .daypick button.did { color: var(--ink-3); text-decoration: line-through; }
 .swapnote { font-size: 12px; color: var(--ink-3); margin: -4px 0 0; }
 .swapnote button { background: none; border: 0; padding: 0; color: var(--accent); font: inherit; cursor: pointer; text-decoration: underline; }
+.cookday { padding: 9px 0; border-top: 1px solid var(--line-soft); }
+.cookday:first-of-type { border-top: 0; }
+.cookday .ch { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; }
+.cookday .ch span { color: var(--ink-3); font-size: 12.5px; text-align: right; }
+.cookday ul { margin: 5px 0 0; padding-left: 18px; font-size: 13px; line-height: 1.5; color: var(--ink-2); }
 .shopsec { font: 700 11px "IBM Plex Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: 12px 0 4px; }
 .shoprow { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line-soft); font-size: 14px; cursor: pointer; }
 .shoprow input { width: 18px; height: 18px; accent-color: var(--accent); flex: none; }
@@ -776,7 +781,8 @@ const MUSCLES = [
 const VOL_MIN = 10, VOL_MAX = 20, VOL_SCALE = 24;
 
 /* Seth's 7-day meal plan: Whole Foods products, pre-cooked chicken, beef twice,
-   one cheat night. Solved so every day lands on the comeback target.
+   one cheat night, egg and yogurt breakfasts alternating. Solved so every day
+   lands on 2,900 kcal with protein at 185-195 g.
    Day totals are computed from the meals; per-meal kcal from macros at 4/4/9. */
 const MEALS = {
  "monday": {
@@ -788,11 +794,11 @@ const MEALS = {
     "i": [
      "4 whole eggs",
      "3 slices whole-grain toast",
-     "109 g berries"
+     "140 g berries"
     ],
-    "k": 717,
+    "k": 733,
     "p": 43,
-    "c": 80,
+    "c": 84,
     "f": 25
    },
    {
@@ -803,7 +809,7 @@ const MEALS = {
      "80 g dry rice, then cooked",
      "125 g black beans",
      "35 g shredded cheese",
-     "Side: 75 g bell pepper, 64 g carrots"
+     "On the side: 75 g bell pepper, 64 g carrots"
     ],
     "k": 736,
     "p": 54,
@@ -826,47 +832,47 @@ const MEALS = {
     "n": "Post-workout smoothie",
     "i": [
      "30 g whey protein isolate (1 scoop)",
+     "12 g honey",
      "210 g frozen berries",
      "60 g spinach",
      "244 g 2% milk",
      "Water and ice; the banana is already eaten"
     ],
-    "k": 353,
+    "k": 393,
     "p": 38,
-    "c": 39,
+    "c": 49,
     "f": 5
    },
    {
     "t": "5:00 PM",
     "n": "Snack",
     "i": [
-     "1 medium apple",
-     "116 g shelled edamame"
+     "110 g shelled edamame"
     ],
-    "k": 254,
-    "p": 14,
-    "c": 36,
-    "f": 6
+    "k": 141,
+    "p": 13,
+    "c": 11,
+    "f": 5
    },
    {
     "t": "6:45-7:00 PM",
-    "n": "Chicken-rice dinner",
+    "n": "Chicken teriyaki bowl",
     "i": [
      "150 g 365 organic grilled chicken strips",
      "80 g dry rice, then cooked",
-     "104 g cucumber, 75 g bell pepper, 64 g carrots",
-     "30 g sauce",
-     "24 g olive oil"
+     "234 g broccoli (frozen steam bag)",
+     "30 g teriyaki sauce",
+     "23 g olive oil"
     ],
-    "k": 728,
-    "p": 40,
-    "c": 79,
-    "f": 28
+    "k": 785,
+    "p": 46,
+    "c": 85,
+    "f": 29
    }
   ],
   "k": 2900,
-  "p": 190,
-  "c": 355,
+  "p": 195,
+  "c": 350,
   "f": 80,
   "liftAt": "2:15-3:30 PM"
  },
@@ -878,14 +884,14 @@ const MEALS = {
     "n": "Yogurt breakfast",
     "i": [
      "340 g 365 organic nonfat Greek yogurt",
-     "20 g granola",
-     "122 g berries",
+     "40 g granola",
+     "140 g berries",
      "21 g honey"
     ],
-    "k": 395,
-    "p": 35,
-    "c": 57,
-    "f": 3
+    "k": 498,
+    "p": 37,
+    "c": 74,
+    "f": 6
    },
    {
     "t": "11:45 AM-12:00 PM",
@@ -895,39 +901,39 @@ const MEALS = {
      "80 g dry rice, then cooked",
      "234 g broccoli (frozen steam bag)",
      "30 g teriyaki sauce",
-     "26 g olive oil"
+     "25 g olive oil"
     ],
-    "k": 799,
+    "k": 790,
     "p": 45,
     "c": 85,
-    "f": 31
+    "f": 30
    },
    {
     "t": "4:30 PM",
     "n": "Smoothie",
     "i": [
      "60 g whey protein isolate (2 scoops)",
+     "11 g honey",
      "1 medium banana",
      "210 g frozen berries",
      "60 g spinach",
      "244 g 2% milk",
      "Water and ice"
     ],
-    "k": 577,
+    "k": 613,
     "p": 66,
-    "c": 67,
+    "c": 76,
     "f": 5
    },
    {
     "t": "6:00 PM",
     "n": "Snack",
     "i": [
-     "1 medium apple",
-     "103 g shelled edamame"
+     "95 g shelled edamame"
     ],
-    "k": 241,
-    "p": 13,
-    "c": 36,
+    "k": 129,
+    "p": 11,
+    "c": 10,
     "f": 5
    },
    {
@@ -936,12 +942,12 @@ const MEALS = {
     "i": [
      "1 box Goodles, prepared per box",
      "104 g cucumber, 75 g bell pepper, 64 g carrots",
-     "26 g olive oil"
+     "25 g olive oil"
     ],
-    "k": 888,
+    "k": 870,
     "p": 31,
     "c": 110,
-    "f": 36
+    "f": 34
    }
   ],
   "k": 2900,
@@ -959,55 +965,55 @@ const MEALS = {
     "i": [
      "4 whole eggs",
      "4 slices whole-grain toast",
-     "107 g berries"
+     "140 g berries"
     ],
-    "k": 834,
+    "k": 859,
     "p": 49,
-    "c": 101,
-    "f": 26
+    "c": 105,
+    "f": 27
    },
    {
     "t": "10:50 AM",
-    "n": "Beef teriyaki bowl",
+    "n": "Chicken burrito bowl",
     "i": [
-     "227 g (half a 1 lb pack) Organic Rancher 93/7 beef, browned",
+     "150 g 365 organic grilled chicken strips",
      "80 g dry rice, then cooked",
-     "200 g 365 organic frozen three-pepper blend",
-     "30 g teriyaki sauce",
-     "12 g olive oil"
+     "125 g black beans",
+     "35 g shredded cheese",
+     "On the side: 75 g bell pepper, 64 g carrots"
     ],
-    "k": 809,
-    "p": 57,
-    "c": 80,
-    "f": 29
+    "k": 736,
+    "p": 54,
+    "c": 94,
+    "f": 16
    },
    {
     "t": "3:15 PM",
     "n": "Post-workout smoothie",
     "i": [
      "30 g whey protein isolate (1 scoop)",
+     "4 g honey",
      "1 medium banana",
      "210 g frozen berries",
      "60 g spinach",
      "244 g 2% milk",
      "Water and ice"
     ],
-    "k": 461,
+    "k": 473,
     "p": 38,
-    "c": 66,
+    "c": 69,
     "f": 5
    },
    {
     "t": "6:30 PM",
     "n": "Snack",
     "i": [
-     "1 medium apple",
-     "47 g shelled edamame"
+     "70 g shelled edamame"
     ],
-    "k": 162,
-    "p": 6,
-    "c": 30,
-    "f": 2
+    "k": 87,
+    "p": 8,
+    "c": 7,
+    "f": 3
    },
    {
     "t": "7:30-8:00 PM",
@@ -1017,12 +1023,12 @@ const MEALS = {
      "80 g dry rice, then cooked",
      "104 g cucumber, 75 g bell pepper, 64 g carrots",
      "30 g sauce",
-     "12 g olive oil"
+     "24 g olive oil"
     ],
-    "k": 634,
-    "p": 40,
-    "c": 78,
-    "f": 18
+    "k": 745,
+    "p": 41,
+    "c": 80,
+    "f": 29
    }
   ],
   "k": 2900,
@@ -1036,74 +1042,75 @@ const MEALS = {
   "m": [
    {
     "t": "7:30 AM",
-    "n": "Egg breakfast",
+    "n": "Yogurt breakfast",
     "i": [
-     "4 whole eggs",
-     "3 slices whole-grain toast",
-     "109 g berries"
+     "340 g 365 organic nonfat Greek yogurt",
+     "60 g granola",
+     "140 g berries",
+     "21 g honey"
     ],
-    "k": 717,
-    "p": 43,
-    "c": 80,
-    "f": 25
+    "k": 585,
+    "p": 38,
+    "c": 88,
+    "f": 9
    },
    {
     "t": "11:45 AM-12:00 PM",
-    "n": "Chicken burrito bowl",
+    "n": "Chicken teriyaki bowl",
     "i": [
      "150 g 365 organic grilled chicken strips",
      "80 g dry rice, then cooked",
-     "125 g black beans",
-     "35 g shredded cheese",
-     "Side: 75 g bell pepper, 64 g carrots"
+     "234 g broccoli (frozen steam bag)",
+     "30 g teriyaki sauce",
+     "20 g olive oil"
     ],
-    "k": 736,
-    "p": 54,
-    "c": 94,
-    "f": 16
+    "k": 745,
+    "p": 45,
+    "c": 85,
+    "f": 25
    },
    {
     "t": "4:30 PM",
     "n": "Smoothie",
     "i": [
      "30 g whey protein isolate (1 scoop)",
+     "34 g honey",
      "1 medium banana",
      "210 g frozen berries",
      "60 g spinach",
      "244 g 2% milk",
      "Water and ice"
     ],
-    "k": 465,
+    "k": 577,
     "p": 39,
-    "c": 66,
+    "c": 94,
     "f": 5
    },
    {
     "t": "6:00 PM",
     "n": "Snack",
     "i": [
-     "1 medium apple",
-     "116 g shelled edamame"
+     "87 g shelled edamame"
     ],
-    "k": 254,
-    "p": 14,
-    "c": 36,
-    "f": 6
+    "k": 112,
+    "p": 10,
+    "c": 9,
+    "f": 4
    },
    {
     "t": "7:30-8:00 PM",
-    "n": "Chicken-rice dinner",
+    "n": "Beef teriyaki bowl",
     "i": [
-     "150 g 365 organic grilled chicken strips",
+     "227 g (half the 1 lb pack) Organic Rancher 93/7 beef",
      "80 g dry rice, then cooked",
-     "104 g cucumber, 75 g bell pepper, 64 g carrots",
-     "30 g sauce",
-     "24 g olive oil"
+     "200 g 365 organic frozen three-pepper blend",
+     "30 g teriyaki sauce",
+     "20 g olive oil"
     ],
-    "k": 728,
-    "p": 40,
+    "k": 881,
+    "p": 58,
     "c": 79,
-    "f": 28
+    "f": 37
    }
   ],
   "k": 2900,
@@ -1117,60 +1124,58 @@ const MEALS = {
   "m": [
    {
     "t": "7:30 AM",
-    "n": "Yogurt breakfast",
+    "n": "Egg breakfast",
     "i": [
-     "340 g 365 organic nonfat Greek yogurt",
-     "20 g granola",
-     "122 g berries",
-     "21 g honey"
+     "4 whole eggs",
+     "3 slices whole-grain toast",
+     "140 g berries"
     ],
-    "k": 395,
-    "p": 35,
-    "c": 57,
-    "f": 3
+    "k": 733,
+    "p": 43,
+    "c": 84,
+    "f": 25
    },
    {
     "t": "11:45 AM-12:00 PM",
-    "n": "Chicken teriyaki bowl",
+    "n": "Beef taco bowl",
     "i": [
-     "150 g 365 organic grilled chicken strips",
+     "227 g (half the 1 lb pack) Organic Rancher 93/7 beef, with taco seasoning",
      "80 g dry rice, then cooked",
-     "234 g broccoli (frozen steam bag)",
-     "30 g teriyaki sauce",
-     "26 g olive oil"
+     "200 g 365 organic frozen three-pepper blend",
+     "8 g olive oil"
     ],
-    "k": 799,
-    "p": 45,
-    "c": 85,
-    "f": 31
+    "k": 745,
+    "p": 55,
+    "c": 75,
+    "f": 25
    },
    {
     "t": "2:15 PM",
     "n": "Smoothie",
     "i": [
-     "60 g whey protein isolate (2 scoops)",
+     "30 g whey protein isolate (1 scoop)",
+     "13 g honey",
      "1 medium banana",
      "210 g frozen berries",
      "60 g spinach",
      "244 g 2% milk",
      "Water and ice"
     ],
-    "k": 577,
-    "p": 66,
-    "c": 67,
+    "k": 509,
+    "p": 39,
+    "c": 77,
     "f": 5
    },
    {
     "t": "4:30-5:00 PM",
     "n": "Snack",
     "i": [
-     "1 medium apple",
-     "103 g shelled edamame"
+     "138 g shelled edamame"
     ],
-    "k": 241,
-    "p": 13,
-    "c": 36,
-    "f": 5
+    "k": 187,
+    "p": 17,
+    "c": 14,
+    "f": 7
    },
    {
     "t": "7:30 PM",
@@ -1178,17 +1183,17 @@ const MEALS = {
     "i": [
      "1 box Goodles, prepared per box",
      "104 g cucumber, 75 g bell pepper, 64 g carrots",
-     "26 g olive oil"
+     "8 g olive oil"
     ],
-    "k": 888,
+    "k": 726,
     "p": 31,
     "c": 110,
-    "f": 36
+    "f": 18
    }
   ],
   "k": 2900,
-  "p": 190,
-  "c": 355,
+  "p": 185,
+  "c": 360,
   "f": 80,
   "liftAt": "10:30 AM"
  },
@@ -1197,16 +1202,17 @@ const MEALS = {
   "m": [
    {
     "t": "9:00 AM",
-    "n": "Egg breakfast",
+    "n": "Yogurt breakfast",
     "i": [
-     "4 whole eggs",
-     "4 slices whole-grain toast",
-     "88 g berries"
+     "340 g 365 organic nonfat Greek yogurt",
+     "60 g granola",
+     "140 g berries",
+     "21 g honey"
     ],
-    "k": 822,
-    "p": 48,
-    "c": 99,
-    "f": 26
+    "k": 585,
+    "p": 38,
+    "c": 88,
+    "f": 9
    },
    {
     "t": "1:00 PM",
@@ -1228,42 +1234,41 @@ const MEALS = {
     "n": "Smoothie",
     "i": [
      "30 g whey protein isolate (1 scoop)",
+     "19 g honey",
      "1 medium banana",
      "210 g frozen berries",
      "60 g spinach",
      "244 g 2% milk",
      "Water and ice"
     ],
-    "k": 465,
+    "k": 529,
     "p": 39,
-    "c": 66,
+    "c": 82,
     "f": 5
    },
    {
     "t": "6:00 PM",
     "n": "Snack",
     "i": [
-     "1 medium apple",
-     "89 g shelled edamame"
+     "85 g shelled edamame"
     ],
-    "k": 225,
-    "p": 11,
-    "c": 34,
-    "f": 5
+    "k": 108,
+    "p": 10,
+    "c": 8,
+    "f": 4
    },
    {
     "t": "8:00 PM",
     "n": "Cheat night: taquitos",
     "i": [
-     "6 frozen taquitos (baked or air-fried)",
+     "8 365 chicken taquitos, air-fried on a liner",
      "170 g Greek yogurt + taco seasoning, as a dip",
-     "34 g guacamole",
-     "60 g salsa"
+     "\u00bd avocado"
     ],
-    "k": 823,
-    "p": 47,
-    "c": 71,
-    "f": 39
+    "k": 1113,
+    "p": 58,
+    "c": 92,
+    "f": 57
    }
   ],
   "k": 2900,
@@ -1277,17 +1282,16 @@ const MEALS = {
   "m": [
    {
     "t": "9:00 AM",
-    "n": "Yogurt breakfast",
+    "n": "Egg breakfast",
     "i": [
-     "340 g 365 organic nonfat Greek yogurt",
-     "60 g granola",
-     "176 g berries",
-     "21 g honey"
+     "4 whole eggs",
+     "4 slices whole-grain toast",
+     "140 g berries"
     ],
-    "k": 605,
-    "p": 39,
-    "c": 92,
-    "f": 9
+    "k": 859,
+    "p": 49,
+    "c": 105,
+    "f": 27
    },
    {
     "t": "1:00 PM",
@@ -1297,55 +1301,55 @@ const MEALS = {
      "80 g dry rice, then cooked",
      "234 g broccoli (frozen steam bag)",
      "30 g teriyaki sauce",
-     "20 g olive oil"
+     "16 g olive oil"
     ],
-    "k": 745,
+    "k": 709,
     "p": 45,
     "c": 85,
-    "f": 25
+    "f": 21
    },
    {
     "t": "4:00 PM",
     "n": "Smoothie",
     "i": [
      "30 g whey protein isolate (1 scoop)",
+     "7 g honey",
      "1 medium banana",
      "210 g frozen berries",
      "60 g spinach",
      "244 g 2% milk",
      "Water and ice"
     ],
-    "k": 465,
+    "k": 489,
     "p": 39,
-    "c": 66,
+    "c": 72,
     "f": 5
    },
    {
     "t": "6:00 PM",
     "n": "Snack",
     "i": [
-     "1 medium apple",
-     "75 g shelled edamame"
+     "140 g shelled edamame"
     ],
-    "k": 199,
-    "p": 10,
-    "c": 33,
-    "f": 3
+    "k": 187,
+    "p": 17,
+    "c": 14,
+    "f": 7
    },
    {
     "t": "8:00 PM",
-    "n": "Beef fajita bowl",
+    "n": "Chicken-rice dinner",
     "i": [
-     "227 g (half a 1 lb pack) Organic Rancher 93/7 beef, browned with taco seasoning",
+     "150 g 365 organic grilled chicken strips",
      "80 g dry rice, then cooked",
-     "200 g 365 organic frozen three-pepper blend",
-     "60 g salsa",
-     "20 g olive oil"
+     "104 g cucumber, 75 g bell pepper, 64 g carrots",
+     "30 g sauce",
+     "16 g olive oil"
     ],
-    "k": 886,
-    "p": 57,
+    "k": 656,
+    "p": 40,
     "c": 79,
-    "f": 38
+    "f": 20
    }
   ],
   "k": 2900,
@@ -1355,11 +1359,13 @@ const MEALS = {
   "liftAt": null
  }
 };
-const WEIGH = [["Chicken strips", "150 g per bowl, straight from the pack \u2014 six 8 oz packs cover the week's nine chicken bowls"], ["Beef", "weigh it raw; half a 1 lb pack per bowl, browned once for both"], ["Rice", "80 g dry in every bowl \u2014 see the table below"], ["Produce", "weigh the edible portion; frozen broccoli and peppers straight from the bag"], ["Whey", "30 g is 1 scoop (27 g protein); Tuesday and Friday take 2"], ["Eggs, toast, bananas, apples, taquitos", "counted whole, not weighed"]];
+/* Cook every two days: one pot of rice per session, the beef once, everything
+   else microwaved in its bag or eaten straight from the pack. */
+const COOK = [["Sunday", "Sunday + Monday", "4 bowls", ["1 pot of rice: 320 g dry", "Fill 4 containers: 150 g chicken strips and a quarter of the rice in each", "Chop cucumber, bell pepper and carrots for Sunday dinner and Monday's burrito side", "Monday burrito: add 125 g black beans and 35 g cheese to its container"]], ["Tuesday morning", "Tuesday + Wednesday", "3 bowls", ["1 pot of rice: 240 g dry", "Fill 3 containers: 150 g chicken strips and a third of the rice in each", "Chop the veg for Wednesday's burrito side and dinner", "Wednesday burrito: beans and cheese into its container", "Tuesday's Goodles is made fresh that night (one pot)"]], ["Thursday morning", "Thursday, Friday + Saturday lunch", "4 bowls", ["1 pot of rice: 320 g dry", "1 skillet: brown the whole 1 lb of beef, split it in half; teriyaki on one half, taco seasoning on the other", "Split the rice into 4 containers: Thursday's chicken and beef bowls, Friday's beef taco bowl, Saturday's chicken lunch", "Friday's Goodles is made fresh that night (one pot)"]], ["Saturday", "Dinner", "cheat night", ["Taquitos on an air-fryer liner \u2014 nothing to wash"]]];
 /* One Whole Foods trip covers the week; Amazon covers what it does not stock.
    Ticks are kept per week, so the list resets itself every Monday. */
-const SHOP = [["Protein", [["Organic grilled chicken breast strips, 8 oz", "6", "https://www.wholefoodsmarket.com/grocery/product/whole-foods-market-organic-grilled-chicken-breast-strips-8-oz-b07nrc7thl"], ["Organic Rancher organic 93/7 ground beef, 1 lb", "1", "https://www.wholefoodsmarket.com/product/organic-rancher-organic-ground-beef-93-lean7-fat-b09439skw3"], ["365 organic nonfat Greek yogurt, 32 oz", "2", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-greek-nonfat-plain-yogurt-32-oz-b07myd18hm"], ["Organic eggs", "18", ""], ["365 organic shelled edamame, frozen 12 oz", "2", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-frozen-organic-vegetables-shelled-edamame-b074h5ltcr"]]], ["Carbs", [["365 organic jasmine rice, 2 lb", "1", "https://www.wholefoodsmarket.com/shipped-to-you/product/365-by-whole-foods-market-organic-jasmine-thai-white-rice-32-ounce-b084njjjq7"], ["365 organic black beans, 15 oz", "2", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-black-beans-15-oz-b074h6qvky"], ["365 organic whole wheat sandwich bread, 20 oz", "1", "https://www.wholefoodsmarket.com/product/organic-whole%20wheat%20sandwich%20bread,%2020%20oz-b07glty9c6"], ["365 organic oat & honey granola, 17 oz", "every few weeks", "https://origin-www.wholefoodsmarket.com/shipped-to-you/product/365-by-whole-foods-market-organic-oat-honey-granola-17-ounce-b074h6mbqr"], ["Bananas", "7", ""], ["Apples", "7", ""]]], ["Frozen", [["365 organic broccoli florets, 32 oz", "1", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-broccoli-florets-32-oz-b077lf2zmr"], ["365 organic three-pepper blend, 16 oz", "1", "https://www.wholefoodsmarket.com/grocery/product/365-by-whole-foods-market-365-by-whole-foods-market-organic-three-pepper-blend-16-oz-b074h7324y"], ["Organic frozen mixed berries", "about 3.5 lb", ""], ["Organic frozen spinach", "about 1 lb", ""], ["365 chicken taquitos", "1 box", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-spicy-chicken-taquito-125-oz-b0dslrv17w"]]], ["Produce + dairy", [["Fresh berries, for Mon\u2013Wed breakfasts", "about 1 lb", ""], ["Bell peppers", "4", ""], ["Cucumbers", "2", ""], ["Carrots", "1 lb", ""], ["365 organic Mexican blend cheese, 8 oz", "1", "https://www.wholefoodsmarket.com/grocery/product/365-by-whole-foods-market-organic-mexican-blend-cheese-shreds-8-oz-b07vm5hqcn"], ["365 organic 2% milk", "\u00bd gallon", ""], ["Traditional guacamole, 8 oz", "1", "https://www.wholefoodsmarket.com/product/whole-foods-market-traditional-guacamole-8-oz-b07nsq3z3y"]]], ["Sauces + pantry", [["365 organic teriyaki sauce, 10 oz", "every 2 weeks", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-sauce-teriyaki-10-oz-b074h6vr3v"], ["365 organic thick & chunky salsa, 16 oz", "1", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-thick-chunky-medium-salsa-16-oz-b0czplfxb3"], ["365 organic taco seasoning", "every few weeks", "https://origin-d8.wholefoodsmarket.com/shipped-to-you/product/365-by-whole-foods-market-organic-taco-seasoning-1-ounce-b07zpp9t2f"], ["Organic olive oil, honey", "when low", ""]]], ["Amazon", [["Goodles", "2 boxes", ""], ["Earth Fed Muscle whey isolate", "a tub lasts ~3 weeks", ""]]]];
-const PLAN_NOTES = ["Every day hits the same target: 190 g protein, 355 g carbs, 80 g fat \u2014 the Phase 1 comeback target above.", "Chicken is Whole Foods' organic grilled breast strips, already cooked: 150 g per bowl, because pre-cooked strips carry about a third less protein per gram than chicken you cook yourself. Beef is one 1 lb pack of Organic Rancher 93/7, browned once and split across Wednesday lunch and Sunday dinner.", "Saturday dinner is the cheat night: six taquitos with guacamole and salsa. The Greek yogurt dip is there for protein \u2014 taquitos are mostly carbs and fat \u2014 and Saturday lunch skips the oil to make room.", "Edamame, berries and oil change day to day to keep each day on target. Wednesday and Saturday breakfasts take a fourth slice of toast; every yogurt breakfast is 340 g.", "Macros for the Whole Foods products come from nutrition databases, not the labels themselves. Check the chicken strips, yogurt and taquitos against their packs after the first shop.", "Lifting is Monday, Tuesday, Thursday and Friday; Wednesday is the hard swim and Saturday is surf, golf or light cardio. The food is the same 2,900 kcal every day either way."];
+const SHOP = [["Protein", [["Organic grilled chicken breast strips, 8 oz", "6", "https://www.wholefoodsmarket.com/grocery/product/whole-foods-market-organic-grilled-chicken-breast-strips-8-oz-b07nrc7thl"], ["Organic Rancher organic 93/7 ground beef, 1 lb", "1", "https://www.wholefoodsmarket.com/product/organic-rancher-organic-ground-beef-93-lean7-fat-b09439skw3"], ["365 organic nonfat Greek yogurt, 32 oz", "2", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-greek-nonfat-plain-yogurt-32-oz-b07myd18hm"], ["Organic eggs", "18", ""], ["365 organic shelled edamame, frozen 12 oz", "3", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-frozen-organic-vegetables-shelled-edamame-b074h5ltcr"]]], ["Carbs", [["365 organic jasmine rice, 2 lb", "1", "https://www.wholefoodsmarket.com/shipped-to-you/product/365-by-whole-foods-market-organic-jasmine-thai-white-rice-32-ounce-b084njjjq7"], ["365 organic black beans, 15 oz", "1", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-black-beans-15-oz-b074h6qvky"], ["365 organic whole wheat sandwich bread, 20 oz", "1", "https://www.wholefoodsmarket.com/product/organic-whole%20wheat%20sandwich%20bread,%2020%20oz-b07glty9c6"], ["365 organic oat & honey granola, 17 oz", "every few weeks", "https://origin-www.wholefoodsmarket.com/shipped-to-you/product/365-by-whole-foods-market-organic-oat-honey-granola-17-ounce-b074h6mbqr"], ["Bananas", "7", ""]]], ["Frozen", [["365 organic broccoli florets, 32 oz + 16 oz", "1 each", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-broccoli-florets-32-oz-b077lf2zmr"], ["365 organic three-pepper blend, 16 oz", "1", "https://www.wholefoodsmarket.com/grocery/product/365-by-whole-foods-market-365-by-whole-foods-market-organic-three-pepper-blend-16-oz-b074h7324y"], ["Organic frozen mixed berries", "about 3.5 lb", ""], ["Organic frozen spinach", "about 1 lb", ""], ["365 chicken taquitos", "1 box", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-spicy-chicken-taquito-125-oz-b0dslrv17w"]]], ["Produce + dairy", [["Fresh berries, for breakfasts", "about 2 lb", ""], ["Bell peppers", "3", ""], ["Cucumbers", "2", ""], ["Carrots", "1 lb", ""], ["365 organic Mexican blend cheese, 8 oz", "1", "https://www.wholefoodsmarket.com/grocery/product/365-by-whole-foods-market-organic-mexican-blend-cheese-shreds-8-oz-b07vm5hqcn"], ["365 organic 2% milk", "\u00bd gallon", ""], ["Avocado", "1", ""]]], ["Sauces + pantry", [["365 organic teriyaki sauce, 10 oz", "every 2 weeks", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-sauce-teriyaki-10-oz-b074h6vr3v"], ["365 organic taco seasoning", "every few weeks", "https://origin-d8.wholefoodsmarket.com/shipped-to-you/product/365-by-whole-foods-market-organic-taco-seasoning-1-ounce-b07zpp9t2f"], ["Organic honey, 12 oz", "every 2 weeks", ""], ["Organic olive oil", "when low", ""]]], ["Amazon", [["Goodles", "2 boxes", ""], ["Earth Fed Muscle whey isolate", "a tub lasts ~3 weeks", ""]]]];
+const PLAN_NOTES = ["Every day lands on 2,900 kcal: 80 g fat, protein 185\u2013195 g, and carbs making up the rest.", "Breakfasts alternate egg and yogurt from Monday, so Sunday and Monday are both eggs. Honey in the smoothie replaces the apple's carbs; edamame is the whole afternoon snack.", "Chicken is Whole Foods' organic grilled breast strips, already cooked: 150 g per bowl. The 1 lb of beef is browned once on Thursday and covers Thursday dinner and Friday lunch.", "Saturday dinner is the cheat night. The Greek yogurt dip is there for protein, and Saturday lunch skips the oil to make room for the avocado.", "Broccoli and the pepper blend are frozen: microwave them in the bag right before you eat. If you would rather never wash a rice pot, 365 makes 90-second organic jasmine rice pouches.", "Macros for the Whole Foods products come from nutrition databases, not the labels. Check the chicken strips, yogurt and taquitos against their packs after the first shop."];
 
 /* Nutrition. Maintenance \u2248 2,900 kcal: Mifflin-St Jeor at 6'2"/170 lb \u00d7 1.6
    for six lifts and four cardio sessions a week. Kept there after the
@@ -1395,7 +1401,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-11-06a';   // bump on every deploy
+const BUILD = '2026-11-07a';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
@@ -1512,7 +1518,7 @@ function rampNote(n) {
 }
 
 const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-const TODAY = iso(new Date());
+let TODAY = iso(new Date());   // refreshed on every render: the app can stay open across days
 
 function e1rm(w, r) {            // Epley
   if (!(w > 0) || !(r > 0)) return 0;
@@ -1844,7 +1850,11 @@ const isLogged = exId => !!(logs[exId] || {})[TODAY];
    =========================================================== */
 const app = document.getElementById('app');
 
+let mealDayFor = null;   // the date mealDay was chosen on
 function render() {
+  const now = iso(new Date());
+  if (now !== TODAY) { TODAY = now; openEx = null; }
+  if (mealDayFor !== TODAY) { mealDay = null; mealDayFor = TODAY; }
   app.innerHTML = ({ today: viewToday, plan: viewPlan, fuel: viewFuel, progress: viewProgress })[tab]();
   paintSync();
   wire();
@@ -2238,9 +2248,6 @@ function fuelTarget(t) {
   return m;
 }
 
-/* The plan weighs rice dry, because cooked weight depends entirely on how
-   much water went in the pot. 2.8x is the ratio implied by USDA's raw and
-   cooked figures for white long-grain; real kitchens land near 2.6 to 3.0. */
 /** Minutes past midnight from labels like "7:45 AM", "11:45 AM-12:00 PM",
  *  or "2:15-3:30 PM" where only the end carries the meridiem. */
 function clockMin(label) {
@@ -2299,16 +2306,6 @@ function toggleShop(id) {
   logs.shop = { [wk]: Object.assign({}, logs.shop[wk]) };   // only this week is kept
   if (logs.shop[wk][id]) delete logs.shop[wk][id]; else logs.shop[wk][id] = 1;
   persist('shop');
-}
-
-function riceTable() {
-  const dry = new Set();
-  Object.values(MEALS).forEach(d => d.m.forEach(m => m.i.forEach(x => {
-    const g = /^(\d+) g dry rice/.exec(x);
-    if (g) dry.add(+g[1]);
-  })));
-  const r = (g, f) => Math.round(g * f / 5) * 5;
-  return [...dry].sort((a, b) => a - b).map(g => ({ dry: g, mid: r(g, 2.8), lo: r(g, 2.6), hi: r(g, 3.0) }));
 }
 
 const DAY_KEYS = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
@@ -2431,34 +2428,17 @@ function viewFuel() {
             <span class="sn">${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(name)}</a>` : esc(name)}</span>
             <span class="sq">${esc(qty)}</span>
           </label>`; }).join('')}`).join('')}
-      <div style="font-size:12px;color:var(--ink-3);margin-top:10px">Ticks clear themselves each Monday. Macros assume these products; check the chicken, yogurt and taquito labels after your first trip.</div>
+      <button class="resetbtn" data-shopreset="1" style="margin-top:12px">Reset</button>
+      <div style="font-size:12px;color:var(--ink-3);margin-top:10px">Ticks also clear themselves each Monday. Macros assume these products; check the chicken, yogurt and taquito labels after your first trip.</div>
     </div>
 
     <div class="panel" style="margin-top:10px">
-      <div class="eyebrow" style="margin-bottom:6px">How to weigh it</div>
-      ${WEIGH.map(([a, b]) => `<div class="weigh"><b>${esc(a)}</b><span>${esc(b)}</span></div>`).join('')}
-    </div>
-
-    <div class="panel" style="margin-top:10px">
-      <div class="eyebrow" style="margin-bottom:6px">Rice, dry to cooked</div>
-      <div style="font-size:13px;line-height:1.5;color:var(--ink-2);margin-bottom:10px">
-        Every rice figure in this plan is the <b style="color:var(--ink)">dry</b> weight. Weigh it dry
-        wherever you can \u2014 cooked weight swings with how much water went in the pot, so it is the
-        less reliable number. These are for when the rice is already cooked.
-      </div>
-      <table class="rice">
-        <tr><th>Dry</th><th>Cooked</th><th>Range</th></tr>
-        ${riceTable().map(r => `<tr>
-          <td class="num">${r.dry} g</td>
-          <td class="num b">${r.mid} g</td>
-          <td class="num dim">${r.lo}\u2013${r.hi} g</td>
-        </tr>`).join('')}
-      </table>
-      <div style="font-size:12.5px;line-height:1.5;color:var(--ink-3);margin-top:10px">
-        Better than any table: cook 100 g dry the way you normally would, weigh the whole batch once
-        it has stopped steaming, and divide by 100. That multiplier is yours \u2014 your rice, your pot,
-        your lid \u2014 and it will not move much after that.
-      </div>
+      <div class="eyebrow" style="margin-bottom:6px">Cook days</div>
+      ${COOK.map(([when, covers, n, steps]) => `
+        <div class="cookday">
+          <div class="ch"><b>${esc(when)}</b><span>${esc(covers)} \u00b7 ${esc(n)}</span></div>
+          <ul>${steps.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+        </div>`).join('')}
     </div>
 
     <div class="panel" style="margin-top:10px">
@@ -2483,12 +2463,6 @@ function viewFuel() {
           : 'A surplus around 200 kcal is deliberately small. Past a point, a bigger one does not build muscle any faster \u2014 it just adds the fat you would then have to diet back off.'}
       </div>
     </div>
-
-    <div class="eyebrow" style="margin:20px 0 9px">Timing</div>
-    <div class="stack">${tips(FUEL.timing)}</div>
-
-    <div class="eyebrow" style="margin:20px 0 9px">Adjusting</div>
-    <div class="stack">${tips(FUEL.adjust)}</div>
 
     ${Object.keys(edits.fuel).length
       ? `<button class="resetbtn" data-resetfuel="1" style="margin-top:16px">Reset macros to the original targets</button>` : ''}
@@ -2683,6 +2657,8 @@ function wire() {
     const sw = t.closest('[data-swapday]');
     if (sw) { setSwap(sw.dataset.swapday); openEx = null; mealDay = null; render(); return; }
 
+    if (t.closest('[data-shopreset]')) { logs.shop = {}; persist('shop'); render(); return; }
+
     const sh = t.closest('[data-shop]');
     if (sh) { toggleShop(sh.dataset.shop); render(); return; }
 
@@ -2848,6 +2824,11 @@ function wire() {
 loadLocal();
 loadEdits();
 render();
+// A phone keeps the app in memory for days; when it comes back on a new date,
+// redraw so Today, the meal plan and set logging all move to the real day.
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && iso(new Date()) !== TODAY) render();
+});
 
 if ('serviceWorker' in navigator) {
   // A worker already controlling the page means this load came from cache,
