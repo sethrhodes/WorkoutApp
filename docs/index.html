@@ -580,7 +580,8 @@ table.rice td.dim { color: var(--ink-3); font-size: 12.5px; text-align: right; }
 /* ===========================================================
    THE PROGRAM
    Upper/lower twice a week, three cardio sessions, one full rest day.
-   Only the short Saturday leg day shares its slot with cardio, an easy swim.
+   Only the short Friday leg day shares its slot with cardio, an easy swim;
+   Saturday is surf, golf or light cardio.
    RIR = reps in reserve: how many you leave in the tank.
    =========================================================== */
 const PLAN = [
@@ -605,7 +606,7 @@ const PLAN = [
       { id:'back_squat', name:'Back Squat', m:'quads', sets:3, rep:[6,8], rest:90, rir:2, bar:45, cue:'Leave 2 in the tank. A grinder here costs you the rest of the session.' },
       { id:'leg_press', name:'Leg Press', m:'quads', sets:3, rep:[12,15], rest:75, rir:1, cue:'Your main machine quad movement now that the hack squat is out. Go down until your hips are just about to tuck under \u2014 that is the bottom, not the sled hitting the stops. Feet mid-platform and shoulder width; drop them lower on the platform on the last two sets to bias the quads harder, which is the job the hack squat was doing.' },
       { id:'leg_ext', name:'Leg Extension', m:'quads', sets:3, rep:[12,15], rest:45, rir:0, cue:'The only move that trains rectus femoris with the hip extended. Worth its slot.' },
-      { id:'seated_curl_tue', name:'Seated Leg Curl', m:'hams', sets:2, rep:[10,12], rest:60, rir:0, cue:'Same curl as Saturday, two sets here so the hamstrings get a second weekly hit without costing the quads anything.' },
+      { id:'seated_curl_tue', name:'Seated Leg Curl', m:'hams', sets:2, rep:[10,12], rest:60, rir:0, cue:'Same curl as Friday, two sets here so the hamstrings get a second weekly hit without costing the quads anything.' },
       { id:'cable_crunch', name:'Weighted Cable Crunch', m:'abs', sets:4, rep:[8,12], rest:75, rir:1, cue:'Spinal flexion, heavy \u2014 treat it like a compound and add weight weekly the same way you would on a row. The weighted crunch machine does this job just as well, so use whichever is free and lets you load heaviest; just stay on one of them long enough to progress it.' },
       { id:'hanging_raise', name:'Weighted Hanging Leg Raise', m:'abs', sets:3, rep:[8,12], rest:75, rir:1, cue:'Lower abs. Ankle weight or a DB between the feet. Curl the pelvis up; don\u2019t just swing the legs.' }
     ]
@@ -630,12 +631,7 @@ const PLAN = [
     ]
   },
   {
-    key:'friday', idx:5, title:'Easy cardio', focus:'Cardio only \u2014 no lifting today',
-    cardio:{ kind:'Easy swim or run', min:25, how:'Easy aerobic work, conversational pace throughout. Swim or run, whichever your body prefers today.' },
-    ex:[]
-  },
-  {
-    key:'saturday', idx:6, title:'Lower B', focus:'Hamstrings + abs \u2014 the short day, then a swim',
+    key:'friday', idx:5, title:'Lower B', focus:'Hamstrings + abs \u2014 the short day, then a swim',
     warmup:'5 min bike, hip hinges with a dowel, 2 ramping RDL sets.',
     cardio:{ kind:'Easy swim', min:20, how:'Straight after the lift. Continuous and easy \u2014 water is the right call after a hamstring day: no impact, and the kick flushes the legs rather than beating them up.' },
     ex:[
@@ -644,6 +640,11 @@ const PLAN = [
       { id:'seated_curl', name:'Seated Leg Curl', m:'hams', sets:3, rep:[10,12], rest:60, rir:0, cue:'Seated beats lying \u2014 the flexed hip puts the hamstring under a harder stretch.' },
       { id:'ab_wheel', name:'Ab Wheel Rollout', m:'abs', sets:3, rep:[8,12], rest:60, rir:1, cue:'Anti-extension \u2014 resisting the arch is the job your abs actually do all day. Ribs down, no sag through the hips.' }
     ]
+  },
+  {
+    key:'saturday', idx:6, title:'Surf, golf or light cardio', focus:'No lifting today',
+    cardio:{ kind:'Surf, golf or easy cardio', min:60, how:'Surfing or a round of golf counts \u2014 walk the course if you can. If neither happens, do 30\u201345 minutes of something easy: a walk, an easy bike or an easy swim. Nothing hard; Monday is an upper day.' },
+    ex:[]
   }
 ];
 const BASE_EX = {};
@@ -1112,7 +1113,7 @@ const MEALS = {
   "liftAt": "10:00-11:30 AM"
  },
  "friday": {
-  "lift": "Cardio 10:30 AM",
+  "lift": "Lift 10:30 AM",
   "m": [
    {
     "t": "7:30 AM",
@@ -1192,7 +1193,7 @@ const MEALS = {
   "liftAt": "10:30 AM"
  },
  "saturday": {
-  "lift": "Lift 10:30 AM-12:00 PM",
+  "lift": "Cardio 10:30 AM-12:00 PM",
   "m": [
    {
     "t": "9:00 AM",
@@ -1358,7 +1359,7 @@ const WEIGH = [["Chicken strips", "150 g per bowl, straight from the pack \u2014
 /* One Whole Foods trip covers the week; Amazon covers what it does not stock.
    Ticks are kept per week, so the list resets itself every Monday. */
 const SHOP = [["Protein", [["Organic grilled chicken breast strips, 8 oz", "6", "https://www.wholefoodsmarket.com/grocery/product/whole-foods-market-organic-grilled-chicken-breast-strips-8-oz-b07nrc7thl"], ["Organic Rancher organic 93/7 ground beef, 1 lb", "1", "https://www.wholefoodsmarket.com/product/organic-rancher-organic-ground-beef-93-lean7-fat-b09439skw3"], ["365 organic nonfat Greek yogurt, 32 oz", "2", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-greek-nonfat-plain-yogurt-32-oz-b07myd18hm"], ["Organic eggs", "18", ""], ["365 organic shelled edamame, frozen 12 oz", "2", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-frozen-organic-vegetables-shelled-edamame-b074h5ltcr"]]], ["Carbs", [["365 organic jasmine rice, 2 lb", "1", "https://www.wholefoodsmarket.com/shipped-to-you/product/365-by-whole-foods-market-organic-jasmine-thai-white-rice-32-ounce-b084njjjq7"], ["365 organic black beans, 15 oz", "2", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-black-beans-15-oz-b074h6qvky"], ["365 organic whole wheat sandwich bread, 20 oz", "1", "https://www.wholefoodsmarket.com/product/organic-whole%20wheat%20sandwich%20bread,%2020%20oz-b07glty9c6"], ["365 organic oat & honey granola, 17 oz", "every few weeks", "https://origin-www.wholefoodsmarket.com/shipped-to-you/product/365-by-whole-foods-market-organic-oat-honey-granola-17-ounce-b074h6mbqr"], ["Bananas", "7", ""], ["Apples", "7", ""]]], ["Frozen", [["365 organic broccoli florets, 32 oz", "1", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-broccoli-florets-32-oz-b077lf2zmr"], ["365 organic three-pepper blend, 16 oz", "1", "https://www.wholefoodsmarket.com/grocery/product/365-by-whole-foods-market-365-by-whole-foods-market-organic-three-pepper-blend-16-oz-b074h7324y"], ["Organic frozen mixed berries", "about 3.5 lb", ""], ["Organic frozen spinach", "about 1 lb", ""], ["365 chicken taquitos", "1 box", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-spicy-chicken-taquito-125-oz-b0dslrv17w"]]], ["Produce + dairy", [["Fresh berries, for Mon\u2013Wed breakfasts", "about 1 lb", ""], ["Bell peppers", "4", ""], ["Cucumbers", "2", ""], ["Carrots", "1 lb", ""], ["365 organic Mexican blend cheese, 8 oz", "1", "https://www.wholefoodsmarket.com/grocery/product/365-by-whole-foods-market-organic-mexican-blend-cheese-shreds-8-oz-b07vm5hqcn"], ["365 organic 2% milk", "\u00bd gallon", ""], ["Traditional guacamole, 8 oz", "1", "https://www.wholefoodsmarket.com/product/whole-foods-market-traditional-guacamole-8-oz-b07nsq3z3y"]]], ["Sauces + pantry", [["365 organic teriyaki sauce, 10 oz", "every 2 weeks", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-sauce-teriyaki-10-oz-b074h6vr3v"], ["365 organic thick & chunky salsa, 16 oz", "1", "https://www.wholefoodsmarket.com/product/365-by-whole-foods-market-organic-thick-chunky-medium-salsa-16-oz-b0czplfxb3"], ["365 organic taco seasoning", "every few weeks", "https://origin-d8.wholefoodsmarket.com/shipped-to-you/product/365-by-whole-foods-market-organic-taco-seasoning-1-ounce-b07zpp9t2f"], ["Organic olive oil, honey", "when low", ""]]], ["Amazon", [["Goodles", "2 boxes", ""], ["Earth Fed Muscle whey isolate", "a tub lasts ~3 weeks", ""]]]];
-const PLAN_NOTES = ["Every day hits the same target: 190 g protein, 355 g carbs, 80 g fat \u2014 the Phase 1 comeback target above.", "Chicken is Whole Foods' organic grilled breast strips, already cooked: 150 g per bowl, because pre-cooked strips carry about a third less protein per gram than chicken you cook yourself. Beef is one 1 lb pack of Organic Rancher 93/7, browned once and split across Wednesday lunch and Sunday dinner.", "Saturday dinner is the cheat night: six taquitos with guacamole and salsa. The Greek yogurt dip is there for protein \u2014 taquitos are mostly carbs and fat \u2014 and Saturday lunch skips the oil to make room.", "Edamame, berries and oil change day to day to keep each day on target. Wednesday and Saturday breakfasts take a fourth slice of toast; every yogurt breakfast is 340 g.", "Macros for the Whole Foods products come from nutrition databases, not the labels themselves. Check the chicken strips, yogurt and taquitos against their packs after the first shop.", "Lifting is Monday, Tuesday, Thursday and Saturday; Wednesday and Friday are cardio only. The food is the same 2,900 kcal every day either way."];
+const PLAN_NOTES = ["Every day hits the same target: 190 g protein, 355 g carbs, 80 g fat \u2014 the Phase 1 comeback target above.", "Chicken is Whole Foods' organic grilled breast strips, already cooked: 150 g per bowl, because pre-cooked strips carry about a third less protein per gram than chicken you cook yourself. Beef is one 1 lb pack of Organic Rancher 93/7, browned once and split across Wednesday lunch and Sunday dinner.", "Saturday dinner is the cheat night: six taquitos with guacamole and salsa. The Greek yogurt dip is there for protein \u2014 taquitos are mostly carbs and fat \u2014 and Saturday lunch skips the oil to make room.", "Edamame, berries and oil change day to day to keep each day on target. Wednesday and Saturday breakfasts take a fourth slice of toast; every yogurt breakfast is 340 g.", "Macros for the Whole Foods products come from nutrition databases, not the labels themselves. Check the chicken strips, yogurt and taquitos against their packs after the first shop.", "Lifting is Monday, Tuesday, Thursday and Friday; Wednesday is the hard swim and Saturday is surf, golf or light cardio. The food is the same 2,900 kcal every day either way."];
 
 /* Nutrition. Maintenance \u2248 2,900 kcal: Mifflin-St Jeor at 6'2"/170 lb \u00d7 1.6
    for six lifts and four cardio sessions a week. Kept there after the
@@ -1394,7 +1395,7 @@ const FUEL = {
    localStorage mirror so the page paints instantly and a lost
    grant never loses a training history.
    =========================================================== */
-const BUILD = '2026-11-04a';   // bump on every deploy
+const BUILD = '2026-11-06a';   // bump on every deploy
 const LS = 'ironledger.v1';
 const LSE = 'ironledger.edits.v1';
 let logs = {};        // { exerciseId: { 'YYYY-MM-DD': { sets:[{w,r}], at } } }
@@ -1411,7 +1412,7 @@ function saveLocal() {
 /* Edits saved per day were written against the old six-day split. Cardio
    overrides and added exercises keyed to a weekday would land on the wrong
    session now, so they are dropped once; per-exercise edits carry over. */
-const PROGRAM_VERSION = 2;
+const PROGRAM_VERSION = 3;
 function migrateEdits() {
   if ((edits.prog || 1) >= PROGRAM_VERSION) return;
   edits.cardio = {};
